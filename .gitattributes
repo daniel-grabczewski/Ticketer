@@ -1,18 +1,19 @@
-# Set the default behavior, in case people don't have core.autocrlf set.
+# Set the default behavior for text files
 * text=auto
 
-# Explicitly declare text files you want to always be normalized and converted
-# to native line endings on checkout.
-*.cs     text eol=lf
-*.csproj text eol=lf
-*.sln    text eol=lf
-*.json   text eol=lf
-*.ts     text eol=lf
-*.html   text eol=lf
-*.css    text eol=lf
+# Explicitly declare text files to be normalized and converted to native line endings on checkout.
+*.js text
+*.ts text
+*.html text
+*.css text
+*.json text
+*.md text
+*.xml text
 
 # Binary files
 *.png binary
 *.jpg binary
 *.jpeg binary
 *.gif binary
+*.ico binary
+*.pdf binary
