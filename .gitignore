@@ -1,0 +1,22 @@
+# Ignore build outputs, temporary files, and user-specific settings
+/backend/bin/
+/backend/obj/
+/frontend/node_modules/
+/frontend/dist/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.rsuser
+*.sln.docstates
+
+# ASP.NET Core environment files
+/backend/appsettings.Development.json
+/backend/Properties/launchSettings.json
+
+# VS Code settings
+.vscode/
+
+# Ignore user secrets
+/backend/secrets.json
