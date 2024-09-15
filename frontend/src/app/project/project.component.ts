@@ -69,7 +69,7 @@ export class ProjectComponent implements OnInit {
     this.http.post('/api/tickets', ticketData).subscribe({
       next: (response) => {
         console.log('Ticket added successfully: ', response);
-        this.getTickets;
+        this.getTickets();
       },
       error: (error) => {
         console.log('Failed to add ticket: ', error);
