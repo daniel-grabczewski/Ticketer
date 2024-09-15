@@ -2,7 +2,7 @@
 <div>
   <h1>Submit a Ticket</h1>
   <form (submit)="submitTicket()">
-    <input type="text" [(ngModel)]="description" placeholder="Enter ticket description" required />
+    <input type="text" [(ngModel)]="description" name="description" placeholder="Enter ticket description" required />
     <button type="submit">Submit</button>
   </form>
 
