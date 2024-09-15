@@ -55,17 +55,6 @@ export class ProjectComponent implements OnInit {
     - Whenever a component is created, Angular looks for a function called 'ngOnInit', and runs whatever is inside of it.
   */
 
-  onDescriptionChange(value: string) {
-    this.description = value; // Manually updates the component property
-    console.log('Description updated from HTML input:', value);
-  }
-
-  // Function to manually update the description in the HTML from TS
-  updateDescriptionInHtml(newDescription: string) {
-    this.description = newDescription; // Update the component property
-    console.log('Description updated from TS:', newDescription);
-  }
-
   // Function to submit a new ticket to the backend API
   submitTicket() {
     // Hardcoded ticket data for simplicity
