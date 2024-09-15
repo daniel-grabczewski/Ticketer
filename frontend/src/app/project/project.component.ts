@@ -59,24 +59,54 @@ export class ProjectComponent implements OnInit {
   submitTicket() {
     // Hardcoded ticket data for simplicity
     const ticketData = {
-      title: 'Hardcoded Title', // Example hardcoded title
-      description: this.description, // Use the description from the input field
-      createdAt: '2023-01-01T00:00:00', // Example hardcoded datetime
-      updatedAt: '2023-01-01T00:00:00', // Example hardcoded datetime
+      title: 'Hardcoded Title',
+      description: this.description,
+      createdAt: '2023-01-01T00:00:00',
+      updatedAt: '2023-01-01T00:00:00',
     };
 
     // Make a POST request to the backend API to create a new ticket
-    this.http.post('/api/tickets', ticketData).subscribe((response) => {
-      console.log('Ticket added:', response);
-      this.getTickets(); // Refresh the list of tickets after adding a new one
+    this.http.post('/api/tickets', ticketData).subscribe({
+      next: (response) => {
+        console.log('Ticket added successfully: ', response);
+        this.getTickets;
+      },
+      error: (error) => {
+        console.log('Failed to add ticket: ', error);
+      },
     });
+    /*
+      .subscribe always listens to an observable object, which either will emit values (response) or an errors (error) and can take two types of paramters:
+        - 1: A function. When given a function, .subscribe performs the function with the assumption that there was no error.
+          That is, it will have no error catching. E.g. .subscribe((response) => {do stuff}). It always expects a response
+
+        - 2: An object. When given an object, it will have reserved key names (next, error, complete). Each key will have its own function, where it has access to the emitted values/errors from the observable
+          'Next' handles what happens upon a value being emmited from the observable
+          'Error' handles what happens upon an error from the observable (an error is returned instead of a value)
+          'Complete' handles what happens after the request is complete
+          E.g. {next : (response) => {do stuff}, error : (response) => {do stuff}, complete : (response) => {do stuff}}
+          All of these keys are optional. Technically, you could provide .subscribe with an empty object, {}. Although not functional, it still wouldn't cause an error
+
+          What happens in any of these functions is up to us. There is no requirement to use the response object at all.
+          Both of these wouldn't throw any error : 
+          .subscribe({next : () => {console.log('hello')}})
+          .subscribe(() => {console.log('hello)})
+
+          If an error is emmited from the observable, then the observable terminates. And so subscribe() won't do anything.
+
+    */
   }
 
   // Function to fetch all tickets from the backend API
   getTickets() {
     // Make a GET request to the backend API to retrieve all tickets
-    this.http.get<Ticket[]>('/api/tickets').subscribe((data) => {
-      this.tickets = data; // Update the tickets list with the response data
+    this.http.get<Ticket[]>('/api/tickets').subscribe({
+      next: (data) => {
+        this.tickets = data;
+      },
+      error: (error) => {
+        console.log('An error occurred while fetching data', error);
+      },
     });
   }
 }
