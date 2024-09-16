@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment';
 
 interface Ticket {
   id: number;
@@ -66,7 +67,7 @@ export class ProjectComponent implements OnInit {
     };
 
     // Make a POST request to the backend API to create a new ticket
-    this.http.post('/api/tickets', ticketData).subscribe({
+    this.http.post(`${environment.baseURL}/tickets`, ticketData).subscribe({
       next: (response) => {
         console.log('Ticket added successfully: ', response);
         this.getTickets();
@@ -100,7 +101,7 @@ export class ProjectComponent implements OnInit {
   // Function to fetch all tickets from the backend API
   getTickets() {
     // Make a GET request to the backend API to retrieve all tickets
-    this.http.get<Ticket[]>('/api/tickets').subscribe({
+    this.http.get<Ticket[]>(`${environment.baseURL}/tickets`).subscribe({
       next: (data) => {
         this.tickets = data;
       },
