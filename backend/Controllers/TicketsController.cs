@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Models; // Assuming you have a Ticket model class created in Models folder
 using backend.Data;
+using Microsoft.EntityFrameworkCore;
 
 [ApiController]
 [Route("api/[controller]")]  // Route: /api/tickets
@@ -31,5 +32,15 @@ public class TicketsController : ControllerBase
         // Return a simple message for now
         return Ok(new { Message = "Ticket saved successfully!" });
     }
+
+[HttpGet]
+public async Task<IActionResult> GetAllTicketsAsync() 
+{
+    // Retrieve all tickets from the database asynchronously
+    var tickets = await _context.Tickets.ToListAsync();
+    Console.WriteLine(tickets);
+    // Return the list of tickets with a 200 OK response
+    return Ok(tickets);
+}
 }
 
