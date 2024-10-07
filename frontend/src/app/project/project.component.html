@@ -10,7 +10,9 @@
   <h2>Tickets</h2>
   <ul>
     <li *ngFor="let ticket of tickets">
-      {{ ticket.description }}
+      <strong>{{ ticket.title }}</strong><br>
+      {{ ticket.description }}<br>
+      Last Updated: {{ ticket.updatedAt }}
     </li>
   </ul>
 </div>
