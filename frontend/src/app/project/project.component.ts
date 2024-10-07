@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment';
+import { UtilsService } from '../shared/utils.service';
+UtilsService
 
 interface Ticket {
   id: number;
@@ -21,21 +23,25 @@ interface Ticket {
 })
 export class ProjectComponent implements OnInit {
   description: string = '';
+  title : string = '';
   tickets: Ticket[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private utilsService: UtilsService) {}
   ngOnInit(): void {
     this.getTickets(); // Fetch tickets when the component is initialized
   }
 
   // Function to submit a new ticket to the backend API
   submitTicket() {
-    // Hardcoded ticket data for simplicity
+
+    // Generate current date as DD/MM/YYYY HH:MM AM/PM
+    const now = new Date(); // Create a date object
+
     const ticketData = {
-      title: 'Hardcoded Title',
+      title: this.title,
       description: this.description,
-      createdAt: '2023-01-01T00:00:00',
-      updatedAt: '2023-01-01T00:00:00',
+      createdAt: now,
+      updatedAt: now,
     };
 
     // Make a POST request to the backend API to create a new ticket
