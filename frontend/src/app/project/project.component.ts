@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment';
 import { UtilsService } from '../shared/utils.service';
-UtilsService
+UtilsService;
 
 interface Ticket {
   id: number;
@@ -23,7 +23,7 @@ interface Ticket {
 })
 export class ProjectComponent implements OnInit {
   description: string = '';
-  title : string = '';
+  title: string = '';
   tickets: Ticket[] = [];
 
   constructor(private http: HttpClient, private utilsService: UtilsService) {}
@@ -33,7 +33,6 @@ export class ProjectComponent implements OnInit {
 
   // Function to submit a new ticket to the backend API
   submitTicket() {
-
     // Generate current date as DD/MM/YYYY HH:MM AM/PM
     const now = new Date(); // Create a date object
 
@@ -58,10 +57,15 @@ export class ProjectComponent implements OnInit {
 
   // Function to fetch all tickets from the backend API
   getTickets() {
-    // Make a GET request to the backend API to retrieve all tickets
     this.http.get<Ticket[]>(`${environment.baseURL}/tickets`).subscribe({
       next: (data) => {
-        this.tickets = data;
+        // Format the updatedAt field for each ticket
+        this.tickets = data.map((ticket) => ({
+          ...ticket,
+          updatedAt: this.utilsService.formatDateTime(
+            new Date(ticket.updatedAt)
+          ), // Format updatedAt as needed
+        }));
       },
       error: (error) => {
         console.log('An error occurred while fetching data', error);
