@@ -42,5 +42,21 @@ public async Task<IActionResult> GetAllTicketsAsync()
     // Return the list of tickets with a 200 OK response
     return Ok(tickets);
 }
+
+[HttpDelete("{id}")]
+public async Task<IActionResult> DeleteTicketById(int id) {
+  var ticket = await _context.Tickets.FindAsync(id);
+  Console.WriteLine(ticket);
+  if (ticket == null) {
+    return  NotFound();
+  }
+
+  _context.Tickets.Remove(ticket);
+
+  await _context.SaveChangesAsync();
+
+  return NoContent();
+}
+
 }
 
