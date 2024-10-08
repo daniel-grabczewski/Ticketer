@@ -44,9 +44,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseRouting(); // Adds routing middleware WHY IS THIS FIRST
-
 app.UseCors("AllowAllOrigins"); // Enable CORS
+
+app.UseRouting(); // Adds routing middleware WHY IS THIS FIRST
 
 app.UseAuthentication(); // Adds authentication middleware (if needed)
 
