@@ -8,11 +8,12 @@
   </form>
 
   <h2>Tickets</h2>
-  <ul>
-    <li *ngFor="let ticket of tickets">
+  <div>
+    <div *ngFor="let ticket of tickets">
       <strong>{{ ticket.title }}</strong><br>
       {{ ticket.description }}<br>
       Last Updated: {{ ticket.updatedAt }}
-    </li>
-  </ul>
+      <button (click)="deleteTicket(ticket.id)">Delete</button>
+    </div>
+  </div>
 </div>
