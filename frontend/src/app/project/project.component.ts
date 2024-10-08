@@ -31,10 +31,26 @@ export class ProjectComponent implements OnInit {
     this.getTickets(); // Fetch tickets when the component is initialized
   }
 
+  // Function to delete a new ticket to the backend API
+  deleteTicket(ticketId: number) {
+    // Make a DELETE request to the backend API to delete a ticket, given its ID
+    this.http.delete(`${environment.baseURL}/tickets/${ticketId}`).subscribe({
+      next: (response) => {
+        console.log(
+          `Ticket with ID ${ticketId} delete successfully: `,
+          response
+        );
+        this.getTickets();
+      },
+      error: (error) => {
+        console.log(`Failed to delete ticket with ID ${ticketId}`, error);
+      },
+    });
+  }
+
   // Function to submit a new ticket to the backend API
   submitTicket() {
-    // Generate current date as DD/MM/YYYY HH:MM AM/PM
-    const now = new Date(); // Create a date object
+    const now = new Date();
 
     const ticketData = {
       title: this.title,
