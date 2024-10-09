@@ -119,18 +119,36 @@ public async Task<IActionResult> UpdateTicketByIdAsync(int id, [FromBody] Update
 }
 
 [HttpDelete("{id}")]
-public async Task<IActionResult> DeleteTicketByIdAsync(int id) {
-  var ticket = await _context.Tickets.FindAsync(id);
-  Console.WriteLine(ticket);
-  if (ticket == null) {
-    return  NotFound();
-  }
+public async Task<IActionResult> DeleteTicketByIdAsync(int id)
+{
+    // Step 1: Check user authentication (guest or Auth0)
+    string guestId = Request.Cookies["GuestId"];
+    string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-  _context.Tickets.Remove(ticket);
+    if (string.IsNullOrEmpty(guestId) && auth0UserId == null)
+    {
+        return Unauthorized("User must be authenticated");
+    }
 
-  await _context.SaveChangesAsync();
+    // Step 2: Retrieve the ticket from the database
+    var ticket = await _context.Tickets.FindAsync(id);
 
-  return NoContent();
+    if (ticket == null)
+    {
+        return NotFound();
+    }
+
+    // Step 3: Ensure the user is authorized to delete the ticket
+    if ((ticket.IsGuest && ticket.UserId != guestId) || (!ticket.IsGuest && ticket.UserId != auth0UserId))
+    {
+        return Unauthorized("You do not have permission to delete this ticket.");
+    }
+
+    // Step 4: Remove the ticket from the context
+    _context.Tickets.Remove(ticket);
+    await _context.SaveChangesAsync();
+
+    return NoContent();
 }
 
 }
