@@ -60,14 +60,26 @@ public class TicketsController : ControllerBase
     }
 
 [HttpGet]
-public async Task<IActionResult> GetAllTicketsAsync() 
+public async Task<IActionResult> GetAllTicketsAsync()
 {
-    // Retrieve all tickets from the database asynchronously
-    var tickets = await _context.Tickets.ToListAsync();
-    Console.WriteLine(tickets);
-    // Return the list of tickets with a 200 OK response
+    // Step 1: Check user authentication (guest or Auth0)
+    string guestId = Request.Cookies["GuestId"];
+    string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    if (string.IsNullOrEmpty(guestId) && auth0UserId == null)
+    {
+        return Unauthorized("User must be authenticated");
+    }
+
+    // Step 2: Retrieve tickets for the current user (guest or Auth0)
+    var tickets = await _context.Tickets
+        .Where(t => (t.IsGuest && t.UserId == guestId) || (!t.IsGuest && t.UserId == auth0UserId))
+        .ToListAsync();
+
+    // Step 3: Return the list of tickets
     return Ok(tickets);
 }
+
 
 [HttpPut("{id}")]
 public async Task<IActionResult> UpdateTicketByIdAsync(int id, [FromBody] UpdateTicketDto updatedTicket) {
