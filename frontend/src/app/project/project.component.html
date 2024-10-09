@@ -35,7 +35,7 @@
 
       <!-- Toggle between "Update" and "Save Changes" buttons -->
       <button *ngIf="!ticket.isEditing" (click)="toggleEditMode(ticket)">Update</button>
-      <button *ngIf="ticket.isEditing" (click)="saveChanges(ticket)">Save Changes</button>
+      <button *ngIf="ticket.isEditing" (click)="updateTicket(ticket)">Save Changes</button>
       <button (click)="deleteTicket(ticket.id)">Delete</button>
     </div>
   </div>
