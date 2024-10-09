@@ -10,9 +10,32 @@
   <h2>Tickets</h2>
   <div>
     <div *ngFor="let ticket of tickets">
-      <strong>{{ ticket.title }}</strong><br>
-      {{ ticket.description }}<br>
-      Last Updated: {{ ticket.updatedAt }}
+      <!-- Show input fields if in edit mode, otherwise show text -->
+      <div *ngIf="ticket.isEditing; else viewMode">
+        <div>
+        <label>
+          Title:
+        <input type="text" [(ngModel)]="ticket.title" />
+      </label>
+    </div>
+    <div>
+      <label>
+          Description:
+        <input type="text" [(ngModel)]="ticket.description" />
+      </label>
+    </div>
+      </div>
+      <div>
+      <ng-template #viewMode>
+        <strong>{{ ticket.title }}</strong><br />
+        {{ ticket.description }}<br />
+        Last Updated: {{ ticket.updatedAt }}
+      </ng-template>
+    </div>
+
+      <!-- Toggle between "Update" and "Save Changes" buttons -->
+      <button *ngIf="!ticket.isEditing" (click)="toggleEditMode(ticket)">Update</button>
+      <button *ngIf="ticket.isEditing" (click)="saveChanges(ticket)">Save Changes</button>
       <button (click)="deleteTicket(ticket.id)">Delete</button>
     </div>
   </div>
