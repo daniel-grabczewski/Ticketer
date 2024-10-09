@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 [ApiController]
 [Route("api/[controller]")]  // Route: /api/tickets
 
+// Use 'dotnet watch run' in terminal if you server to update whenever you make changes. Otherwise, you'll need to keep restarting.
+
 public class TicketsController : ControllerBase
 {
 
@@ -43,8 +45,23 @@ public async Task<IActionResult> GetAllTicketsAsync()
     return Ok(tickets);
 }
 
+[HttpPut("{id}")]
+public async Task<IActionResult> UpdateTicketByIdAsync(int id, [FromBody] UpdateTicketDto updatedTicket) {
+  var ticket = await _context.Tickets.FindAsync(id);
+  Console.WriteLine(ticket);
+    if (ticket == null) {
+    return  NotFound();
+  }
+  ticket.Title = updatedTicket.Title;
+  ticket.Description = updatedTicket.Description;
+  ticket.UpdatedAt = updatedTicket.UpdatedAt;
+  
+  await _context.SaveChangesAsync();
+  return Ok(ticket);
+}
+
 [HttpDelete("{id}")]
-public async Task<IActionResult> DeleteTicketById(int id) {
+public async Task<IActionResult> DeleteTicketByIdAsync(int id) {
   var ticket = await _context.Tickets.FindAsync(id);
   Console.WriteLine(ticket);
   if (ticket == null) {
