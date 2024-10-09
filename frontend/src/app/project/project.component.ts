@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment';
 import { UtilsService } from '../shared/utils.service';
-UtilsService;
 
 interface Ticket {
   id: number;
@@ -12,6 +11,7 @@ interface Ticket {
   description: string;
   createdAt: string;
   updatedAt: string;
+  isEditing?: boolean;
 }
 
 @Component({
@@ -31,13 +31,38 @@ export class ProjectComponent implements OnInit {
     this.getTickets(); // Fetch tickets when the component is initialized
   }
 
-  // Function to delete a new ticket to the backend API
+  // Toggle edit mode for a specific ticket
+  toggleEditMode(ticket: Ticket) {
+    ticket.isEditing = !ticket.isEditing;
+  }
+
+  // Save changes to the ticket (HTTP PUT request)
+  updateTicket(ticket: Ticket) {
+    const updatedTicket = {
+      title: ticket.title,
+      description: ticket.description,
+      updatedAt: new Date(),
+    };
+
+    this.http
+      .put(`${environment.baseURL}/tickets/${ticket.id}`, updatedTicket)
+      .subscribe({
+        next: (response) => {
+          console.log('Ticket updated successfully:', response);
+          ticket.isEditing = false; // Exit edit mode after saving
+          this.getTickets(); // Refresh tickets list
+        },
+        error: (error) => {
+          console.log('Failed to update ticket:', error);
+        },
+      });
+  }
+
   deleteTicket(ticketId: number) {
-    // Make a DELETE request to the backend API to delete a ticket, given its ID
     this.http.delete(`${environment.baseURL}/tickets/${ticketId}`).subscribe({
       next: (response) => {
         console.log(
-          `Ticket with ID ${ticketId} delete successfully: `,
+          `Ticket with ID ${ticketId} deleted successfully:`,
           response
         );
         this.getTickets();
@@ -48,7 +73,6 @@ export class ProjectComponent implements OnInit {
     });
   }
 
-  // Function to submit a new ticket to the backend API
   submitTicket() {
     const now = new Date();
 
@@ -59,28 +83,26 @@ export class ProjectComponent implements OnInit {
       updatedAt: now,
     };
 
-    // Make a POST request to the backend API to create a new ticket
     this.http.post(`${environment.baseURL}/tickets`, ticketData).subscribe({
       next: (response) => {
-        console.log('Ticket added successfully: ', response);
+        console.log('Ticket added successfully:', response);
         this.getTickets();
       },
       error: (error) => {
-        console.log('Failed to add ticket: ', error);
+        console.log('Failed to add ticket:', error);
       },
     });
   }
 
-  // Function to fetch all tickets from the backend API
   getTickets() {
     this.http.get<Ticket[]>(`${environment.baseURL}/tickets`).subscribe({
       next: (data) => {
-        // Format the updatedAt field for each ticket
         this.tickets = data.map((ticket) => ({
           ...ticket,
           updatedAt: this.utilsService.formatDateTime(
             new Date(ticket.updatedAt)
-          ), // Format updatedAt as needed
+          ),
+          isEditing: false, // Initialize edit mode to false
         }));
       },
       error: (error) => {
