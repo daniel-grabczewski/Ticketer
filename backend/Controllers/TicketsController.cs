@@ -82,18 +82,40 @@ public async Task<IActionResult> GetAllTicketsAsync()
 
 
 [HttpPut("{id}")]
-public async Task<IActionResult> UpdateTicketByIdAsync(int id, [FromBody] UpdateTicketDto updatedTicket) {
-  var ticket = await _context.Tickets.FindAsync(id);
-  Console.WriteLine(ticket);
-    if (ticket == null) {
-    return  NotFound();
-  }
-  ticket.Title = updatedTicket.Title;
-  ticket.Description = updatedTicket.Description;
-  ticket.UpdatedAt = updatedTicket.UpdatedAt;
-  
-  await _context.SaveChangesAsync();
-  return Ok(ticket);
+[HttpPut("{id}")]
+public async Task<IActionResult> UpdateTicketByIdAsync(int id, [FromBody] UpdateTicketDto updatedTicket)
+{
+    // Step 1: Check user authentication (guest or Auth0)
+    string guestId = Request.Cookies["GuestId"];
+    string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    if (string.IsNullOrEmpty(guestId) && auth0UserId == null)
+    {
+        return Unauthorized("User must be authenticated");
+    }
+
+    // Step 2: Retrieve the ticket from the database
+    var ticket = await _context.Tickets.FindAsync(id);
+
+    if (ticket == null)
+    {
+        return NotFound();
+    }
+
+    // Step 3: Ensure the user is authorized to update the ticket
+    if ((ticket.IsGuest && ticket.UserId != guestId) || (!ticket.IsGuest && ticket.UserId != auth0UserId))
+    {
+        return Unauthorized("You do not have permission to update this ticket.");
+    }
+
+    // Step 4: Update the ticket fields
+    ticket.Title = updatedTicket.Title;
+    ticket.Description = updatedTicket.Description;
+    ticket.UpdatedAt = DateTime.UtcNow;
+
+    await _context.SaveChangesAsync();
+
+    return Ok(ticket);
 }
 
 [HttpDelete("{id}")]
