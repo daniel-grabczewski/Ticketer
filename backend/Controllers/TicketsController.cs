@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using backend.Models; // Assuming you have a Ticket model class created in Models folder
 using backend.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims; // Required for Auth0 claims extraction
 
 [ApiController]
 [Route("api/[controller]")]  // Route: /api/tickets
@@ -22,17 +23,40 @@ public class TicketsController : ControllerBase
 
     public async Task<IActionResult> CreateTicketAsync([FromBody] Ticket newTicket)
     {
-        // Print out the ticket data
-        Console.WriteLine($"Received ticket: {newTicket.Description}");
+        // Check if the user is a guest by seeing if there's a GuestId cookie
+        string guestId = Request.Cookies["GuestId"];
+
+        if (!string.IsNullOrEmpty(guestId))
+        {
+            // Guest user, assign the GuestId to the UserId field
+            newTicket.UserId = guestId;
+            newTicket.IsGuest = true;
+        }
+        else
+        {
+            // Auth0 user, extract the Auth0 ID from the claims (assuming you have Auth0 authentication set up)
+            string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // "sub" in Auth0 is usually mapped to NameIdentifier
+
+            if (auth0UserId == null)
+            {
+                return Unauthorized("User must be authenticated");
+            }
+
+            newTicket.UserId = auth0UserId;
+            newTicket.IsGuest = false;
+        }
+
+        // Set creation and update times
+        newTicket.CreatedAt = DateTime.UtcNow;
+        newTicket.UpdatedAt = DateTime.UtcNow;
 
         // Add the new ticket to the context
-    await _context.Tickets.AddAsync(newTicket);
+        await _context.Tickets.AddAsync(newTicket);
 
-    // Save changes to the database
-    await _context.SaveChangesAsync();
+        // Save changes to the database
+        await _context.SaveChangesAsync();
 
-        // Return a simple message for now
-        return Ok(new { Message = "Ticket saved successfully!" });
+        return Ok(new { Message = "Ticket saved successfully!", Ticket = newTicket });
     }
 
 [HttpGet]
