@@ -6,13 +6,10 @@ using System.Security.Claims; // Required for Auth0 claims extraction
 
 [ApiController]
 [Route("api/[controller]")]  // Route: /api/tickets
-
-// Use 'dotnet watch run' in terminal if you server to update whenever you make changes. Otherwise, you'll need to keep restarting.
-
 public class TicketsController : ControllerBase
 {
-
     private readonly ApplicationDbContext _context;
+
     public TicketsController(ApplicationDbContext context)
     {
         _context = context; 
@@ -20,7 +17,6 @@ public class TicketsController : ControllerBase
 
     // POST: api/tickets
     [HttpPost]
-
     public async Task<IActionResult> CreateTicketAsync([FromBody] Ticket newTicket)
     {
         // Check if the user is a guest by seeing if there's a GuestId cookie
@@ -39,7 +35,7 @@ public class TicketsController : ControllerBase
 
             if (auth0UserId == null)
             {
-                return Unauthorized("User must be authenticated");
+                return Unauthorized();
             }
 
             newTicket.UserId = auth0UserId;
@@ -59,97 +55,85 @@ public class TicketsController : ControllerBase
         return Ok(new { Message = "Ticket saved successfully!", Ticket = newTicket });
     }
 
-[HttpGet]
-public async Task<IActionResult> GetAllTicketsAsync()
-{
-    // Step 1: Check user authentication (guest or Auth0)
-    string guestId = Request.Cookies["GuestId"];
-    string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-    if (string.IsNullOrEmpty(guestId) && auth0UserId == null)
+    // GET: api/tickets
+    [HttpGet]
+    public async Task<IActionResult> GetAllTicketsAsync()
     {
-        return Unauthorized("User must be authenticated");
+        // Step 1: Check user authentication (guest or Auth0)
+        string guestId = Request.Cookies["GuestId"];
+        string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(guestId) && auth0UserId == null)
+        {
+            return Unauthorized();
+        }
+
+        // Step 2: Retrieve tickets for the current user (guest or Auth0) in a single query
+        var tickets = await _context.Tickets
+            .Where(t => (t.IsGuest && t.UserId == guestId) || (!t.IsGuest && t.UserId == auth0UserId))
+            .ToListAsync();
+
+        return Ok(tickets);
     }
 
-    // Step 2: Retrieve tickets for the current user (guest or Auth0)
-    var tickets = await _context.Tickets
-        .Where(t => (t.IsGuest && t.UserId == guestId) || (!t.IsGuest && t.UserId == auth0UserId))
-        .ToListAsync();
+    // PUT: api/tickets/{id}
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateTicketByIdAsync(int id, [FromBody] UpdateTicketDto updatedTicket)
+    {
+        // Step 1: Check user authentication (guest or Auth0)
+        string guestId = Request.Cookies["GuestId"];
+        string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    // Step 3: Return the list of tickets
-    return Ok(tickets);
+        if (string.IsNullOrEmpty(guestId) && auth0UserId == null)
+        {
+            return Unauthorized();
+        }
+
+        // Step 2: Retrieve the ticket and ensure the user is authorized in a single query
+        var ticket = await _context.Tickets
+            .SingleOrDefaultAsync(t => t.Id == id && ((t.IsGuest && t.UserId == guestId) || (!t.IsGuest && t.UserId == auth0UserId)));
+
+        if (ticket == null)
+        {
+            return NotFound();
+        }
+
+        // Step 3: Update the ticket fields
+        ticket.Title = updatedTicket.Title;
+        ticket.Description = updatedTicket.Description;
+        ticket.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(ticket);
+    }
+
+    // DELETE: api/tickets/{id}
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteTicketByIdAsync(int id)
+    {
+        // Step 1: Check user authentication (guest or Auth0)
+        string guestId = Request.Cookies["GuestId"];
+        string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(guestId) && auth0UserId == null)
+        {
+            return Unauthorized();
+        }
+
+        // Step 2: Retrieve the ticket and ensure the user is authorized in a single query
+        var ticket = await _context.Tickets
+            .SingleOrDefaultAsync(t => t.Id == id && ((t.IsGuest && t.UserId == guestId) || (!t.IsGuest && t.UserId == auth0UserId)));
+
+        if (ticket == null)
+        {
+            return NotFound();
+        }
+
+        // Step 3: Remove the ticket from the context
+        _context.Tickets.Remove(ticket);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 }
-
-
-[HttpPut("{id}")]
-[HttpPut("{id}")]
-public async Task<IActionResult> UpdateTicketByIdAsync(int id, [FromBody] UpdateTicketDto updatedTicket)
-{
-    // Step 1: Check user authentication (guest or Auth0)
-    string guestId = Request.Cookies["GuestId"];
-    string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-    if (string.IsNullOrEmpty(guestId) && auth0UserId == null)
-    {
-        return Unauthorized("User must be authenticated");
-    }
-
-    // Step 2: Retrieve the ticket from the database
-    var ticket = await _context.Tickets.FindAsync(id);
-
-    if (ticket == null)
-    {
-        return NotFound();
-    }
-
-    // Step 3: Ensure the user is authorized to update the ticket
-    if ((ticket.IsGuest && ticket.UserId != guestId) || (!ticket.IsGuest && ticket.UserId != auth0UserId))
-    {
-        return Unauthorized("You do not have permission to update this ticket.");
-    }
-
-    // Step 4: Update the ticket fields
-    ticket.Title = updatedTicket.Title;
-    ticket.Description = updatedTicket.Description;
-    ticket.UpdatedAt = DateTime.UtcNow;
-
-    await _context.SaveChangesAsync();
-
-    return Ok(ticket);
-}
-
-[HttpDelete("{id}")]
-public async Task<IActionResult> DeleteTicketByIdAsync(int id)
-{
-    // Step 1: Check user authentication (guest or Auth0)
-    string guestId = Request.Cookies["GuestId"];
-    string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-    if (string.IsNullOrEmpty(guestId) && auth0UserId == null)
-    {
-        return Unauthorized("User must be authenticated");
-    }
-
-    // Step 2: Retrieve the ticket from the database
-    var ticket = await _context.Tickets.FindAsync(id);
-
-    if (ticket == null)
-    {
-        return NotFound();
-    }
-
-    // Step 3: Ensure the user is authorized to delete the ticket
-    if ((ticket.IsGuest && ticket.UserId != guestId) || (!ticket.IsGuest && ticket.UserId != auth0UserId))
-    {
-        return Unauthorized("You do not have permission to delete this ticket.");
-    }
-
-    // Step 4: Remove the ticket from the context
-    _context.Tickets.Remove(ticket);
-    await _context.SaveChangesAsync();
-
-    return NoContent();
-}
-
-}
-
