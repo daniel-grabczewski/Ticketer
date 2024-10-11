@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using backend.Models; // Assuming you have a Ticket model class created in Models folder
 using backend.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims; // Required for Auth0 claims extraction
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization; // Required for Auth0 claims extraction
 
 [ApiController]
 [Route("api/[controller]")]  // Route: /api/tickets
@@ -16,6 +17,7 @@ public class TicketsController : ControllerBase
     }
 
     // POST: api/tickets
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateTicketAsync([FromBody] Ticket newTicket)
     {
@@ -56,6 +58,7 @@ public class TicketsController : ControllerBase
     }
 
     // GET: api/tickets
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAllTicketsAsync()
     {
@@ -77,6 +80,7 @@ public class TicketsController : ControllerBase
     }
 
     // PUT: api/tickets/{id}
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTicketByIdAsync(int id, [FromBody] UpdateTicketDto updatedTicket)
     {
@@ -109,6 +113,7 @@ public class TicketsController : ControllerBase
     }
 
     // DELETE: api/tickets/{id}
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTicketByIdAsync(int id)
     {
