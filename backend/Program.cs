@@ -1,5 +1,7 @@
 using backend.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,16 +17,65 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     ));
 
-// Add CORS policy (example)
+// Add CORS policy to allow your frontend (Angular) to access your API
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAllOrigins", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("http://localhost:4200") // Angular frontend URL
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowCredentials();
     });
 });
+
+// Add JWT Bearer authentication for Auth0
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.Authority = "https://dev-3l5ve3any1ptgo1l.us.auth0.com/";
+    options.Audience = "https://ticketer-api";
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true
+        // No need to set ValidIssuer or ValidAudience as they are inferred from Authority and Audience
+    };
+
+    // Optional: Add token validation events (for logging/debugging)
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine("Authentication failed: " + context.Exception.Message);
+            
+            // Log the incoming Authorization header
+            if (context.Request.Headers.ContainsKey("Authorization"))
+            {
+                var token = context.Request.Headers["Authorization"].ToString();
+                Console.WriteLine("Received Token: " + token);
+            }
+            else
+            {
+                Console.WriteLine("No Authorization header found.");
+            }
+
+            return Task.CompletedTask;
+        },
+        OnTokenValidated = context =>
+        {
+            Console.WriteLine("Token successfully validated.");
+            return Task.CompletedTask;
+        }
+    };
+});
+
+builder.Services.AddAuthorization(); // Add authorization services
 
 var app = builder.Build();
 
@@ -38,26 +89,23 @@ if (app.Environment.IsDevelopment())
 // Add exception handling middleware
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error"); // or custom error handling page
-    app.UseHsts(); // Use HSTS (HTTP Strict Transport Security) in production
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowAllOrigins"); // Enable CORS
+// Enable CORS for frontend access
+app.UseCors("AllowFrontend");
 
-app.UseRouting(); // Adds routing middleware WHY IS THIS FIRST
+// Enable routing middleware
+app.UseRouting();
 
-app.UseAuthentication(); // Adds authentication middleware (if needed)
+// Enable authentication and authorization middleware
+app.UseAuthentication(); // This is required for token validation
+app.UseAuthorization(); // This enforces any authorization policies
 
-app.UseAuthorization(); // Adds authorization middleware
-
-app.MapControllers(); // Maps routes to controllers
+// Map your controllers to handle incoming requests
+app.MapControllers();
 
 app.Run();
-
-// So Controllers are just classes with methods (actions) inside of them that handle different types of requests.
-// So, the controller for /users will have different actions depending on whether its GET POST PUT DELETE
-// Go through and understand everything here.. Controllers, actions, public/private, how to interact with the db with EF Core, etc.
-// Understand the entire pipeline.
-// Once that's done, then move on to creating the front end with angular and turning this into a github repo.
