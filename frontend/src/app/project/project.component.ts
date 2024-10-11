@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment';
 import { UtilsService } from '../shared/utils.service';
+import { AuthService } from '@auth0/auth0-angular';
 
 interface Ticket {
   id: number;
@@ -25,8 +26,13 @@ export class ProjectComponent implements OnInit {
   description: string = '';
   title: string = '';
   tickets: Ticket[] = [];
+  auth0Service: any;
 
-  constructor(private http: HttpClient, private utilsService: UtilsService) {}
+  constructor(
+    private http: HttpClient,
+    private utilsService: UtilsService,
+    public auth: AuthService
+  ) {}
   ngOnInit(): void {
     this.getTickets(); // Fetch tickets when the component is initialized
   }
@@ -62,8 +68,7 @@ export class ProjectComponent implements OnInit {
     this.http.delete(`${environment.baseURL}/tickets/${ticketId}`).subscribe({
       next: (response) => {
         console.log(
-          `Ticket with ID ${ticketId} deleted successfully:`,
-          response
+          `Ticket with ID ${ticketId} deleted successfully:`
         );
         this.getTickets();
       },
@@ -79,8 +84,8 @@ export class ProjectComponent implements OnInit {
     const ticketData = {
       title: this.title,
       description: this.description,
-      createdAt: now,
-      updatedAt: now,
+      createdAt: '2024-10-10T23:36:57.800981', //Hardcoded for now
+      updatedAt: '2024-10-10T23:36:57.800981', //Hardcoded for now
     };
 
     this.http.post(`${environment.baseURL}/tickets`, ticketData).subscribe({
@@ -92,6 +97,9 @@ export class ProjectComponent implements OnInit {
         console.log('Failed to add ticket:', error);
       },
     });
+
+    this.description = '';
+    this.title = '';
   }
 
   getTickets() {
@@ -99,9 +107,7 @@ export class ProjectComponent implements OnInit {
       next: (data) => {
         this.tickets = data.map((ticket) => ({
           ...ticket,
-          updatedAt: this.utilsService.formatDateTime(
-            new Date(ticket.updatedAt)
-          ),
+          updatedAt: '2024-10-10T23:36:57.800981', //this.utilsService.formatDateTime(new Date(ticket.updatedAt)),
           isEditing: false, // Initialize edit mode to false
         }));
       },
