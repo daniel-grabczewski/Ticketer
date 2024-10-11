@@ -14,6 +14,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AuthService } from '@auth0/auth0-angular';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -31,11 +33,25 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatMenuModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    CommonModule,
+    RouterOutlet,
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   title = 'frontend';
+
+  constructor(public auth: AuthService) {}
+
+  // Method to trigger login
+  login() {
+    this.auth.loginWithRedirect();
+  }
+
+  // Method to trigger logout
+  logout() {
+    this.auth.logout({ logoutParams: { returnTo: window.location.origin } });
+  }
 }

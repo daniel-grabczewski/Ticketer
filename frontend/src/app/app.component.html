@@ -1,1 +1,17 @@
+<div class="container">
+
+  <!-- Check if user is authenticated -->
+  <div *ngIf="auth.isAuthenticated$ | async; else loginBlock">
+    <p>You are logged in!</p>
+    <button (click)="logout()">Logout</button>
+  </div>
+
+  <!-- If not authenticated, show login button -->
+  <ng-template #loginBlock>
+    <p>You are not logged in.</p>
+    <button (click)="login()">Login</button>
+  </ng-template>
+</div>
+
+<!-- Router outlet for your routed components -->
 <router-outlet></router-outlet>
