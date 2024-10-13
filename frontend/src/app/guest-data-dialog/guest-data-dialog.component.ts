@@ -6,7 +6,7 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
   selector: 'app-guest-data-dialog',
   standalone: true,
   imports: [MatDialogModule, MatButtonModule],
-  styleUrl: './guest-data-dialog.component.css',
+  styleUrls: ['./guest-data-dialog.component.css'],
   template: `
     <h1 mat-dialog-title>Transfer Guest Data</h1>
     <div mat-dialog-content>
