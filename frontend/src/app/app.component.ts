@@ -11,7 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
@@ -19,6 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
+import { GuestDataDialogComponent } from './guest-data-dialog/guest-data-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +39,7 @@ import { CommonModule } from '@angular/common';
     MatProgressSpinnerModule,
     MatTooltipModule,
     CommonModule,
+    GuestDataDialogComponent, // Include the dialog component
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -48,12 +50,36 @@ export class AppComponent {
 
   constructor(
     public auth: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private dialog: MatDialog
   ) {
     // Subscribe to authentication status
-    this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
+    this.auth.isAuthenticated$.subscribe(async (isAuthenticated) => {
       if (isAuthenticated) {
         this.isGuest = false;
+
+        try {
+          // Check if user is registered
+          const isRegistered = await firstValueFrom(
+            this.http.get<{ IsRegistered: boolean }>(
+              `${environment.baseURL}/users/isRegistered`
+            )
+          );
+
+          // Check if GuestId cookie exists
+          const guestCookieExists = this.checkGuestCookie();
+
+          if (!isRegistered.IsRegistered && guestCookieExists) {
+            // Show dialog to transfer guest data
+            this.openGuestDataDialog();
+          } else if (isRegistered.IsRegistered && guestCookieExists) {
+            // User is registered, delete guest data without prompting
+            await this.deleteGuestDataForRegisteredUser();
+          }
+        } catch (error) {
+          console.error('Error during authentication handling:', error);
+        }
+
       } else {
         // Check if GuestId cookie exists
         this.isGuest = this.checkGuestCookie();
@@ -63,22 +89,7 @@ export class AppComponent {
 
   // Method to trigger login
   login() {
-    if (this.isGuest) {
-      const transferData = confirm('Do you want to transfer your data to your new account?');
-      if (transferData) {
-        // Transfer guest data before logging in
-        this.transferGuestData().then(() => {
-          this.auth.loginWithRedirect();
-        });
-      } else {
-        // Delete guest data and proceed with login
-        this.deleteGuestData().then(() => {
-          this.auth.loginWithRedirect();
-        });
-      }
-    } else {
-      this.auth.loginWithRedirect();
-    }
+    this.auth.loginWithRedirect();
   }
 
   // Method to trigger logout
@@ -142,4 +153,53 @@ export class AppComponent {
   deleteGuestCookie() {
     document.cookie = 'GuestId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   }
+
+  // Method to open the guest data transfer dialog
+  openGuestDataDialog() {
+    const dialogRef = this.dialog.open(GuestDataDialogComponent);
+
+    dialogRef.afterClosed().subscribe(async (result) => {
+      if (result === true) {
+        // User chose to transfer data
+        await this.transferGuestData();
+      } else {
+        // User chose not to transfer data
+        await this.deleteGuestData();
+      }
+
+      // Register the user after handling guest data
+      await this.registerUser();
+    });
+  }
+
+  // Method to register the user
+  async registerUser() {
+    try {
+      await firstValueFrom(
+        this.http.post(`${environment.baseURL}/users/register`, {})
+      );
+      console.log('User registered successfully.');
+    } catch (error) {
+      console.error('Failed to register user:', error);
+    }
+  }
+
+  // Method to delete guest data for a registered user
+  async deleteGuestDataForRegisteredUser() {
+    try {
+      await firstValueFrom(
+        this.http.post(
+          `${environment.baseURL}/auth/deleteGuestDataForRegisteredUser`,
+          {},
+          { withCredentials: true }
+        )
+      );
+      console.log('Guest data deleted for registered user.');
+      this.isGuest = false;
+    } catch (error) {
+      console.error('Failed to delete guest data for registered user:', error);
+    }
+  }
 }
+
+
