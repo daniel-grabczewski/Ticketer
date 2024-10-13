@@ -36,5 +36,35 @@ namespace backend.Controllers
 
             return Ok(new { IsRegistered = isRegistered });
         }
+         [HttpPost("register")]
+        public async Task<IActionResult> RegisterUser()
+        {
+            // Get the Auth0 user ID from the claims
+            string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(auth0UserId))
+            {
+                return Unauthorized();
+            }
+
+            // Check if the user already exists
+            bool exists = await _context.Users.AnyAsync(u => u.UserId == auth0UserId);
+
+            if (exists)
+            {
+                return BadRequest("User is already registered.");
+            }
+
+            // Create a new User entry
+            var user = new User
+            {
+                UserId = auth0UserId
+            };
+
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Message = "User registered successfully." });
+        }
     }
 }
