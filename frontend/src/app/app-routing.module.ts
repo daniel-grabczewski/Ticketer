@@ -14,8 +14,7 @@ export const routes: Routes = [
   {
     path: 'project',
     component: ProjectComponent,
-    // Remove or adjust the guard to allow guest access
-    // canActivate: [authGuardFn], // Comment out or remove
+    // Guard removed to allow guest access
   },
   { path: '**', redirectTo: '' }, // Redirect unknown paths to home
 ];
