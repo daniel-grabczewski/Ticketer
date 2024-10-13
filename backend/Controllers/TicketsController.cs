@@ -1,144 +1,198 @@
 using Microsoft.AspNetCore.Mvc;
-using backend.Models; // Assuming you have a Ticket model class created in Models folder
+using backend.Models; // Assuming you have a Ticket model class
 using backend.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization; // Required for Auth0 claims extraction
+using Microsoft.AspNetCore.Authorization;
 
-[ApiController]
-[Route("api/[controller]")]  // Route: /api/tickets
-public class TicketsController : ControllerBase
+namespace backend.Controllers
 {
-    private readonly ApplicationDbContext _context;
-
-    public TicketsController(ApplicationDbContext context)
+    [ApiController]
+    [Authorize]  // Ensure the authentication middleware runs
+    [Route("api/[controller]")]
+    public class TicketsController : ControllerBase
     {
-        _context = context; 
-    }
+        private readonly ApplicationDbContext _context;
 
-    // POST: api/tickets
-    [Authorize]
-    [HttpPost]
-    public async Task<IActionResult> CreateTicketAsync([FromBody] Ticket newTicket)
-    {
-        // Check if the user is a guest by seeing if there's a GuestId cookie
-        string guestId = Request.Cookies["GuestId"];
-
-        if (!string.IsNullOrEmpty(guestId))
+        public TicketsController(ApplicationDbContext context)
         {
-            // Guest user, assign the GuestId to the UserId field
-            newTicket.UserId = guestId;
-            newTicket.IsGuest = true;
+            _context = context;
         }
-        else
-        {
-            // Auth0 user, extract the Auth0 ID from the claims (assuming you have Auth0 authentication set up)
-            string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // "sub" in Auth0 is usually mapped to NameIdentifier
 
-            if (auth0UserId == null)
+        // POST: api/tickets
+        [HttpPost]
+        [AllowAnonymous] // Allow anonymous access for guest users
+        public async Task<IActionResult> CreateTicketAsync([FromBody] Ticket newTicket)
+        {
+            // Check if the user is authenticated
+            string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(auth0UserId))
             {
-                return Unauthorized();
+                // Authenticated user
+                newTicket.UserId = auth0UserId;
+                newTicket.IsGuest = false;
+            }
+            else
+            {
+                // Check if the user is a guest by checking the GuestId cookie
+                string guestId = Request.Cookies["GuestId"];
+
+                if (!string.IsNullOrEmpty(guestId))
+                {
+                    // Guest user
+                    newTicket.UserId = guestId;
+                    newTicket.IsGuest = true;
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
 
-            newTicket.UserId = auth0UserId;
-            newTicket.IsGuest = false;
+            // Set creation and update times
+            newTicket.CreatedAt = DateTime.UtcNow;
+            newTicket.UpdatedAt = DateTime.UtcNow;
+
+            // Add the new ticket to the context
+            await _context.Tickets.AddAsync(newTicket);
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Message = "Ticket saved successfully!", Ticket = newTicket });
         }
 
-        // Set creation and update times
-        newTicket.CreatedAt = DateTime.UtcNow;
-        newTicket.UpdatedAt = DateTime.UtcNow;
-
-        // Add the new ticket to the context
-        await _context.Tickets.AddAsync(newTicket);
-
-        // Save changes to the database
-        await _context.SaveChangesAsync();
-
-        return Ok(new { Message = "Ticket saved successfully!", Ticket = newTicket });
-    }
-
-    // GET: api/tickets
-    [Authorize]
-    [HttpGet]
-    public async Task<IActionResult> GetAllTicketsAsync()
-    {
-        // Step 1: Check user authentication (guest or Auth0)
-        string guestId = Request.Cookies["GuestId"];
-        string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrEmpty(guestId) && auth0UserId == null)
+        // GET: api/tickets
+        [HttpGet]
+        [AllowAnonymous] // Allow anonymous access for guest users
+        public async Task<IActionResult> GetAllTicketsAsync()
         {
-            return Unauthorized();
+            // Check if the user is authenticated
+            string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(auth0UserId))
+            {
+                // Authenticated user
+                var tickets = await _context.Tickets
+                    .Where(t => !t.IsGuest && t.UserId == auth0UserId)
+                    .ToListAsync();
+
+                return Ok(tickets);
+            }
+            else
+            {
+                // Check if the user is a guest by checking the GuestId cookie
+                string guestId = Request.Cookies["GuestId"];
+
+                if (!string.IsNullOrEmpty(guestId))
+                {
+                    // Guest user
+                    var tickets = await _context.Tickets
+                        .Where(t => t.IsGuest && t.UserId == guestId)
+                        .ToListAsync();
+
+                    return Ok(tickets);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }
         }
 
-        // Step 2: Retrieve tickets for the current user (guest or Auth0) in a single query
-        var tickets = await _context.Tickets
-            .Where(t => (t.IsGuest && t.UserId == guestId) || (!t.IsGuest && t.UserId == auth0UserId))
-            .ToListAsync();
-
-        return Ok(tickets);
-    }
-
-    // PUT: api/tickets/{id}
-    [Authorize]
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateTicketByIdAsync(int id, [FromBody] UpdateTicketDto updatedTicket)
-    {
-        // Step 1: Check user authentication (guest or Auth0)
-        string guestId = Request.Cookies["GuestId"];
-        string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrEmpty(guestId) && auth0UserId == null)
+        // PUT: api/tickets/{id}
+        [HttpPut("{id}")]
+        [AllowAnonymous] // Allow anonymous access for guest users
+        public async Task<IActionResult> UpdateTicketByIdAsync(
+            int id, [FromBody] UpdateTicketDto updatedTicket)
         {
-            return Unauthorized();
+            // Check if the user is authenticated
+            string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            Ticket ticket = null;
+
+            if (!string.IsNullOrEmpty(auth0UserId))
+            {
+                // Authenticated user
+                ticket = await _context.Tickets
+                    .SingleOrDefaultAsync(t => t.Id == id && !t.IsGuest && t.UserId == auth0UserId);
+            }
+            else
+            {
+                // Check if the user is a guest by checking the GuestId cookie
+                string guestId = Request.Cookies["GuestId"];
+
+                if (!string.IsNullOrEmpty(guestId))
+                {
+                    // Guest user
+                    ticket = await _context.Tickets
+                        .SingleOrDefaultAsync(t => t.Id == id && t.IsGuest && t.UserId == guestId);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            // Update the ticket fields
+            ticket.Title = updatedTicket.Title;
+            ticket.Description = updatedTicket.Description;
+            ticket.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(ticket);
         }
 
-        // Step 2: Retrieve the ticket and ensure the user is authorized in a single query
-        var ticket = await _context.Tickets
-            .SingleOrDefaultAsync(t => t.Id == id && ((t.IsGuest && t.UserId == guestId) || (!t.IsGuest && t.UserId == auth0UserId)));
-
-        if (ticket == null)
+        // DELETE: api/tickets/{id}
+        [HttpDelete("{id}")]
+        [AllowAnonymous] // Allow anonymous access for guest users
+        public async Task<IActionResult> DeleteTicketByIdAsync(int id)
         {
-            return NotFound();
+            // Check if the user is authenticated
+            string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            Ticket ticket = null;
+
+            if (!string.IsNullOrEmpty(auth0UserId))
+            {
+                // Authenticated user
+                ticket = await _context.Tickets
+                    .SingleOrDefaultAsync(t => t.Id == id && !t.IsGuest && t.UserId == auth0UserId);
+            }
+            else
+            {
+                // Check if the user is a guest by checking the GuestId cookie
+                string guestId = Request.Cookies["GuestId"];
+
+                if (!string.IsNullOrEmpty(guestId))
+                {
+                    // Guest user
+                    ticket = await _context.Tickets
+                        .SingleOrDefaultAsync(t => t.Id == id && t.IsGuest && t.UserId == guestId);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            // Remove the ticket from the context
+            _context.Tickets.Remove(ticket);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
-
-        // Step 3: Update the ticket fields
-        ticket.Title = updatedTicket.Title;
-        ticket.Description = updatedTicket.Description;
-        ticket.UpdatedAt = DateTime.UtcNow;
-
-        await _context.SaveChangesAsync();
-
-        return Ok(ticket);
-    }
-
-    // DELETE: api/tickets/{id}
-    [Authorize]
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTicketByIdAsync(int id)
-    {
-        // Step 1: Check user authentication (guest or Auth0)
-        string guestId = Request.Cookies["GuestId"];
-        string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrEmpty(guestId) && auth0UserId == null)
-        {
-            return Unauthorized();
-        }
-
-        // Step 2: Retrieve the ticket and ensure the user is authorized in a single query
-        var ticket = await _context.Tickets
-            .SingleOrDefaultAsync(t => t.Id == id && ((t.IsGuest && t.UserId == guestId) || (!t.IsGuest && t.UserId == auth0UserId)));
-
-        if (ticket == null)
-        {
-            return NotFound();
-        }
-
-        // Step 3: Remove the ticket from the context
-        _context.Tickets.Remove(ticket);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
     }
 }
