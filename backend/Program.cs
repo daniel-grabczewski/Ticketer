@@ -2,6 +2,7 @@ using backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +26,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:4200") // Angular frontend URL
               .AllowAnyMethod()
               .AllowAnyHeader()
-              .AllowCredentials();
+              .AllowCredentials(); // Important for cookies
     });
 });
 
@@ -44,32 +45,28 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true
-        // No need to set ValidIssuer or ValidAudience as they are inferred from Authority and Audience
     };
 
-    // Optional: Add token validation events (for logging/debugging)
     options.Events = new JwtBearerEvents
     {
         OnAuthenticationFailed = context =>
         {
-            Console.WriteLine("Authentication failed: " + context.Exception.Message);
-            
-            // Log the incoming Authorization header
-            if (context.Request.Headers.ContainsKey("Authorization"))
-            {
-                var token = context.Request.Headers["Authorization"].ToString();
-                Console.WriteLine("Received Token: " + token);
-            }
-            else
-            {
-                Console.WriteLine("No Authorization header found.");
-            }
-
-            return Task.CompletedTask;
+            // Do not fail the request; allow anonymous access
+            context.NoResult();
+            context.Response.StatusCode = 401;
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsync("{\"error\":\"Authentication failed.\"}");
         },
-        OnTokenValidated = context =>
+        OnChallenge = context =>
         {
-            Console.WriteLine("Token successfully validated.");
+            // Skip the default challenge response
+            context.HandleResponse();
+            if (!context.Response.HasStarted)
+            {
+                context.Response.StatusCode = 401;
+                context.Response.ContentType = "application/json";
+                context.Response.WriteAsync("{\"error\":\"Unauthorized access.\"}");
+            }
             return Task.CompletedTask;
         }
     };
@@ -84,28 +81,23 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    // Do not use HTTPS redirection in development if not using HTTPS
+    // app.UseHttpsRedirection();
 }
-
-// Add exception handling middleware
-if (!app.Environment.IsDevelopment())
+else
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
+    app.UseHttpsRedirection(); // Use HTTPS redirection in production
 }
 
-app.UseHttpsRedirection();
-
-// Enable CORS for frontend access
-app.UseCors("AllowFrontend");
-
-// Enable routing middleware
 app.UseRouting();
 
-// Enable authentication and authorization middleware
-app.UseAuthentication(); // This is required for token validation
-app.UseAuthorization(); // This enforces any authorization policies
+app.UseCors("AllowFrontend");
 
-// Map your controllers to handle incoming requests
+app.UseAuthentication(); // Must come before UseAuthorization
+app.UseAuthorization();  // Must come after UseAuthentication
+
 app.MapControllers();
 
 app.Run();
