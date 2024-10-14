@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment';
 import { UtilsService } from '../shared/utils.service';
 import { AuthService } from '@auth0/auth0-angular';
+import { MaterialSharedModule } from '../shared/material.shared';
 
 interface Ticket {
   id: number;
@@ -18,7 +19,7 @@ interface Ticket {
 @Component({
   selector: 'app-project',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MaterialSharedModule],
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css'],
 })
