@@ -14,6 +14,7 @@
 # ASP.NET Core environment files
 /backend/appsettings.Development.json
 /backend/Properties/launchSettings.json
+/backend/appsettings.json
 
 # VS Code settings
 .vscode/
