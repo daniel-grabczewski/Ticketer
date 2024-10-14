@@ -4,44 +4,17 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '@auth0/auth0-angular';
 import { environment } from '../environments/environment';
 import { firstValueFrom } from 'rxjs';
-
-// Import Angular Material modules
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import {
-  MatDialogModule,
-  MatDialog,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatListModule } from '@angular/material/list';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { GuestDataDialogComponent } from './guest-data-dialog/guest-data-dialog.component';
+import { MaterialSharedModule } from './shared/material.shared';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
-    MatButtonModule,
-    MatCardModule,
-    MatInputModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatDialogModule,
-    MatSnackBarModule,
-    MatListModule,
-    MatMenuModule,
-    MatFormFieldModule,
-    MatProgressSpinnerModule,
-    MatTooltipModule,
+    MaterialSharedModule,
     CommonModule,
     GuestDataDialogComponent, // Include the dialog component
   ],
