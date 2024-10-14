@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
 import { AuthService } from '@auth0/auth0-angular';
 import { Observable, from } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -12,6 +12,7 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Check if the user is authenticated
     return this.auth.isAuthenticated$.pipe(
+      take(1),
       switchMap((isAuthenticated) => {
         if (isAuthenticated) {
           // If authenticated, get the token and clone the request with the Authorization header

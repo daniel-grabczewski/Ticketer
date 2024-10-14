@@ -1,16 +1,25 @@
 <div class="container">
+  <h1>Welcome to Ticketer!</h1>
 
-  <!-- Check if user is authenticated -->
-  <div *ngIf="auth.isAuthenticated$ | async; else loginBlock">
+  <!-- Authenticated user -->
+  <div *ngIf="(auth.isAuthenticated$ | async) && !isGuest">
     <p>You are logged in!</p>
-    <button (click)="logout()">Logout</button>
+    <button mat-button (click)="logout()">Logout</button>
   </div>
 
-  <!-- If not authenticated, show login button -->
-  <ng-template #loginBlock>
+  <!-- Guest user -->
+  <div *ngIf="isGuest">
+    <p>You are continuing as a guest.</p>
+    <!-- No logout button for guests -->
+    <button mat-button (click)="login()">Login</button>
+  </div>
+
+  <!-- Not authenticated and not guest -->
+  <div *ngIf="!(auth.isAuthenticated$ | async) && !isGuest">
     <p>You are not logged in.</p>
-    <button (click)="login()">Login</button>
-  </ng-template>
+    <button mat-button (click)="login()">Login</button>
+    <button mat-button (click)="continueAsGuest()">Continue as Guest</button>
+  </div>
 </div>
 
 <!-- Router outlet for your routed components -->
