@@ -26,13 +26,13 @@ export class ProjectComponent implements OnInit {
   description: string = '';
   title: string = '';
   tickets: Ticket[] = [];
-  auth0Service: any;
 
   constructor(
     private http: HttpClient,
     private utilsService: UtilsService,
     public auth: AuthService
   ) {}
+
   ngOnInit(): void {
     this.getTickets(); // Fetch tickets when the component is initialized
   }
@@ -51,7 +51,9 @@ export class ProjectComponent implements OnInit {
     };
 
     this.http
-      .put(`${environment.baseURL}/tickets/${ticket.id}`, updatedTicket)
+      .put(`${environment.baseURL}/tickets/${ticket.id}`, updatedTicket, {
+        withCredentials: true, // Include cookies in the request
+      })
       .subscribe({
         next: (response) => {
           console.log('Ticket updated successfully:', response);
@@ -65,55 +67,73 @@ export class ProjectComponent implements OnInit {
   }
 
   deleteTicket(ticketId: number) {
-    this.http.delete(`${environment.baseURL}/tickets/${ticketId}`).subscribe({
-      next: (response) => {
-        console.log(
-          `Ticket with ID ${ticketId} deleted successfully:`
-        );
-        this.getTickets();
-      },
-      error: (error) => {
-        console.log(`Failed to delete ticket with ID ${ticketId}`, error);
-      },
-    });
+    this.http
+      .delete(`${environment.baseURL}/tickets/${ticketId}`, {
+        withCredentials: true, // Include cookies in the request
+      })
+      .subscribe({
+        next: (response) => {
+          console.log(
+            `Ticket with ID ${ticketId} deleted successfully:`,
+            response
+          );
+          this.getTickets();
+        },
+        error: (error) => {
+          console.log(`Failed to delete ticket with ID ${ticketId}`, error);
+        },
+      });
   }
 
   submitTicket() {
-    const now = new Date();
-
     const ticketData = {
       title: this.title,
       description: this.description,
-      createdAt: '2024-10-10T23:36:57.800981', //Hardcoded for now
-      updatedAt: '2024-10-10T23:36:57.800981', //Hardcoded for now
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
-    this.http.post(`${environment.baseURL}/tickets`, ticketData).subscribe({
-      next: (response) => {
-        console.log('Ticket added successfully:', response);
-        this.getTickets();
-      },
-      error: (error) => {
-        console.log('Failed to add ticket:', error);
-      },
-    });
-
-    this.description = '';
-    this.title = '';
+    this.http
+      .post(`${environment.baseURL}/tickets`, ticketData, {
+        withCredentials: true, // Include cookies in the request
+      })
+      .subscribe({
+        next: (response) => {
+          console.log('Ticket added successfully:', response);
+          this.getTickets();
+          // Reset the form fields
+          this.title = '';
+          this.description = '';
+        },
+        error: (error) => {
+          console.log('Failed to add ticket:', error);
+        },
+      });
   }
 
   getTickets() {
-    this.http.get<Ticket[]>(`${environment.baseURL}/tickets`).subscribe({
-      next: (data) => {
-        this.tickets = data.map((ticket) => ({
-          ...ticket,
-          updatedAt: '2024-10-10T23:36:57.800981', //this.utilsService.formatDateTime(new Date(ticket.updatedAt)),
-          isEditing: false, // Initialize edit mode to false
-        }));
-      },
-      error: (error) => {
-        console.log('An error occurred while fetching data', error);
-      },
+    this.auth.getAccessTokenSilently().subscribe((token) => {
+      console.log('Access Token:', token);
     });
+
+    this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
+      console.log('User is authenticated:', isAuthenticated);
+    });
+
+    this.http
+      .get<Ticket[]>(`${environment.baseURL}/tickets`, {
+        withCredentials: true, // Include cookies in the request
+      })
+      .subscribe({
+        next: (data) => {
+          this.tickets = data.map((ticket) => ({
+            ...ticket,
+            isEditing: false, // Initialize edit mode to false
+          }));
+        },
+        error: (error) => {
+          console.log('An error occurred while fetching data', error);
+        },
+      });
   }
 }

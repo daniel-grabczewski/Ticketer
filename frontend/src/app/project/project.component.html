@@ -1,42 +1,38 @@
-<h1>Project page</h1>
-<div>
-  <h1>Submit a Ticket</h1>
-  <form (submit)="submitTicket()">
-    <input type="text" [(ngModel)]="title" name="title" placeholder="Enter ticket title" required />
-    <input type="text" [(ngModel)]="description" name="description" placeholder="Enter ticket description" required />
-    <button type="submit">Submit</button>
-  </form>
-
-  <h2>Tickets</h2>
-  <div>
-    <div *ngFor="let ticket of tickets">
-      <!-- Show input fields if in edit mode, otherwise show text -->
-      <div *ngIf="ticket.isEditing; else viewMode">
-        <div>
-        <label>
-          Title:
-        <input type="text" [(ngModel)]="ticket.title" />
-      </label>
+<div class="ticket-form">
+  <h2>Create a New Ticket</h2>
+  <form (ngSubmit)="submitTicket()">
+    <div>
+      <label for="title">Title:</label>
+      <input id="title" [(ngModel)]="title" name="title" required />
     </div>
     <div>
-      <label>
-          Description:
-        <input type="text" [(ngModel)]="ticket.description" />
-      </label>
+      <label for="description">Description:</label>
+      <textarea
+        id="description"
+        [(ngModel)]="description"
+        name="description"
+        required
+      ></textarea>
     </div>
-      </div>
-      <div>
-      <ng-template #viewMode>
-        <strong>{{ ticket.title }}</strong><br />
-        {{ ticket.description }}<br />
-        Last Updated: {{ ticket.updatedAt }}
-      </ng-template>
-    </div>
+    <button type="submit">Submit Ticket</button>
+  </form>
+</div>
 
-      <!-- Toggle between "Update" and "Save Changes" buttons -->
-      <button *ngIf="!ticket.isEditing" (click)="toggleEditMode(ticket)">Update</button>
-      <button *ngIf="ticket.isEditing" (click)="updateTicket(ticket)">Save Changes</button>
+<div class="ticket-list">
+  <h2>Your Tickets</h2>
+  <div *ngFor="let ticket of tickets">
+    <div *ngIf="!ticket.isEditing">
+      <h3>{{ ticket.title }}</h3>
+      <p>{{ ticket.description }}</p>
+      <p><small>Updated at: {{ ticket.updatedAt | date:'short' }}</small></p>
+      <button (click)="toggleEditMode(ticket)">Edit</button>
       <button (click)="deleteTicket(ticket.id)">Delete</button>
+    </div>
+    <div *ngIf="ticket.isEditing">
+      <input [(ngModel)]="ticket.title" name="editTitle" />
+      <textarea [(ngModel)]="ticket.description" name="editDescription"></textarea>
+      <button (click)="updateTicket(ticket)">Save</button>
+      <button (click)="toggleEditMode(ticket)">Cancel</button>
     </div>
   </div>
 </div>
