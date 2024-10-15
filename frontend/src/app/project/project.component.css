@@ -1,0 +1,29 @@
+.form-container {
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  gap: 1rem; /* Optional: Adds space between fields */
+}
+
+.full-width {
+  width: 100%;
+}
+
+.project-page {
+  display: flex;
+  flex-direction : column;
+  align-items: center;
+  padding-bottom : 3rem;
+}
+
+.tickets-container {
+  max-width : 600px;
+  display: flex;
+  flex-direction : column;
+  gap : 3rem;
+  padding : 1rem;
+}
+
+.ticket-card {
+  margin-bottom : 2rem;
+}
+
