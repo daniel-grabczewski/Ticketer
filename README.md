@@ -10,6 +10,12 @@ Navigate to **/frontend** in your terminal
 - Run `npm install -g @angular/cli` to install the Angular Command Line Interface
 - Run `ng add @angular/material` to install Angular's Material UI library
 
+## Configuration files
+- Rename `appsettings.json.example` to `appsettings.json` in **/backend**
+- In that file, replace `<YOUR PASSWORD>` with the password you set for your MySQL root account.
+
+- Rename `environment.ts.example` to `environment.ts` in **/frontend/src/environments** 
+- In that file, replace `<YOUR AUTH0 DOMAIN>`, `<YOUR AUTH0 CLIENT ID>`, and `<YOUR AUTH0 AUDIENCE>` with the matching fields from your Auth0 configuration.
 
 ## Build database
 Navigate to **/backend** in your terminal
@@ -38,9 +44,3 @@ Navigate to **/backend** in your terminal
 - The application will automatically reload if you change any of the source files.
 
 
-## Configuration files
-- Rename `appsettings.json.example` to `appsettings.json` in **/backend**
-- In that file, replace `<YOUR PASSWORD>` with the password you set for your MySQL root account.
-
-- Rename `environment.ts.example` to `environment.ts` in **/frontend/src/environments** 
-- In that file, replace `<YOUR AUTH0 DOMAIN>`, `<YOUR AUTH0 CLIENT ID>`, and `<YOUR AUTH0 AUDIENCE>` with the matching fields from your Auth0 configuration.
