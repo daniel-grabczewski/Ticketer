@@ -12,7 +12,6 @@
 *.sln.docstates
 
 # ASP.NET Core environment files
-/backend/appsettings.Development.json
 /backend/appsettings.json
 
 # VS Code settings
