@@ -6,7 +6,7 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
   selector: 'app-guest-data-dialog',
   standalone: true,
   imports: [MatDialogModule, MatButtonModule],
-  styleUrls: ['./guest-data-dialog.component.css'],
+  styleUrls: ['./guest-data-dialog.component.scss'],
   template: `
     <h1 mat-dialog-title>Transfer Guest Data</h1>
     <div mat-dialog-content>
@@ -19,9 +19,7 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
   `,
 })
 export class GuestDataDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<GuestDataDialogComponent>
-  ) {}
+  constructor(public dialogRef: MatDialogRef<GuestDataDialogComponent>) {}
 
   onNoClick(): void {
     this.dialogRef.close(false);

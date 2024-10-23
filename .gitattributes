@@ -5,7 +5,7 @@
 *.js text
 *.ts text
 *.html text
-*.css text
+*.scss text
 *.json text
 *.md text
 *.xml text

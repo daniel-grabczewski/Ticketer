@@ -4,6 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-dashboard',
   standalone: true, // Mark this component as standalone
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css'],
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {}

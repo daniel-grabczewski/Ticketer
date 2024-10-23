@@ -19,7 +19,7 @@ import { MatDialog } from '@angular/material/dialog';
     GuestDataDialogComponent, // Include the dialog component
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   title = 'frontend';
@@ -47,7 +47,6 @@ export class AppComponent {
           // Check if GuestId cookie exists
           const guestCookieExists = this.checkGuestCookie();
 
-
           console.log('IsRegistered response:', isRegisteredResponse);
           console.log('Guest cookie exists:', guestCookieExists);
 
@@ -62,28 +61,27 @@ export class AppComponent {
             );
             console.log('HasGuestData response:', hasGuestDataResponse);
             const hasGuestData = hasGuestDataResponse.hasGuestData;
-            
 
             if (!isRegistered && hasGuestData) {
               // Show dialog to transfer guest data
-              console.log('Opening dialog...')
+              console.log('Opening dialog...');
               this.openGuestDataDialog();
             } else if (isRegistered && hasGuestData) {
               // User is registered, delete guest data without prompting
-              console.log('Deleting guest data...')
+              console.log('Deleting guest data...');
               await this.deleteGuestDataForRegisteredUser();
             } else {
               // No guest data to handle
               if (!isRegistered) {
                 // Register the user
-                console.log('Registering user with guest cookie')
+                console.log('Registering user with guest cookie');
                 await this.registerUser();
               }
             }
           } else {
             // No GuestId cookie, but if user is not registered, register them
             if (!isRegistered) {
-              console.log('Registering user without cookie')
+              console.log('Registering user without cookie');
               await this.registerUser();
             }
           }
