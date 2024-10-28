@@ -14,3 +14,10 @@ interface CreateTicketRequest {
   name: string;
   listId: string;
 }
+
+interface UpdateTicketRequest {
+  id: string;
+  colorId: string;
+  name: string;
+  description: string;
+}
