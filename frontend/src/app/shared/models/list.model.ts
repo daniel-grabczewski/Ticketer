@@ -22,3 +22,5 @@ interface UpdateListPositionRequest {
   id: string;
   newPosition: number;
 }
+
+interface UpdateListRequest extends ListDetailsBase {}
