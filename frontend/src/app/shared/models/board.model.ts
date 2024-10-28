@@ -15,3 +15,12 @@ interface GetBoardFullDetailsResponse {
     }[];
   }[];
 }
+
+interface GetAllBoardsDetailsResponse {
+  id: number;
+  name: string;
+  colorId: number;
+  listCount: number;
+  ticketCount: number;
+}
+[];
