@@ -31,6 +31,13 @@ interface BoardRequestBase {
   name: string;
 }
 
-interface CreateBoardRequest extends BoardRequestBase{}
+interface CreateBoardRequest extends BoardRequestBase {}
 
-interface UpdateBoardRequest extends BoardRequestBase{}
+interface UpdateBoardRequest extends BoardRequestBase {}
+
+interface CreateDuplicateBoardRequest {
+  originalBoardId: string;
+  newBoardId: string;
+  newName: string;
+  colorId: number;
+}
