@@ -24,3 +24,9 @@ interface GetAllBoardsDetailsResponse {
   ticketCount: number;
 }
 [];
+
+interface BoardRequestBase {
+  id: string;
+  colorId: string;
+  name: string;
+}
