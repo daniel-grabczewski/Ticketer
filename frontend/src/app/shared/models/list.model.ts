@@ -24,3 +24,5 @@ interface UpdateListPositionRequest {
 }
 
 interface UpdateListRequest extends ListDetailsBase {}
+
+interface DeleteListRequest extends DeleteRequestBase {}
