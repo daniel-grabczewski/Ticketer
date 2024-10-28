@@ -21,3 +21,9 @@ interface UpdateTicketRequest {
   name: string;
   description: string;
 }
+
+interface UpdateTicketPositionRequest {
+  id: string;
+  listId: string;
+  newPosition?: number;
+}
