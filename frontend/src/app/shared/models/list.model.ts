@@ -11,3 +11,9 @@ interface CreateDuplicateListRequest {
   newListName: string;
   boardId: string;
 }
+
+interface CreateListRequest {
+  id: string;
+  boardId: string;
+  name: string;
+}
