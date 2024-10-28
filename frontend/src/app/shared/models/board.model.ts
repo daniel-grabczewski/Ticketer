@@ -41,3 +41,5 @@ interface CreateDuplicateBoardRequest {
   newName: string;
   colorId: number;
 }
+
+interface DeleteBoardRequest extends DeleteRequestBase {}
