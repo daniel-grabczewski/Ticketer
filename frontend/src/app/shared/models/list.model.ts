@@ -17,3 +17,8 @@ interface CreateListRequest {
   boardId: string;
   name: string;
 }
+
+interface UpdateListPositionRequest {
+  id: string;
+  newPosition: number;
+}
