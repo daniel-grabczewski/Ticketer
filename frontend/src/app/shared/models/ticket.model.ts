@@ -27,3 +27,5 @@ interface UpdateTicketPositionRequest {
   listId: string;
   newPosition?: number;
 }
+
+interface DeleteTicketRequest extends DeleteRequestBase {}
