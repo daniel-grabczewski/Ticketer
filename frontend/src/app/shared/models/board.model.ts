@@ -30,3 +30,7 @@ interface BoardRequestBase {
   colorId: string;
   name: string;
 }
+
+interface CreateBoardRequest extends BoardRequestBase{}
+
+interface UpdateBoardRequest extends BoardRequestBase{}
