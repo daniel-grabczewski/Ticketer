@@ -1,0 +1,3 @@
+interface DeleteRequestBase {
+  id: string;
+}
