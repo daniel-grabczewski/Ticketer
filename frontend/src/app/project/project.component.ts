@@ -3,9 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment';
-import { UtilsService } from '../shared/utils.service';
+import { UtilsService } from '../shared/utils/utils.service';
 import { AuthService } from '@auth0/auth0-angular';
-import { MaterialSharedModule } from '../shared/material.shared';
+import { MaterialSharedModule } from '../shared/material/material.shared';
 
 interface Ticket {
   id: number;

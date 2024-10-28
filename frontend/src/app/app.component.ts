@@ -5,8 +5,8 @@ import { AuthService } from '@auth0/auth0-angular';
 import { environment } from '../environments/environment';
 import { firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { GuestDataDialogComponent } from './guest-data-dialog/guest-data-dialog.component';
-import { MaterialSharedModule } from './shared/material.shared';
+import { GuestDataDialogComponent } from './shared/components/guest-data-dialog/guest-data-dialog.component';
+import { MaterialSharedModule } from './shared/material/material.shared';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
