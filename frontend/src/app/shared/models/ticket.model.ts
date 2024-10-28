@@ -8,3 +8,9 @@ interface GetTicketDetailsResponse {
   listName: string;
   boardId: string;
 }
+
+interface CreateTicketRequest {
+  id: string;
+  name: string;
+  listId: string;
+}
