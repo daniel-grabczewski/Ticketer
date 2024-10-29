@@ -61,4 +61,15 @@ export class TicketService {
       .put<void>(url, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
+
+    /**
+   * Updates an existing ticket.
+   * @param request The request object containing updated ticket details.
+   * @returns An Observable of void.
+   */
+    updateTicket(request: UpdateTicketRequest): Observable<void> {
+      return this.http
+        .put<void>(this.baseUrl, request)
+        .pipe(catchError(this.errorHandlingService.handleError));
+    }
 }
