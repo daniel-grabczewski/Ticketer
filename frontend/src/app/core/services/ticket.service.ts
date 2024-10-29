@@ -35,4 +35,15 @@ export class TicketService {
       .get<GetTicketDetailsResponse>(url)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
+
+  /**
+   * Creates a new ticket.
+   * @param request The request object containing ticket details.
+   * @returns An Observable of void.
+   */
+  createTicket(request: CreateTicketRequest): Observable<void> {
+    return this.http
+      .post<void>(this.baseUrl, request)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
 }
