@@ -71,4 +71,16 @@ export class ListService {
       .put<void>(this.baseUrl, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
+
+  /**
+   * Changes the position of a list.
+   * @param request The request object containing the list ID and new position.
+   * @returns An Observable of void.
+   */
+  updateListPosition(request: UpdateListPositionRequest): Observable<void> {
+    const url = `${this.baseUrl}/changePosition`;
+    return this.http
+      .put<void>(url, request)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
 }
