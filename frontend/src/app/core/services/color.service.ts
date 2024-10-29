@@ -25,7 +25,9 @@ export class ColorService {
    */
   getAllColors(): Observable<GetColorsResponse[]> {
     return this.http
-      .get<GetColorsResponse[]>(this.baseUrl)
+      .get<GetColorsResponse[]>(this.baseUrl, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -37,7 +39,9 @@ export class ColorService {
   getColorHexById(colorId: string): Observable<string> {
     const url = `${this.baseUrl}/${colorId}`;
     return this.http
-      .get<string>(url)
+      .get<string>(url, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 }

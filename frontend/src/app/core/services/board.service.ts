@@ -31,7 +31,9 @@ export class BoardService {
    */
   getAllBoards(): Observable<GetAllBoardsDetailsResponse[]> {
     return this.http
-      .get<GetAllBoardsDetailsResponse[]>(this.baseUrl)
+      .get<GetAllBoardsDetailsResponse[]>(this.baseUrl, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -43,7 +45,9 @@ export class BoardService {
   getBoardById(boardId: string): Observable<GetBoardFullDetailsResponse> {
     const url = `${this.baseUrl}/${boardId}`;
     return this.http
-      .get<GetBoardFullDetailsResponse>(url)
+      .get<GetBoardFullDetailsResponse>(url, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -56,7 +60,9 @@ export class BoardService {
    */
   createBoard(request: CreateBoardRequest): Observable<void> {
     return this.http
-      .post<void>(this.baseUrl, request)
+      .post<void>(this.baseUrl, request, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -68,18 +74,22 @@ export class BoardService {
   duplicateBoard(request: CreateDuplicateBoardRequest): Observable<void> {
     const url = `${this.baseUrl}/duplicate`;
     return this.http
-      .post<void>(url, request)
+      .post<void>(url, request, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
-   /**
+  /**
    * Updates an existing board.
    * @param request The request object containing updated board details.
    * @returns An Observable of void
    */
-   updateBoard(request: UpdateBoardRequest): Observable<void> {
+  updateBoard(request: UpdateBoardRequest): Observable<void> {
     return this.http
-      .put<void>(this.baseUrl, request)
+      .put<void>(this.baseUrl, request, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -91,7 +101,9 @@ export class BoardService {
   deleteBoard(boardId: string): Observable<void> {
     const url = `${this.baseUrl}/${boardId}`;
     return this.http
-      .delete<void>(url)
+      .delete<void>(url, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 }

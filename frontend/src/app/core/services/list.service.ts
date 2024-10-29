@@ -34,7 +34,9 @@ export class ListService {
   getAllLists(boardId: string): Observable<GetAllListsDetailsResponse[]> {
     const url = `${this.baseUrl}/${boardId}`;
     return this.http
-      .get<GetAllListsDetailsResponse[]>(url)
+      .get<GetAllListsDetailsResponse[]>(url, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -46,7 +48,9 @@ export class ListService {
   duplicateList(request: CreateDuplicateListRequest): Observable<void> {
     const url = `${this.baseUrl}/duplicate`;
     return this.http
-      .post<void>(url, request)
+      .post<void>(url, request, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -57,7 +61,9 @@ export class ListService {
    */
   createList(request: CreateListRequest): Observable<void> {
     return this.http
-      .post<void>(this.baseUrl, request)
+      .post<void>(this.baseUrl, request, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -68,7 +74,9 @@ export class ListService {
    */
   updateList(request: UpdateListRequest): Observable<void> {
     return this.http
-      .put<void>(this.baseUrl, request)
+      .put<void>(this.baseUrl, request, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -80,7 +88,9 @@ export class ListService {
   updateListPosition(request: UpdateListPositionRequest): Observable<void> {
     const url = `${this.baseUrl}/changePosition`;
     return this.http
-      .put<void>(url, request)
+      .put<void>(url, request, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -92,7 +102,9 @@ export class ListService {
   deleteList(listId: string): Observable<void> {
     const url = `${this.baseUrl}/${listId}`;
     return this.http
-      .delete<void>(url)
+      .delete<void>(url, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 }
