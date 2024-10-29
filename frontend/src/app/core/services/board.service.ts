@@ -47,16 +47,28 @@ export class BoardService {
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
-    /**
+  /**
    * Creates a new board.
    * After receiving success status, navigate to /board/{board-id}/{board-name-slug}.
    * The navigation should be handled in the component subscribing to this method.
    * @param request The request object containing board details.
    * @returns An Observable of void
    */
-    createBoard(request: CreateBoardRequest): Observable<void> {
-      return this.http
-        .post<void>(this.baseUrl, request)
-        .pipe(catchError(this.errorHandlingService.handleError));
-    }
+  createBoard(request: CreateBoardRequest): Observable<void> {
+    return this.http
+      .post<void>(this.baseUrl, request)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
+
+  /**
+   * Duplicates an existing board.
+   * @param request The request object containing duplication details.
+   * @returns An Observable of void
+   */
+  duplicateBoard(request: CreateDuplicateBoardRequest): Observable<void> {
+    const url = `${this.baseUrl}/duplicate`;
+    return this.http
+      .post<void>(url, request)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
 }
