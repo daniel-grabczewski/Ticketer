@@ -8,7 +8,7 @@ interface GetBoardFullDetailsResponse {
     position: number;
     tickets: {
       id: string;
-      coverId: number;
+      colorId: number | null;
       description: string;
       name: string;
       position: number;
@@ -19,7 +19,7 @@ interface GetBoardFullDetailsResponse {
 interface GetAllBoardsDetailsResponse {
   id: number;
   name: string;
-  colorId: number;
+  colorId: number | null;
   listCount: number;
   ticketCount: number;
 }
@@ -27,7 +27,7 @@ interface GetAllBoardsDetailsResponse {
 
 interface BoardRequestBase {
   id: string;
-  colorId: string;
+  colorId: number | null;
   name: string;
 }
 
@@ -37,7 +37,7 @@ interface CreateDuplicateBoardRequest {
   originalBoardId: string;
   newBoardId: string;
   newName: string;
-  colorId: number;
+  colorId: number | null;
 }
 
 interface UpdateBoardRequest extends BoardRequestBase {}

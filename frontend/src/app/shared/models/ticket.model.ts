@@ -3,7 +3,7 @@ interface GetTicketDetailsResponse {
   name: string;
   description: string;
   position: number;
-  colorId: string;
+  colorId: number | null;
   listId: string;
   listName: string;
   boardId: string;
@@ -17,7 +17,7 @@ interface CreateTicketRequest {
 
 interface UpdateTicketRequest {
   id: string;
-  colorId: string;
+  colorId: number | null;
   name: string;
   description: string;
 }

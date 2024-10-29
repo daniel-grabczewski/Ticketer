@@ -7,7 +7,6 @@ namespace YourProject.Models
         [Key]
         public int Id { get; set; } // Numeric ID unique to the color
 
-        [Required]
         public string Hex { get; set; } // Hex string that represents the color
 
         // Navigation properties

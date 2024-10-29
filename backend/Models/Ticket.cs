@@ -17,7 +17,7 @@ namespace YourProject.Models
         public string Description { get; set; } // Description of the ticket as a string
 
         [Required]
-        public int ColorId { get; set; } = 0; // Default to 0, meaning no color
+        public int? ColorId { get; set; }
 
         [Required]
         public int Position { get; set; } // Number representing the order of the tickets in their list

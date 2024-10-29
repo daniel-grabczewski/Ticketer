@@ -22,11 +22,6 @@ namespace backend.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure default value for Ticket.ColorId
-            modelBuilder.Entity<Ticket>()
-                .Property(t => t.ColorId)
-                .HasDefaultValue(0);
-
             // Configure relationships
 
             // User has many Boards
@@ -43,7 +38,7 @@ namespace backend.Data
                 .HasForeignKey(l => l.BoardId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Board has one Color
+            // Board has optional Color
             modelBuilder.Entity<Board>()
                 .HasOne(b => b.Color)
                 .WithMany(c => c.Boards)
@@ -57,7 +52,7 @@ namespace backend.Data
                 .HasForeignKey(t => t.ListId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Ticket has one Color
+            // Ticket has optional Color
             modelBuilder.Entity<Ticket>()
                 .HasOne(t => t.Color)
                 .WithMany(c => c.Tickets)
@@ -93,6 +88,16 @@ namespace backend.Data
             modelBuilder.Entity<Ticket>()
                 .Property(t => t.Description)
                 .HasMaxLength(1000);
+
+            // Seed data for Colors
+            modelBuilder.Entity<Color>().HasData(
+                new Color { Id = 1, Hex = "#50C996" },
+                new Color { Id = 2, Hex = "#3BBA3B" },
+                new Color { Id = 4, Hex = "#8131F9" },
+                new Color { Id = 5, Hex = "#FEA362" },
+                new Color { Id = 6, Hex = "#F773BE" },
+                new Color { Id = 7, Hex = "#EE4646" }
+            );
         }
     }
 }
