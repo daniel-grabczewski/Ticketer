@@ -49,4 +49,15 @@ export class ListService {
       .post<void>(url, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
+
+  /**
+   * Creates a new list.
+   * @param request The request object containing list details.
+   * @returns An Observable of void.
+   */
+  createList(request: CreateListRequest): Observable<void> {
+    return this.http
+      .post<void>(this.baseUrl, request)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
 }
