@@ -41,5 +41,3 @@ export interface CreateDuplicateBoardRequest {
 }
 
 export interface UpdateBoardRequest extends BoardRequestBase {}
-
-export interface DeleteBoardRequest extends DeleteRequestBase {}

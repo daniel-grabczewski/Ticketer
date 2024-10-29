@@ -24,5 +24,3 @@ export interface UpdateListPositionRequest {
 }
 
 export interface UpdateListRequest extends ListDetailsBase {}
-
-export interface DeleteListRequest extends DeleteRequestBase {}

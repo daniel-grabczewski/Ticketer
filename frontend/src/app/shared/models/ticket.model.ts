@@ -27,5 +27,3 @@ export interface UpdateTicketPositionRequest {
   listId: string;
   newPosition?: number;
 }
-
-export interface DeleteTicketRequest extends DeleteRequestBase {}
