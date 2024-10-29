@@ -37,4 +37,16 @@ export class ListService {
       .get<GetAllListsDetailsResponse[]>(url)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
+
+  /**
+   * Duplicates an existing list.
+   * @param request The request object containing duplication details.
+   * @returns An Observable of void.
+   */
+  duplicateList(request: CreateDuplicateListRequest): Observable<void> {
+    const url = `${this.baseUrl}/duplicate`;
+    return this.http
+      .post<void>(url, request)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
 }
