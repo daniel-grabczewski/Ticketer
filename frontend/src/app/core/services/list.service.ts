@@ -83,4 +83,16 @@ export class ListService {
       .put<void>(url, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
+
+  /**
+   * Deletes a list by its ID.
+   * @param listId The ID of the list to delete.
+   * @returns An Observable of void.
+   */
+  deleteList(listId: string): Observable<void> {
+    const url = `${this.baseUrl}/${listId}`;
+    return this.http
+      .delete<void>(url)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
 }
