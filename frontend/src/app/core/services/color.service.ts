@@ -29,4 +29,16 @@ export class ColorService {
       .get<GetColorsResponse[]>(this.baseUrl)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
+
+  /**
+   * Retrieves the HEX code of a color by its ID.
+   * @param colorId The ID of the color.
+   * @returns An Observable of string representing the HEX code.
+   */
+  getColorHexById(colorId: string): Observable<string> {
+    const url = `${this.baseUrl}/${colorId}`;
+    return this.http
+      .get<string>(url)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
 }
