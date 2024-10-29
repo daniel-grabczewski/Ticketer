@@ -46,4 +46,17 @@ export class BoardService {
       .get<GetBoardFullDetailsResponse>(url)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
+
+    /**
+   * Creates a new board.
+   * After receiving success status, navigate to /board/{board-id}/{board-name-slug}.
+   * The navigation should be handled in the component subscribing to this method.
+   * @param request The request object containing board details.
+   * @returns An Observable of void
+   */
+    createBoard(request: CreateBoardRequest): Observable<void> {
+      return this.http
+        .post<void>(this.baseUrl, request)
+        .pipe(catchError(this.errorHandlingService.handleError));
+    }
 }
