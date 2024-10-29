@@ -71,4 +71,15 @@ export class BoardService {
       .post<void>(url, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
+
+   /**
+   * Updates an existing board.
+   * @param request The request object containing updated board details.
+   * @returns An Observable of void
+   */
+   updateBoard(request: UpdateBoardRequest): Observable<void> {
+    return this.http
+      .put<void>(this.baseUrl, request)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
 }
