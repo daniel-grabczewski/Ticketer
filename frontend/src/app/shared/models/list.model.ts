@@ -1,28 +1,28 @@
-interface ListDetailsBase {
+export interface ListDetailsBase {
   id: string;
   name: string;
 }
 
-interface GetAllListsDetailsResponse extends ListDetailsBase {}
+export interface GetAllListsDetailsResponse extends ListDetailsBase {}
 
-interface CreateDuplicateListRequest {
+export interface CreateDuplicateListRequest {
   originalListId: string;
   newListId: string;
   newListName: string;
   boardId: string;
 }
 
-interface CreateListRequest {
+export interface CreateListRequest {
   id: string;
   boardId: string;
   name: string;
 }
 
-interface UpdateListPositionRequest {
+export interface UpdateListPositionRequest {
   id: string;
   newPosition: number;
 }
 
-interface UpdateListRequest extends ListDetailsBase {}
+export interface UpdateListRequest extends ListDetailsBase {}
 
-interface DeleteListRequest extends DeleteRequestBase {}
+export interface DeleteListRequest extends DeleteRequestBase {}

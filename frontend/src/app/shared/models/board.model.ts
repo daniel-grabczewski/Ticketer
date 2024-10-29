@@ -1,4 +1,4 @@
-interface GetBoardFullDetailsResponse {
+export interface GetBoardFullDetailsResponse {
   id: number;
   name: string;
   auth0Id: string;
@@ -16,7 +16,7 @@ interface GetBoardFullDetailsResponse {
   }[];
 }
 
-interface GetAllBoardsDetailsResponse {
+export interface GetAllBoardsDetailsResponse {
   id: number;
   name: string;
   colorId: number | null;
@@ -25,21 +25,21 @@ interface GetAllBoardsDetailsResponse {
 }
 [];
 
-interface BoardRequestBase {
+export interface BoardRequestBase {
   id: string;
   colorId: number | null;
   name: string;
 }
 
-interface CreateBoardRequest extends BoardRequestBase {}
+export interface CreateBoardRequest extends BoardRequestBase {}
 
-interface CreateDuplicateBoardRequest {
+export interface CreateDuplicateBoardRequest {
   originalBoardId: string;
   newBoardId: string;
   newName: string;
   colorId: number | null;
 }
 
-interface UpdateBoardRequest extends BoardRequestBase {}
+export interface UpdateBoardRequest extends BoardRequestBase {}
 
-interface DeleteBoardRequest extends DeleteRequestBase {}
+export interface DeleteBoardRequest extends DeleteRequestBase {}

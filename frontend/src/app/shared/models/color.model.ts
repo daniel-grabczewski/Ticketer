@@ -1,4 +1,4 @@
-interface GetColorsResponse {
+export interface GetColorsResponse {
   id: string;
   hexCode: string;
 }

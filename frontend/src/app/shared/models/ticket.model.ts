@@ -1,4 +1,4 @@
-interface GetTicketDetailsResponse {
+export interface GetTicketDetailsResponse {
   id: string;
   name: string;
   description: string;
@@ -9,23 +9,23 @@ interface GetTicketDetailsResponse {
   boardId: string;
 }
 
-interface CreateTicketRequest {
+export interface CreateTicketRequest {
   id: string;
   name: string;
   listId: string;
 }
 
-interface UpdateTicketRequest {
+export interface UpdateTicketRequest {
   id: string;
   colorId: number | null;
   name: string;
   description: string;
 }
 
-interface UpdateTicketPositionRequest {
+export interface UpdateTicketPositionRequest {
   id: string;
   listId: string;
   newPosition?: number;
 }
 
-interface DeleteTicketRequest extends DeleteRequestBase {}
+export interface DeleteTicketRequest extends DeleteRequestBase {}

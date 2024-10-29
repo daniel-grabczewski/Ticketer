@@ -1,3 +1,3 @@
-interface DeleteRequestBase {
+export interface DeleteRequestBase {
   id: string;
 }
