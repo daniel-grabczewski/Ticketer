@@ -82,4 +82,16 @@ export class BoardService {
       .put<void>(this.baseUrl, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
+
+  /**
+   * Deletes a board.
+   * @param request The request object containing the ID of the board to delete.
+   * @returns An Observable of void (adjust the type based on backend response if needed).
+   */
+  deleteBoard(boardId: string): Observable<void> {
+    const url = `${this.baseUrl}/${boardId}`;
+    return this.http
+      .delete<void>(url)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
 }
