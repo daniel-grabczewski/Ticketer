@@ -34,4 +34,16 @@ export class BoardService {
       .get<GetAllBoardsDetailsResponse[]>(this.baseUrl)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
+
+  /**
+   * Retrieves full details of a board by its ID.
+   * @param boardId The ID of the board.
+   * @returns An Observable of GetBoardFullDetailsResponse.
+   */
+  getBoardById(boardId: string): Observable<GetBoardFullDetailsResponse> {
+    const url = `${this.baseUrl}/${boardId}`;
+    return this.http
+      .get<GetBoardFullDetailsResponse>(url)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
 }
