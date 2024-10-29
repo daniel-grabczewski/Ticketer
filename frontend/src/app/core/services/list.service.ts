@@ -60,4 +60,15 @@ export class ListService {
       .post<void>(this.baseUrl, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
+
+  /**
+   * Updates an existing list's name.
+   * @param request The request object containing updated list details.
+   * @returns An Observable of void.
+   */
+  updateList(request: UpdateListRequest): Observable<void> {
+    return this.http
+      .put<void>(this.baseUrl, request)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
 }
