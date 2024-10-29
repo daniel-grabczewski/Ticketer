@@ -46,4 +46,19 @@ export class TicketService {
       .post<void>(this.baseUrl, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
+
+  /**
+   * Updates the position of a ticket.
+   * If newPosition is not provided, the backend defaults it to 1.
+   * @param request The request object containing ticket ID, list ID, and optional new position.
+   * @returns An Observable of void.
+   */
+  updateTicketPosition(
+    request: UpdateTicketPositionRequest
+  ): Observable<void> {
+    const url = `${this.baseUrl}/changePosition`;
+    return this.http
+      .put<void>(url, request)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
 }
