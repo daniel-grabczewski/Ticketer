@@ -53,23 +53,33 @@ export class TicketService {
    * @param request The request object containing ticket ID, list ID, and optional new position.
    * @returns An Observable of void.
    */
-  updateTicketPosition(
-    request: UpdateTicketPositionRequest
-  ): Observable<void> {
+  updateTicketPosition(request: UpdateTicketPositionRequest): Observable<void> {
     const url = `${this.baseUrl}/changePosition`;
     return this.http
       .put<void>(url, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
-    /**
+  /**
    * Updates an existing ticket.
    * @param request The request object containing updated ticket details.
    * @returns An Observable of void.
    */
-    updateTicket(request: UpdateTicketRequest): Observable<void> {
-      return this.http
-        .put<void>(this.baseUrl, request)
-        .pipe(catchError(this.errorHandlingService.handleError));
-    }
+  updateTicket(request: UpdateTicketRequest): Observable<void> {
+    return this.http
+      .put<void>(this.baseUrl, request)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
+
+  /**
+   * Deletes a ticket by its ID.
+   * @param ticketId The ID of the ticket to delete.
+   * @returns An Observable of void.
+   */
+  deleteTicket(ticketId: string): Observable<void> {
+    const url = `${this.baseUrl}/${ticketId}`;
+    return this.http
+      .delete<void>(url)
+      .pipe(catchError(this.errorHandlingService.handleError));
+  }
 }
