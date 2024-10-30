@@ -55,8 +55,7 @@ export class AppComponent {
             console.log('Calling hasGuestData endpoint...');
             const hasGuestDataResponse = await firstValueFrom(
               this.http.get<{ hasGuestData: boolean }>(
-                `${environment.baseURL}/auth/hasGuestData`,
-                { withCredentials: true }
+                `${environment.baseURL}/auth/hasGuestData`
               )
             );
             console.log('HasGuestData response:', hasGuestDataResponse);
@@ -114,20 +113,16 @@ export class AppComponent {
   // Method to continue as guest
   continueAsGuest() {
     // Call the backend API to generate a GuestId and set the cookie
-    this.http
-      .get(`${environment.baseURL}/auth/generateGuestId`, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (response) => {
-          console.log('Guest session initiated:', response);
-          this.isGuest = true;
-          // Optionally, navigate to a specific route
-        },
-        error: (error) => {
-          console.error('Failed to initiate guest session:', error);
-        },
-      });
+    this.http.get(`${environment.baseURL}/auth/generateGuestId`).subscribe({
+      next: (response) => {
+        console.log('Guest session initiated:', response);
+        this.isGuest = true;
+        // Optionally, navigate to a specific route
+      },
+      error: (error) => {
+        console.error('Failed to initiate guest session:', error);
+      },
+    });
   }
 
   // Method to check if GuestId cookie exists
@@ -141,11 +136,7 @@ export class AppComponent {
   async transferGuestData() {
     try {
       await firstValueFrom(
-        this.http.post(
-          `${environment.baseURL}/auth/transferGuestData`,
-          {},
-          { withCredentials: true }
-        )
+        this.http.post(`${environment.baseURL}/auth/transferGuestData`, {})
       );
       console.log('Guest data transferred successfully.');
       this.isGuest = false;
@@ -158,11 +149,7 @@ export class AppComponent {
   async deleteGuestData() {
     try {
       await firstValueFrom(
-        this.http.post(
-          `${environment.baseURL}/auth/deleteGuestData`,
-          {},
-          { withCredentials: true }
-        )
+        this.http.post(`${environment.baseURL}/auth/deleteGuestData`, {})
       );
       console.log('Guest data deleted successfully.');
       this.isGuest = false;
@@ -213,8 +200,7 @@ export class AppComponent {
       await firstValueFrom(
         this.http.post(
           `${environment.baseURL}/auth/deleteGuestDataForRegisteredUser`,
-          {},
-          { withCredentials: true }
+          {}
         )
       );
       console.log('Guest data deleted for registered user.');

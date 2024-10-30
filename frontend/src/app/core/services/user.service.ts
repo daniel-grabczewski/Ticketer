@@ -22,9 +22,7 @@ export class UserService {
    */
   getUsername(): Observable<string> {
     return this.http
-      .get<string>(this.baseUrl, {
-        withCredentials: true,
-      })
+      .get<string>(this.baseUrl)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 }

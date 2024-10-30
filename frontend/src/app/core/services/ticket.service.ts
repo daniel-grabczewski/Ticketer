@@ -32,9 +32,7 @@ export class TicketService {
   getTicketById(ticketId: string): Observable<GetTicketDetailsResponse> {
     const url = `${this.baseUrl}/${ticketId}`;
     return this.http
-      .get<GetTicketDetailsResponse>(url, {
-        withCredentials: true,
-      })
+      .get<GetTicketDetailsResponse>(url)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -45,9 +43,7 @@ export class TicketService {
    */
   createTicket(request: CreateTicketRequest): Observable<void> {
     return this.http
-      .post<void>(this.baseUrl, request, {
-        withCredentials: true,
-      })
+      .post<void>(this.baseUrl, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -60,9 +56,7 @@ export class TicketService {
   updateTicketPosition(request: UpdateTicketPositionRequest): Observable<void> {
     const url = `${this.baseUrl}/changePosition`;
     return this.http
-      .put<void>(url, request, {
-        withCredentials: true,
-      })
+      .put<void>(url, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -73,9 +67,7 @@ export class TicketService {
    */
   updateTicket(request: UpdateTicketRequest): Observable<void> {
     return this.http
-      .put<void>(this.baseUrl, request, {
-        withCredentials: true,
-      })
+      .put<void>(this.baseUrl, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -87,9 +79,7 @@ export class TicketService {
   deleteTicket(ticketId: string): Observable<void> {
     const url = `${this.baseUrl}/${ticketId}`;
     return this.http
-      .delete<void>(url, {
-        withCredentials: true,
-      })
+      .delete<void>(url)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 }

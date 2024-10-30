@@ -34,9 +34,7 @@ export class ListService {
   getAllLists(boardId: string): Observable<GetAllListsDetailsResponse[]> {
     const url = `${this.baseUrl}/${boardId}`;
     return this.http
-      .get<GetAllListsDetailsResponse[]>(url, {
-        withCredentials: true,
-      })
+      .get<GetAllListsDetailsResponse[]>(url)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -48,9 +46,7 @@ export class ListService {
   duplicateList(request: CreateDuplicateListRequest): Observable<void> {
     const url = `${this.baseUrl}/duplicate`;
     return this.http
-      .post<void>(url, request, {
-        withCredentials: true,
-      })
+      .post<void>(url, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -61,9 +57,7 @@ export class ListService {
    */
   createList(request: CreateListRequest): Observable<void> {
     return this.http
-      .post<void>(this.baseUrl, request, {
-        withCredentials: true,
-      })
+      .post<void>(this.baseUrl, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -74,9 +68,7 @@ export class ListService {
    */
   updateList(request: UpdateListRequest): Observable<void> {
     return this.http
-      .put<void>(this.baseUrl, request, {
-        withCredentials: true,
-      })
+      .put<void>(this.baseUrl, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -88,9 +80,7 @@ export class ListService {
   updateListPosition(request: UpdateListPositionRequest): Observable<void> {
     const url = `${this.baseUrl}/changePosition`;
     return this.http
-      .put<void>(url, request, {
-        withCredentials: true,
-      })
+      .put<void>(url, request)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 
@@ -102,9 +92,7 @@ export class ListService {
   deleteList(listId: string): Observable<void> {
     const url = `${this.baseUrl}/${listId}`;
     return this.http
-      .delete<void>(url, {
-        withCredentials: true,
-      })
+      .delete<void>(url)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 }
