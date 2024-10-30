@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Data;
-using backend.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using YourProject.Models;
 
 namespace backend.Controllers
 {
@@ -19,6 +19,29 @@ namespace backend.Controllers
             _context = context;
         }
 
+        // GET: api/users
+        [HttpGet]
+        public async Task<IActionResult> GetUsername()
+        {
+            // Get the Auth0 user ID from the claims
+            string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(auth0UserId))
+            {
+                return Unauthorized();
+            }
+
+            // Retrieve the user from the database
+            var user = await _context.Users.FindAsync(auth0UserId);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            return Ok(user.UserName);
+        }
+
         // GET: api/users/isRegistered
         [HttpGet("isRegistered")]
         public async Task<IActionResult> IsUserRegistered()
@@ -32,11 +55,13 @@ namespace backend.Controllers
             }
 
             // Check if the user exists in the Users table
-            bool isRegistered = await _context.Users.AnyAsync(u => u.UserId == auth0UserId);
+            bool isRegistered = await _context.Users.AnyAsync(u => u.Id == auth0UserId);
 
             return Ok(new { IsRegistered = isRegistered });
         }
-         [HttpPost("register")]
+
+        // POST: api/users/register
+        [HttpPost("register")]
         public async Task<IActionResult> RegisterUser()
         {
             // Get the Auth0 user ID from the claims
@@ -47,8 +72,11 @@ namespace backend.Controllers
                 return Unauthorized();
             }
 
+            // Extract the username from claims
+            string userName = User.FindFirst("nickname")?.Value ?? User.FindFirst("name")?.Value ?? "User";
+
             // Check if the user already exists
-            bool exists = await _context.Users.AnyAsync(u => u.UserId == auth0UserId);
+            bool exists = await _context.Users.AnyAsync(u => u.Id == auth0UserId);
 
             if (exists)
             {
@@ -58,7 +86,9 @@ namespace backend.Controllers
             // Create a new User entry
             var user = new User
             {
-                UserId = auth0UserId
+                Id = auth0UserId,
+                UserName = userName,
+                IsGuest = false
             };
 
             await _context.Users.AddAsync(user);
