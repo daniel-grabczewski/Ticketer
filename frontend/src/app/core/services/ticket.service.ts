@@ -38,6 +38,7 @@ export class TicketService {
 
   /**
    * Creates a new ticket.
+   * In the backend, this ticket will always be assigned to the end of the list it is created. So, if the lowest position is currently 5, then the position of this ticket will be 6 (representing the bottom of the list)
    * @param request The request object containing ticket details.
    * @returns An Observable of void.
    */
@@ -50,6 +51,7 @@ export class TicketService {
   /**
    * Updates the position of a ticket.
    * If newPosition is not provided, the backend defaults it to 1.
+   * In backend, depending on the new position of the ticket and the list it goes into, it will need to update the position of all other tickets accordingly.
    * @param request The request object containing ticket ID, list ID, and optional new position.
    * @returns An Observable of void.
    */
@@ -73,6 +75,7 @@ export class TicketService {
 
   /**
    * Deletes a ticket by its ID.
+   * In the backend, depending on which positiono of a list the deleted ticket was in, it will need to adjust the relevant tickets' positions in the same list. 
    * @param ticketId The ID of the ticket to delete.
    * @returns An Observable of void.
    */

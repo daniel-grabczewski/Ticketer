@@ -39,7 +39,8 @@ export class ListService {
   }
 
   /**
-   * Duplicates an existing list.
+   * Duplicates an existing list. 
+   * By default, the position of the duplicated list will be to the right of the original list. So it will shift all other lists to the right of it. If the original list is at position 3, the duplicated list will be at position 4. So all the following lists will be shifted.
    * @param request The request object containing duplication details.
    * @returns An Observable of void.
    */
@@ -51,7 +52,9 @@ export class ListService {
   }
 
   /**
-   * Creates a new list.
+   * Creates a new list. 
+   * By default, the position of the list will be the highest, making it the furthest on the right
+   * (where 1 is the first list on the left, and each incrementing number is to the right)
    * @param request The request object containing list details.
    * @returns An Observable of void.
    */
@@ -74,6 +77,7 @@ export class ListService {
 
   /**
    * Changes the position of a list.
+   * This will update the relevant surrounding lists' positions in the backend.
    * @param request The request object containing the list ID and new position.
    * @returns An Observable of void.
    */
@@ -86,6 +90,7 @@ export class ListService {
 
   /**
    * Deletes a list by its ID.
+   * This will update the relevant surrounding lists' positions in the backend.
    * @param listId The ID of the list to delete.
    * @returns An Observable of void.
    */
