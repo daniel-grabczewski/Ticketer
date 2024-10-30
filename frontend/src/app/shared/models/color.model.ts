@@ -1,5 +1,5 @@
 export interface GetColorsResponse {
-  id: string;
+  id: number;
   hexCode: string;
 }
 [];
