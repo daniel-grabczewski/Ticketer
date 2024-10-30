@@ -2,6 +2,7 @@ export interface GetBoardFullDetailsResponse {
   id: number;
   name: string;
   auth0Id: string;
+  colorId : number | null;
   lists: {
     id: string;
     name: string;
