@@ -31,6 +31,7 @@ If not, run the following commands:
 Next, to build the database, run the following commands:
 - **Create migrations** `dotnet ef migrations add InitialCreate`
 - **Build database** `dotnet ef database update`
+- **Drop database (if necessary)** `dotnet ef database drop --force`
 
 
 ## Development server
