@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Data;
-using backend.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using YourProject.Models;
 
 namespace backend.Controllers
 {
@@ -20,45 +20,65 @@ namespace backend.Controllers
 
         // GET: api/auth/generateGuestId
         [HttpGet("generateGuestId")]
-          public IActionResult GenerateGuestId()
-          {
-              string guestId = Guid.NewGuid().ToString(); // Generate unique guest ID
-              CookieOptions options = new CookieOptions
-              {
-                  Expires = DateTime.Now.AddDays(30), // 30-day expiry
-                  HttpOnly = false, // Set to false if you need JavaScript access
-                  Secure = false,
-                  //Secure = true,   // Should be false in development (requires HTTPS if true)
-                  //SameSite = SameSiteMode.None, // Set to None to allow cross-site requests
-                  //Domain = "localhost", // Specify the domain to allow sharing between ports
-                  Path = "/", // Ensure the cookie is available to all paths
-              };
+        public async Task<IActionResult> GenerateGuestId()
+        {
+            string guestId = Guid.NewGuid().ToString(); // Generate unique guest ID
 
-              Response.Cookies.Append("GuestId", guestId, options); // Store guest ID in a cookie
+            // Create a guest user in the database
+            var guestUser = new User
+            {
+                Id = guestId,
+                UserName = "Guest", // You can generate a unique guest username if needed
+                IsGuest = true
+            };
 
-              return Ok(new { GuestId = guestId });
-          }
+            await _context.Users.AddAsync(guestUser);
+            await _context.SaveChangesAsync();
+
+            CookieOptions options = new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(30), // 30-day expiry
+                HttpOnly = false, // Set to false if you need JavaScript access
+                Secure = false,   // Should be true in production with HTTPS
+                //SameSite = SameSiteMode.None, // Uncomment if necessary
+                //Domain = "localhost", // Uncomment if necessary
+                Path = "/", // Ensure the cookie is available to all paths
+            };
+
+            Response.Cookies.Append("GuestId", guestId, options); // Store guest ID in a cookie
+
+            return Ok(new { GuestId = guestId });
+        }
 
         // GET: api/auth/hasGuestData
         [HttpGet("hasGuestData")]
         [Authorize]
         public async Task<IActionResult> HasGuestData()
         {
-
             Console.WriteLine("HasGuestData endpoint called.");
+
             // Check if GuestId cookie exists
             string guestId = Request.Cookies["GuestId"];
             Console.WriteLine($"GuestId from cookie: {guestId}");
+
             if (string.IsNullOrEmpty(guestId))
             {
                 return Ok(new { HasGuestData = false });
             }
 
-            // Check if there are any tickets associated with the GuestId
-            bool hasGuestData = await _context.Tickets
-                .AnyAsync(t => t.UserId == guestId && t.IsGuest);
+            // Retrieve guest user and check for associated boards
+            var guestUser = await _context.Users
+                .Include(u => u.Boards)
+                .FirstOrDefaultAsync(u => u.Id == guestId && u.IsGuest);
 
-                Console.WriteLine($"Has guest data: {hasGuestData}");
+            if (guestUser == null)
+            {
+                return Ok(new { HasGuestData = false });
+            }
+
+            bool hasGuestData = guestUser.Boards.Any();
+
+            Console.WriteLine($"Has guest data: {hasGuestData}");
 
             return Ok(new { HasGuestData = hasGuestData });
         }
@@ -68,7 +88,7 @@ namespace backend.Controllers
         [Authorize]
         public async Task<IActionResult> TransferGuestData()
         {
-            // Check if user is authenticated
+            // Get Auth0 user ID
             string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(auth0UserId))
             {
@@ -82,38 +102,49 @@ namespace backend.Controllers
                 return BadRequest("Guest ID not found.");
             }
 
-            // Retrieve guest tickets
-            var guestTickets = await _context.Tickets
-                .Where(t => t.UserId == guestId && t.IsGuest)
-                .ToListAsync();
+            // Retrieve guest user
+            var guestUser = await _context.Users
+                .Include(u => u.Boards)
+                    .ThenInclude(b => b.Lists)
+                        .ThenInclude(l => l.Tickets)
+                .FirstOrDefaultAsync(u => u.Id == guestId && u.IsGuest);
 
-            if (!guestTickets.Any())
+            if (guestUser == null)
             {
                 // Remove the GuestId cookie
                 Response.Cookies.Delete("GuestId");
                 return BadRequest("No guest data to transfer.");
             }
 
-            // Transfer tickets to Auth0 user
-            foreach (var ticket in guestTickets)
+            // Retrieve or create authenticated user
+            var authUser = await _context.Users
+                .Include(u => u.Boards)
+                .FirstOrDefaultAsync(u => u.Id == auth0UserId);
+
+            if (authUser == null)
             {
-                ticket.UserId = auth0UserId;
-                ticket.IsGuest = false;
+                authUser = new User
+                {
+                    Id = auth0UserId,
+                    UserName = User.Identity.Name ?? "User", // Use Auth0 username or default
+                    IsGuest = false
+                };
+                _context.Users.Add(authUser);
+                await _context.SaveChangesAsync();
             }
+
+            // Transfer boards from guest to authenticated user
+            foreach (var board in guestUser.Boards)
+            {
+                board.UserId = authUser.Id;
+                board.User = authUser;
+            }
+
+            // Remove guest user
+            _context.Users.Remove(guestUser);
 
             // Remove the GuestId cookie
             Response.Cookies.Delete("GuestId");
-
-            // Register the user if not already registered
-            bool userExists = await _context.Users.AnyAsync(u => u.UserId == auth0UserId);
-            if (!userExists)
-            {
-                var user = new User
-                {
-                    UserId = auth0UserId
-                };
-                await _context.Users.AddAsync(user);
-            }
 
             await _context.SaveChangesAsync();
 
@@ -125,7 +156,7 @@ namespace backend.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteGuestData()
         {
-            // Check if user is authenticated
+            // Get Auth0 user ID
             string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             // Check if GuestId cookie exists
@@ -135,30 +166,35 @@ namespace backend.Controllers
                 return BadRequest("Guest ID not found.");
             }
 
-            // Delete guest tickets
-            var guestTickets = await _context.Tickets
-                .Where(t => t.UserId == guestId && t.IsGuest)
-                .ToListAsync();
+            // Retrieve guest user
+            var guestUser = await _context.Users
+                .Include(u => u.Boards)
+                    .ThenInclude(b => b.Lists)
+                        .ThenInclude(l => l.Tickets)
+                .FirstOrDefaultAsync(u => u.Id == guestId && u.IsGuest);
 
-            if (guestTickets.Any())
+            if (guestUser != null)
             {
-                _context.Tickets.RemoveRange(guestTickets);
+                // Remove guest user and associated data
+                _context.Users.Remove(guestUser);
             }
 
             // Remove the GuestId cookie
             Response.Cookies.Delete("GuestId");
 
-            // Register the user if authenticated and not already registered
+            // Register authenticated user if not already registered
             if (!string.IsNullOrEmpty(auth0UserId))
             {
-                bool userExists = await _context.Users.AnyAsync(u => u.UserId == auth0UserId);
-                if (!userExists)
+                var authUser = await _context.Users.FindAsync(auth0UserId);
+                if (authUser == null)
                 {
-                    var user = new User
+                    authUser = new User
                     {
-                        UserId = auth0UserId
+                        Id = auth0UserId,
+                        UserName = User.Identity.Name ?? "User", // Use Auth0 username or default
+                        IsGuest = false
                     };
-                    await _context.Users.AddAsync(user);
+                    _context.Users.Add(authUser);
                 }
             }
 
@@ -172,16 +208,16 @@ namespace backend.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteGuestDataForRegisteredUser()
         {
-            // Check if user is authenticated
+            // Get Auth0 user ID
             string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(auth0UserId))
             {
                 return Unauthorized("User is not authenticated.");
             }
 
-            // Check if user is already registered
-            bool userExists = await _context.Users.AnyAsync(u => u.UserId == auth0UserId);
-            if (!userExists)
+            // Check if user is registered
+            var authUser = await _context.Users.FindAsync(auth0UserId);
+            if (authUser == null)
             {
                 return BadRequest("User is not registered.");
             }
@@ -190,14 +226,17 @@ namespace backend.Controllers
             string guestId = Request.Cookies["GuestId"];
             if (!string.IsNullOrEmpty(guestId))
             {
-                // Delete guest tickets
-                var guestTickets = await _context.Tickets
-                    .Where(t => t.UserId == guestId && t.IsGuest)
-                    .ToListAsync();
+                // Retrieve guest user
+                var guestUser = await _context.Users
+                    .Include(u => u.Boards)
+                        .ThenInclude(b => b.Lists)
+                            .ThenInclude(l => l.Tickets)
+                    .FirstOrDefaultAsync(u => u.Id == guestId && u.IsGuest);
 
-                if (guestTickets.Any())
+                if (guestUser != null)
                 {
-                    _context.Tickets.RemoveRange(guestTickets);
+                    // Remove guest user and associated data
+                    _context.Users.Remove(guestUser);
                 }
 
                 // Remove the GuestId cookie
