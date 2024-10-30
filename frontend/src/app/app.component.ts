@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from '@auth0/auth0-angular';
-import { environment } from '../environments/environment';
+import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { GuestDataDialogComponent } from './shared/components/guest-data-dialog/guest-data-dialog.component';
 import { MaterialSharedModule } from './shared/material/material.shared';
 import { MatDialog } from '@angular/material/dialog';
+
+// Import the new services
+import { UserService } from './core/services/user.service';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -26,9 +28,10 @@ export class AppComponent {
   isGuest: boolean = false;
 
   constructor(
-    public auth: AuthService,
-    private http: HttpClient,
-    private dialog: MatDialog
+    public auth: Auth0Service,
+    private dialog: MatDialog,
+    private userService: UserService,
+    private authService: AuthService
   ) {
     // Subscribe to authentication status
     this.auth.isAuthenticated$.subscribe(async (isAuthenticated) => {
@@ -38,9 +41,7 @@ export class AppComponent {
         try {
           // Check if user is registered
           const isRegisteredResponse = await firstValueFrom(
-            this.http.get<{ isRegistered: boolean }>(
-              `${environment.baseURL}/users/isRegistered`
-            )
+            this.userService.isRegistered()
           );
           const isRegistered = isRegisteredResponse.isRegistered;
 
@@ -54,9 +55,7 @@ export class AppComponent {
             // Check if there is guest data associated with the GuestId
             console.log('Calling hasGuestData endpoint...');
             const hasGuestDataResponse = await firstValueFrom(
-              this.http.get<{ hasGuestData: boolean }>(
-                `${environment.baseURL}/auth/hasGuestData`
-              )
+              this.authService.hasGuestData()
             );
             console.log('HasGuestData response:', hasGuestDataResponse);
             const hasGuestData = hasGuestDataResponse.hasGuestData;
@@ -113,7 +112,7 @@ export class AppComponent {
   // Method to continue as guest
   continueAsGuest() {
     // Call the backend API to generate a GuestId and set the cookie
-    this.http.get(`${environment.baseURL}/auth/generateGuestId`).subscribe({
+    this.authService.generateGuestId().subscribe({
       next: (response) => {
         console.log('Guest session initiated:', response);
         this.isGuest = true;
@@ -135,9 +134,7 @@ export class AppComponent {
   // Method to transfer guest data to Auth0 user
   async transferGuestData() {
     try {
-      await firstValueFrom(
-        this.http.post(`${environment.baseURL}/auth/transferGuestData`, {})
-      );
+      await firstValueFrom(this.authService.transferGuestData());
       console.log('Guest data transferred successfully.');
       this.isGuest = false;
     } catch (error) {
@@ -148,9 +145,7 @@ export class AppComponent {
   // Method to delete guest data and remove GuestId cookie
   async deleteGuestData() {
     try {
-      await firstValueFrom(
-        this.http.post(`${environment.baseURL}/auth/deleteGuestData`, {})
-      );
+      await firstValueFrom(this.authService.deleteGuestData());
       console.log('Guest data deleted successfully.');
       this.isGuest = false;
     } catch (error) {
@@ -185,9 +180,7 @@ export class AppComponent {
   // Method to register the user
   async registerUser() {
     try {
-      await firstValueFrom(
-        this.http.post(`${environment.baseURL}/users/register`, {})
-      );
+      await firstValueFrom(this.userService.registerUser());
       console.log('User registered successfully.');
     } catch (error) {
       console.error('Failed to register user:', error);
@@ -197,12 +190,7 @@ export class AppComponent {
   // Method to delete guest data for a registered user
   async deleteGuestDataForRegisteredUser() {
     try {
-      await firstValueFrom(
-        this.http.post(
-          `${environment.baseURL}/auth/deleteGuestDataForRegisteredUser`,
-          {}
-        )
-      );
+      await firstValueFrom(this.authService.deleteGuestDataForRegisteredUser());
       console.log('Guest data deleted for registered user.');
       this.isGuest = false;
     } catch (error) {
