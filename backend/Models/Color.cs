@@ -7,7 +7,7 @@ namespace YourProject.Models
         [Key]
         public int Id { get; set; } // Numeric ID unique to the color
 
-        public string Hex { get; set; } // Hex string that represents the color
+        public string HexCode { get; set; } // Hex string that represents the color
 
         // Navigation properties
         public virtual ICollection<Board> Boards { get; set; } // Boards that use this color
