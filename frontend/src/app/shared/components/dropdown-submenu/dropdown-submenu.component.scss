@@ -1,0 +1,70 @@
+@import '../../../assets/styles/main.scss';
+
+.submenu-container {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background-color: $neutral-lighter;
+  border-radius: 8px;
+  width: 300px;
+}
+
+.submenu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h2 {
+    margin: 0;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+}
+
+.input-group {
+  margin-top: 16px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+
+  select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid $neutral-darker;
+    border-radius: 4px;
+    background-color: white;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg%20xmlns="http://www.w3.org/2000/svg"%20viewBox="0%200%204%205"><path%20fill="%23aaa"%20d="M2%200L0%202h4L2%200z%20M2%205L0%203h4l-2%202z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 8px 10px;
+  }
+}
+
+.action-button-group {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    padding: 8px 16px;
+    background-color: $primary;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:disabled {
+      background-color: $primary-darker;
+      cursor: not-allowed;
+    }
+  }
+}

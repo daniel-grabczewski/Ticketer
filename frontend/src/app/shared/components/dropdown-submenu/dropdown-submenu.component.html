@@ -1,1 +1,35 @@
-<p>dropdown-submenu works!</p>
+<div class="submenu-container">
+  <!-- Header with title and close button -->
+  <div class="submenu-header">
+    <h2>{{ title }}</h2>
+    <button class="close-button" (click)="onCloseClicked()">×</button>
+  </div>
+
+  <!-- Dropdown input section -->
+  <div class="input-group">
+    <label for="dropdownSelect">{{ dropdownInputHeader }}</label>
+    <select
+      id="dropdownSelect"
+      [(ngModel)]="selectedOption"
+      [ngModelOptions]="{ standalone: true }"
+    >
+      <option value="" disabled selected hidden>{{ dropdownPlaceholderText }}</option>
+      <option
+        *ngFor="let option of dropdownOptions"
+        [ngValue]="option"
+      >
+        {{ option.name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Action button -->
+  <div class="action-button-group">
+    <button
+      [disabled]="!selectedOption"
+      (click)="onActionClicked()"
+    >
+      {{ buttonText }}
+    </button>
+  </div>
+</div>
