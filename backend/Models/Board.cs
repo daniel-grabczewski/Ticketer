@@ -11,7 +11,6 @@ namespace YourProject.Models
         [Required]
         public string Name { get; set; } // Name of the board as a string
 
-        [Required]
         public int? ColorId { get; set; } // Number ID that is related to a specific HEX code in the color table
 
         [Required]
