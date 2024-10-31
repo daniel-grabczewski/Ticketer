@@ -1,1 +1,12 @@
-<p>background-selection-panel works!</p>
+<div class="colors-container">
+  <ng-container *ngFor="let i of colors; let j = index">
+    <div *ngIf="j % 2 === 0" class="color-box-pair">
+      <div class="color-box" [style.backgroundColor]="colors[j]?.hexCode">
+        {{ colors[j]?.hexCode }}
+      </div>
+      <div *ngIf="colors[j + 1]" class="color-box" [style.backgroundColor]="colors[j + 1].hexCode">
+        {{ colors[j + 1].hexCode }}
+      </div>
+    </div>
+  </ng-container>
+</div>
