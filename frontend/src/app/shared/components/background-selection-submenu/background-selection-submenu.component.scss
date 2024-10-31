@@ -1,0 +1,50 @@
+@import '../../../assets/styles/main.scss';
+
+.submenu-container {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background-color: $neutral-lighter;
+  border-radius: 8px;
+  width: 300px;
+}
+
+.submenu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h2 {
+    margin: 0;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+}
+
+.color-selection-title {
+  margin-top: 16px;
+
+  label {
+    font-weight: bold;
+  }
+}
+
+.action-button-group {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    padding: 8px 16px;
+    background-color: $primary;
+    color: $secondary;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+}

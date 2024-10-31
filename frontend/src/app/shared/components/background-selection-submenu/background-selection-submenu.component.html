@@ -1,0 +1,25 @@
+<div class="submenu-container">
+  <!-- Header with title and close button -->
+  <div class="submenu-header">
+    <h2>{{ title }}</h2>
+    <button class="close-button" (click)="onCloseClicked()">×</button>
+  </div>
+
+  <!-- Hardcoded subtitle -->
+  <div class="color-selection-title">
+    <label>{{ colorSelectionHeader }}</label>
+  </div>
+
+  <!-- Color selection panel -->
+  <app-background-selection-panel
+    [selectedColorId]="colorId"
+    (colorSelected)="onColorSelected($event)"
+  ></app-background-selection-panel>
+
+  <!-- Action button -->
+  <div class="action-button-group">
+    <button (click)="onActionClicked()">
+      {{ buttonText }}
+    </button>
+  </div>
+</div>
