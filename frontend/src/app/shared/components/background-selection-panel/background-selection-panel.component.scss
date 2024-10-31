@@ -1,24 +1,42 @@
 .colors-container {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Adjust as needed */
-  background : red;
-  width : min-content;
+  gap: 8px;
+  background: $neutral-lighter;
+  width: min-content;
 }
 
 .color-box-pair {
   display: flex;
   justify-content: flex-start;
-  gap: 8px; /* Spacing between the two color boxes */
+  gap: 8px;
 }
 
 .color-box {
-  width: 100px; /* Adjust width as desired */
-  height: 50px; /* Adjust height as desired */
+  width: 100px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff; /* Text color for contrast */
-  font-size: 0.8em;
-  border-radius: 0.4em;
+  border-radius: 0.7em;
+
+  &[data-color-id="1"] {
+    background-image: var(--gradient-1);
+  }
+  &[data-color-id="2"] {
+    background-image: var(--gradient-2);
+  }
+  &[data-color-id="3"] {
+    background-image: var(--gradient-3);
+  }
+  &[data-color-id="4"] {
+    background-image: var(--gradient-4);
+  }
+  &[data-color-id="5"] {
+    background-image: var(--gradient-5);
+  }
+  &[data-color-id="6"] {
+    background-image: var(--gradient-6);
+  }
 }
+
