@@ -44,4 +44,10 @@ Navigate to **/backend** in your terminal
 - Run `dotnet watch run` for the backend dev server. This will run on `http://localhost:5202/`
 - The application will automatically reload if you change any of the source files.
 
-
+## How to get your Auth0 token for API testing purposes?
+How do you generate a token for your account to test the APIs?
+- Login with your Auth0 account into Ticketer
+- Inspect the page in your browser, then go to the network tab
+- Scroll down the network requests and click on `isRegistered`
+- Scroll down the headers inside `isRegistered` to find `authorization`
+- Copy and paste the token beneath `bearer`
