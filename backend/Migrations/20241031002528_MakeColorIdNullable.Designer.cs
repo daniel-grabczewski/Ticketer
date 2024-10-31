@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backend.Data;
 
@@ -11,9 +12,11 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241031002528_MakeColorIdNullable")]
+    partial class MakeColorIdNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,6 +31,7 @@ namespace backend.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<int?>("ColorId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -78,22 +82,22 @@ namespace backend.Migrations
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 4,
                             HexCode = "#8131F9"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = 5,
                             HexCode = "#FEA362"
                         },
                         new
                         {
-                            Id = 5,
+                            Id = 6,
                             HexCode = "#F773BE"
                         },
                         new
                         {
-                            Id = 6,
+                            Id = 7,
                             HexCode = "#EE4646"
                         });
                 });
@@ -179,7 +183,8 @@ namespace backend.Migrations
                     b.HasOne("YourProject.Models.Color", "Color")
                         .WithMany("Boards")
                         .HasForeignKey("ColorId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("YourProject.Models.User", "User")
                         .WithMany("Boards")
