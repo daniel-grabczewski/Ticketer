@@ -110,44 +110,58 @@ namespace backend.Controllers
             return Ok(new { Message = "Ticket created successfully!" });
         }
 
-        // PUT: api/tickets
-        [HttpPut]
-        [Authorize]
-        public async Task<IActionResult> UpdateTicket([FromBody] UpdateTicketRequestDTO request)
+// PUT: api/tickets
+[HttpPut]
+[Authorize]
+public async Task<IActionResult> UpdateTicket([FromBody] UpdateTicketRequestDTO request)
+{
+    // Validate the request
+    if (!ModelState.IsValid)
+    {
+        return BadRequest(ModelState);
+    }
+
+    // Retrieve the ticket
+    var ticket = await _context.Tickets
+        .Include(t => t.List)
+        .ThenInclude(l => l.Board)
+        .FirstOrDefaultAsync(t => t.Id == request.Id);
+
+    if (ticket == null)
+    {
+        return NotFound("Ticket not found.");
+    }
+
+    // Check if the user has access to this ticket
+    string userId = await GetUserIdAsync();
+    if (ticket.List.Board.UserId != userId)
+    {
+        return Forbid("You do not have access to this ticket.");
+    }
+
+    // Update ticket details
+    ticket.Name = request.Name;
+    ticket.Description = request.Description;
+
+    // If ColorId is provided, validate it. Otherwise, set it to null.
+    if (request.ColorId.HasValue)
+    {
+        var colorExists = await _context.Colors.AnyAsync(c => c.Id == request.ColorId.Value);
+        if (!colorExists)
         {
-            // Validate the request
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            // Retrieve the ticket
-            var ticket = await _context.Tickets
-                .Include(t => t.List)
-                .ThenInclude(l => l.Board)
-                .FirstOrDefaultAsync(t => t.Id == request.Id);
-
-            if (ticket == null)
-            {
-                return NotFound("Ticket not found.");
-            }
-
-            // Check if the user has access to this ticket
-            string userId = await GetUserIdAsync();
-            if (ticket.List.Board.UserId != userId)
-            {
-                return Forbid("You do not have access to this ticket.");
-            }
-
-            // Update the ticket
-            ticket.Name = request.Name;
-            ticket.Description = request.Description;
-            ticket.ColorId = request.ColorId;
-
-            await _context.SaveChangesAsync();
-
-            return Ok(new { Message = "Ticket updated successfully!" });
+            return BadRequest("The provided ColorId does not exist.");
         }
+        ticket.ColorId = request.ColorId;
+    }
+    else
+    {
+        ticket.ColorId = null;
+    }
+
+    await _context.SaveChangesAsync();
+
+    return Ok(new { Message = "Ticket updated successfully!" });
+}
 
         // PUT: api/tickets/changePosition
         [HttpPut("changePosition")]
