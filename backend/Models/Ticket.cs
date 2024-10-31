@@ -16,7 +16,6 @@ namespace YourProject.Models
 
         public string Description { get; set; } // Description of the ticket as a string
 
-        [Required]
         public int? ColorId { get; set; }
 
         [Required]
