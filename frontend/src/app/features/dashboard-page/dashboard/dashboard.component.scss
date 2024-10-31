@@ -1,0 +1,15 @@
+.dashboard {
+  position: relative; /* To position the submenu absolutely within this container */
+
+  .open-submenu-button {
+    /* Style the button as desired */
+    margin: 16px;
+  }
+
+  app-generate-board-submenu {
+    position: absolute;
+    top: 50px; /* Adjust as needed to position below the button */
+    left: 16px; /* Adjust to position next to the button */
+    z-index: 1000; /* Ensure it appears above other elements */
+  }
+}
