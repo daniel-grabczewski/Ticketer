@@ -93,10 +93,10 @@ namespace backend.Data
             modelBuilder.Entity<Color>().HasData(
                 new Color { Id = 1, HexCode = "#50C996" },
                 new Color { Id = 2, HexCode = "#3BBA3B" },
-                new Color { Id = 4, HexCode = "#8131F9" },
-                new Color { Id = 5, HexCode = "#FEA362" },
-                new Color { Id = 6, HexCode = "#F773BE" },
-                new Color { Id = 7, HexCode = "#EE4646" }
+                new Color { Id = 3, HexCode = "#8131F9" },
+                new Color { Id = 4, HexCode = "#FEA362" },
+                new Color { Id = 5, HexCode = "#F773BE" },
+                new Color { Id = 6, HexCode = "#EE4646" }
             );
         }
     }
