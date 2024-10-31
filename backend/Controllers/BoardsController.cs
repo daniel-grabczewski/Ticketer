@@ -73,6 +73,7 @@ namespace backend.Controllers
                 Id = board.Id,
                 Name = board.Name,
                 ColorId = board.ColorId,
+                Auth0Id = userId,
                 Lists = board.Lists.Select(l => new ListDTO
                 {
                     Id = l.Id,
