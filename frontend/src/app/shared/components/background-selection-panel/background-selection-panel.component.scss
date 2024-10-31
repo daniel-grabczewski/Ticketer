@@ -19,7 +19,10 @@
   align-items: center;
   justify-content: center;
   border-radius: 0.7em;
+  cursor: pointer;
+  transition: border 0.2s ease;
 
+  // Gradient backgrounds
   &[data-color-id="1"] {
     background-image: var(--gradient-1);
   }
@@ -38,5 +41,9 @@
   &[data-color-id="6"] {
     background-image: var(--gradient-6);
   }
-}
 
+  // Border for selected color
+  &.selected {
+    border: 3px solid $background;
+  }
+}
