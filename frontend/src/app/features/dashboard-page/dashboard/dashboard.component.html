@@ -6,10 +6,10 @@
   <app-generate-board-submenu
     *ngIf="showSubmenu"
     [title]="submenuTitle"
-    [textInputHeader]="textInputHeader"
+    [textInputLabel]="textInputLabel"
     [colorSelectionHeader]="colorSelectionHeader"
     [buttonText]="buttonText"
-    [selectedColorId]="defaultColorId"
+    [colorId]="defaultColorId"
     (menuAction)="handleMenuAction($event)"
     (close)="showSubmenu = false"
   ></app-generate-board-submenu>
