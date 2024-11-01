@@ -1,6 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { BackgroundSelectionPanelComponent } from '../background-selection-panel/background-selection-panel.component';
 import { CommonModule } from '@angular/common';
+import {
+  BackgroundSelectionSubmenuInput,
+  BackgroundSelectionSubmenuOutput,
+} from '../../models/submenuInputOutput.model';
 
 @Component({
   selector: 'app-background-selection-submenu',
@@ -9,41 +13,33 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, BackgroundSelectionPanelComponent],
 })
-export class BackgroundSelectionSubmenuComponent {
-  // Inputs
+export class BackgroundSelectionSubmenuComponent
+  implements BackgroundSelectionSubmenuInput
+{
+  // Inputs matching BackgroundSelectionSubmenuInput
   @Input() title: string = '';
   @Input() colorSelectionHeader: string = '';
   @Input() buttonText: string = '';
-  @Input() selectedColorId: number | null = null;
+  @Input() colorId: number | null = null;
 
-  // Outputs
-  @Output() menuAction = new EventEmitter<{
-    type: string;
-    value: number | null;
-  }>();
+  // Outputs for BackgroundSelectionSubmenuOutput
+  @Output() menuAction = new EventEmitter<BackgroundSelectionSubmenuOutput>();
   @Output() close = new EventEmitter<void>();
 
   // Component State
-  colorId: number | null = null;
-
-  ngOnInit() {
-    // Initialize colorId with selectedColorId input
-    this.colorId = this.selectedColorId;
-  }
+  selectedColorId: number | null = this.colorId;
 
   // Handle color selection from the child component
   onColorSelected(colorId: number | null) {
-    this.colorId = colorId;
+    this.selectedColorId = colorId;
   }
 
   // Handle action button click
   onActionClicked() {
-    // Emit the menu action with the specified structure
+    // Emit the menu action
     this.menuAction.emit({
-      type: 'background-selection-submenu',
-      value: this.colorId,
+      colorId: this.selectedColorId,
     });
-    // Close the submenu
     this.close.emit();
   }
 

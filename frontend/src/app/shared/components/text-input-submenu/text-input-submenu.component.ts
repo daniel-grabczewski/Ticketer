@@ -1,6 +1,10 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter } from '@angular/core'
+import { FormsModule } from '@angular/forms'
+import { CommonModule } from '@angular/common'
+import {
+  TextInputSubmenuInput,
+  TextInputSubmenuOutput,
+} from '../../models/submenuInputOutput.model'
 
 @Component({
   selector: 'app-text-input-submenu',
@@ -9,33 +13,31 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, FormsModule],
 })
-export class TextInputSubmenuComponent {
-  // Inputs
-  @Input() title: string = '';
-  @Input() textInputHeader: string = '';
-  @Input() placeholderText: string = '';
-  @Input() buttonText: string = '';
+export class TextInputSubmenuComponent implements TextInputSubmenuInput {
+  // Inputs based on TextInputSubmenuInput
+  @Input() title: string = ''
+  @Input() textInputLabel: string = ''
+  @Input() initialText: string = '' // Optional initial text for prefill
+  @Input() placeholder: string = ''
+  @Input() buttonText: string = ''
 
   // Outputs
-  @Output() menuAction = new EventEmitter<{ type: string; value: string }>();
-  @Output() close = new EventEmitter<void>();
+  @Output() menuAction = new EventEmitter<TextInputSubmenuOutput>()
+  @Output() close = new EventEmitter<void>()
 
   // Component State
-  textInputValue: string = '';
+  textInputValue: string = this.initialText // Initialize with initialText if provided
 
   // Handle action button click
   onActionClicked() {
     // Emit the menu action with the specified structure
-    this.menuAction.emit({
-      type: 'text-input-submenu',
-      value: this.textInputValue,
-    });
+    this.menuAction.emit({ text: this.textInputValue })
     // Close the submenu
-    this.close.emit();
+    this.close.emit()
   }
 
   // Handle close button click
   onCloseClicked() {
-    this.close.emit();
+    this.close.emit()
   }
 }

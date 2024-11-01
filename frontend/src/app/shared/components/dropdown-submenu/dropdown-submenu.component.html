@@ -7,7 +7,7 @@
 
   <!-- Dropdown input section -->
   <div class="input-group">
-    <label for="dropdownSelect">{{ dropdownInputHeader }}</label>
+    <label for="dropdownSelect">{{ dropdownInputLabel }}</label>
     <select
       id="dropdownSelect"
       [(ngModel)]="selectedOption"
@@ -15,7 +15,7 @@
     >
       <option value="" disabled selected hidden>{{ dropdownPlaceholderText }}</option>
       <option
-        *ngFor="let option of dropdownOptions"
+        *ngFor="let option of dropdownItems"
         [ngValue]="option"
       >
         {{ option.name }}

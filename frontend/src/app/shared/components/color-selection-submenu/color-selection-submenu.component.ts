@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { ColorSelectionPanelComponent } from '../color-selection-panel/color-selection-panel.component';
-import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core'
+import { ColorSelectionPanelComponent } from '../color-selection-panel/color-selection-panel.component'
+import { CommonModule } from '@angular/common'
+import { ColorSelectionSubmenuInput, ColorSelectionSubmenuOutput } from '../../models/submenuInputOutput.model'
 
 @Component({
   selector: 'app-color-selection-submenu',
@@ -9,42 +10,40 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, ColorSelectionPanelComponent],
 })
-export class ColorSelectionSubmenuComponent implements OnInit {
-  // Inputs
-  @Input() title: string = '';
-  @Input() selectedColorId: number | null = null;
-  @Input() buttonText: string = '';
+export class ColorSelectionSubmenuComponent implements OnInit, ColorSelectionSubmenuInput {
+  // Inputs matching ColorSelectionSubmenuInput
+  @Input() title: string = ''
+  @Input() colorId: number | null = null
+  @Input() buttonText: string = ''
 
-  // Outputs
-  @Output() menuAction = new EventEmitter<{ type: string; value: number | null }>();
-  @Output() close = new EventEmitter<void>();
+  // Outputs for ColorSelectionSubmenuOutput
+  @Output() menuAction = new EventEmitter<ColorSelectionSubmenuOutput>()
+  @Output() close = new EventEmitter<void>()
 
   // Component State
-  colorId: number | null = null;
+  selectedColorId: number | null = this.colorId
 
   ngOnInit() {
-    // Initialize colorId with selectedColorId input
-    this.colorId = this.selectedColorId;
+    // Initialize selectedColorId
+    this.selectedColorId = this.colorId
   }
 
   // Handle color selection from the child component
   onColorSelected(colorId: number | null) {
-    this.colorId = colorId;
+    this.selectedColorId = colorId
   }
 
   // Handle action button click
   onActionClicked() {
-    // Emit the menu action with the specified structure
+    // Emit the menu action
     this.menuAction.emit({
-      type: 'color-selection-submenu',
-      value: this.colorId,
-    });
-    // Close the submenu
-    this.close.emit();
+      colorId: this.selectedColorId,
+    })
+    this.close.emit()
   }
 
   // Handle close button click
   onCloseClicked() {
-    this.close.emit();
+    this.close.emit()
   }
 }

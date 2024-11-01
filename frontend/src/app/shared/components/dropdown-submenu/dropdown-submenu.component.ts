@@ -1,6 +1,10 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, Input, Output, EventEmitter } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+import {
+  DropdownSubmenuInput,
+  DropdownSubmenuOutput,
+} from '../../models/submenuInputOutput.model'
 
 @Component({
   selector: 'app-dropdown-submenu',
@@ -9,36 +13,33 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
 })
-export class DropdownSubmenuComponent {
-  // Inputs
-  @Input() title: string = '';
-  @Input() dropdownInputHeader: string = '';
-  @Input() dropdownOptions: Array<{ id: string; name: string }> = [];
-  @Input() dropdownPlaceholderText: string = '';
-  @Input() buttonText: string = '';
+export class DropdownSubmenuComponent implements DropdownSubmenuInput {
+  // Inputs matching DropdownSubmenuInput
+  @Input() title: string = ''
+  @Input() dropdownInputLabel: string = '' // Corrected name to match model
+  @Input() dropdownItems: Array<{ id: string; name: string }> = []
+  @Input() dropdownPlaceholderText: string = ''
+  @Input() buttonText: string = ''
 
-  // Outputs
-  @Output() menuAction = new EventEmitter<{ type: string; value: { id: string; name: string } }>();
-  @Output() close = new EventEmitter<void>();
+  // Outputs for DropdownSubmenuOutput
+  @Output() menuAction = new EventEmitter<DropdownSubmenuOutput>()
+  @Output() close = new EventEmitter<void>()
 
   // Component State
-  selectedOption: { id: string; name: string } | null = null;
+  selectedOption: { id: string; name: string } | null = null
 
   // Handle action button click
   onActionClicked() {
     if (this.selectedOption) {
       // Emit the menu action with the specified structure
-      this.menuAction.emit({
-        type: 'dropdown-submenu',
-        value: this.selectedOption,
-      });
+      this.menuAction.emit(this.selectedOption)
     }
     // Close the submenu
-    this.close.emit();
+    this.close.emit()
   }
 
   // Handle close button click
   onCloseClicked() {
-    this.close.emit();
+    this.close.emit()
   }
 }
