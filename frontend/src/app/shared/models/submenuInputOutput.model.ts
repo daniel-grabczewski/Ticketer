@@ -1,80 +1,80 @@
-//These interfaces are included as the Input when the menu passes data to the submenu
+//These export interfaces are included as the Input when the menu passes data to the submenu
 
-type SubmenuTypes = 
+export type SubmenuTypes =
   | 'text-input-submenu'
   | 'confirmation-submenu'
   | 'background-selection-submenu'
   | 'generate-board-submenu'
   | 'color-selection-submenu'
-  | 'dropdown-submenu'
+  | 'dropdown-submenu';
 
 // Text Input Submenu
-interface TextInputSubmenuInput {
+export interface TextInputSubmenuInput {
   title: string;
   textInputLabel: string;
-  initialText?: string; 
-  placeholder? : string;
+  initialText?: string;
+  placeholder?: string;
   buttonText: string;
 }
 //initialText and placeHolder are optional because having a completely empty text input is allowed
 
-interface TextInputSubmenuOutput {
-  text : string
+export interface TextInputSubmenuOutput {
+  text: string;
 }
 
 // Confirmation Submenu
-interface ConfirmationSubmenuInput {
+export interface ConfirmationSubmenuInput {
   title: string;
   confirmationMessage: string;
   buttonText: string;
 }
 
-interface ConfirmationSubmenuOutput {
-  confirmationStatus : boolean;
+export interface ConfirmationSubmenuOutput {
+  confirmationStatus: boolean;
 }
 
 // Background Selection Submenu
-interface BackgroundSelectionSubmenuInput {
+export interface BackgroundSelectionSubmenuInput {
   title: string;
   colorId: number;
   colorSelectionHeader: string;
   buttonText: string;
 }
 
-interface BackgroundSelectionSubmenuOutput {
-  colorId : number
+export interface BackgroundSelectionSubmenuOutput {
+  colorId: number;
 }
 
 // Generate Board Submenu
-interface GenerateBoardSubmenuInput {
+export interface GenerateBoardSubmenuInput {
   title: string;
   colorId: number;
   textInputLabel: string;
   initialText?: string;
-  placeholder? : string;
+  placeholder?: string;
   colorSelectionHeader: string;
   buttonText: string;
 }
 //initialText and placeHolder are optional because having a completely empty text input is allowed
 
-interface GenerateBoardSubmenuOutput {
+export interface GenerateBoardSubmenuOutput {
   name: string;
   colorId: number;
 }
 
 // Color Selection Submenu
-interface ColorSelectionSubmenuInput {
+export interface ColorSelectionSubmenuInput {
   title: string;
   colorId: number;
   buttonText: string;
 }
 
-interface ColorSelectionSubmenuOutput {
-  colorId : number
+export interface ColorSelectionSubmenuOutput {
+  colorId: number;
 }
 
 // Dropdown Submenu
-interface DropdownSubmenuInput {
+export interface DropdownSubmenuInput {
   title: string;
   dropdownInputLabel: string;
   dropdownItems: { id: string; name: string }[];
@@ -82,13 +82,13 @@ interface DropdownSubmenuInput {
   buttonText: string;
 }
 
-interface DropdownSubmenuOutput {
+export interface DropdownSubmenuOutput {
   id: string;
   name: string;
 }
 
 // Union type for the Submenu Input
-type SubmenuInput =
+export type SubmenuInput =
   | TextInputSubmenuInput
   | ConfirmationSubmenuInput
   | BackgroundSelectionSubmenuInput
@@ -97,7 +97,7 @@ type SubmenuInput =
   | DropdownSubmenuInput;
 
 // Union type for the Submenu Output
-  type SubmenuOutput =
+export type SubmenuOutput =
   | TextInputSubmenuOutput
   | ConfirmationSubmenuOutput
   | BackgroundSelectionSubmenuOutput
