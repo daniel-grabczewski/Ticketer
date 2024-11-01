@@ -1,0 +1,29 @@
+@import '../../../assets/styles/main.scss';
+
+.colors-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: $neutral-lighter;
+  width: min-content;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.color-row {
+  display: flex;
+  gap: 8px;
+}
+
+.color-box {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border 0.2s ease;
+  border: 2px solid transparent;
+
+  &.selected {
+    border: 3px solid $background;
+  }
+}
