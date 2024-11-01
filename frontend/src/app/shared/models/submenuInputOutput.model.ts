@@ -36,19 +36,19 @@ export interface ConfirmationSubmenuOutput {
 // Background Selection Submenu
 export interface BackgroundSelectionSubmenuInput {
   title: string;
-  colorId: number;
+  colorId: number | null;
   colorSelectionHeader: string;
   buttonText: string;
 }
 
 export interface BackgroundSelectionSubmenuOutput {
-  colorId: number;
+  colorId: number | null;
 }
 
 // Generate Board Submenu
 export interface GenerateBoardSubmenuInput {
   title: string;
-  colorId: number;
+  colorId: number | null;
   textInputLabel: string;
   initialText?: string;
   placeholder?: string;
@@ -59,18 +59,18 @@ export interface GenerateBoardSubmenuInput {
 
 export interface GenerateBoardSubmenuOutput {
   name: string;
-  colorId: number;
+  colorId: number | null;
 }
 
 // Color Selection Submenu
 export interface ColorSelectionSubmenuInput {
   title: string;
-  colorId: number;
+  colorId: number | null;
   buttonText: string;
 }
 
 export interface ColorSelectionSubmenuOutput {
-  colorId: number;
+  colorId: number | null;
 }
 
 // Dropdown Submenu
