@@ -6,45 +6,24 @@
   gap: 8px;
   background: $neutral-lighter;
   width: min-content;
+  padding: 8px;
+  border-radius: 8px;
 }
 
-.color-box-pair {
+.color-row {
   display: flex;
-  justify-content: flex-start;
   gap: 8px;
 }
 
 .color-box {
   width: 100px;
   height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border-radius: 0.7em;
   cursor: pointer;
   transition: border 0.2s ease;
+  background-size: cover;
+  background-position: center;
 
-  // Gradient backgrounds
-  &[data-color-id="1"] {
-    background-image: var(--gradient-1);
-  }
-  &[data-color-id="2"] {
-    background-image: var(--gradient-2);
-  }
-  &[data-color-id="3"] {
-    background-image: var(--gradient-3);
-  }
-  &[data-color-id="4"] {
-    background-image: var(--gradient-4);
-  }
-  &[data-color-id="5"] {
-    background-image: var(--gradient-5);
-  }
-  &[data-color-id="6"] {
-    background-image: var(--gradient-6);
-  }
-
-  // Border for selected color
   &.selected {
     border: 3px solid $background;
   }

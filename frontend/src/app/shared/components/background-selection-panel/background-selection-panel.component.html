@@ -1,19 +1,11 @@
 <div class="colors-container">
-  <ng-container *ngFor="let i of colors; let j = index">
-    <div *ngIf="j % 2 === 0" class="color-box-pair">
-      <div
-        class="color-box"
-        [attr.data-color-id]="colors[j].id"
-        [class.selected]="colors[j].id === selectedColorId"
-        (click)="onColorClick(colors[j].id)"
-      ></div>
-      <div
-        *ngIf="colors[j + 1]"
-        class="color-box"
-        [attr.data-color-id]="colors[j + 1].id"
-        [class.selected]="colors[j + 1].id === selectedColorId"
-        (click)="onColorClick(colors[j + 1].id)"
-      ></div>
-    </div>
-  </ng-container>
+  <div class="color-row" *ngFor="let row of getRows()">
+    <div
+      *ngFor="let color of row"
+      class="color-box"
+      [style.background-image]="getGradient(color.id)"
+      [class.selected]="color.id === selectedColorId"
+      (click)="onColorClick(color.id)"
+    ></div>
+  </div>
 </div>
