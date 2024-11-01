@@ -2,6 +2,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { BackgroundSelectionPanelComponent } from '../background-selection-panel/background-selection-panel.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import {
+  GenerateBoardSubmenuInput,
+  GenerateBoardSubmenuOutput,
+} from '../../models/submenuInputOutput.model';
 
 @Component({
   selector: 'app-generate-board-submenu',
@@ -10,42 +14,38 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, FormsModule, BackgroundSelectionPanelComponent],
 })
-export class GenerateBoardSubmenuComponent {
+export class GenerateBoardSubmenuComponent
+  implements GenerateBoardSubmenuInput
+{
   // Inputs
   @Input() title: string = '';
-  @Input() textInputHeader: string = '';
+  @Input() textInputLabel: string = '';
   @Input() colorSelectionHeader: string = '';
   @Input() buttonText: string = '';
-  @Input() selectedColorId: number | null = null;
+  @Input() colorId: number | null = null;
+  @Input() initialText: string = ''; // Optional initial text for prefill
+  @Input() placeholder: string = 'Enter name'; // Placeholder with default text
 
   // Outputs
-  @Output() menuAction = new EventEmitter<{
-    type: string;
-    value: { name: string; color: number | null };
-  }>();
+  @Output() menuAction = new EventEmitter<GenerateBoardSubmenuOutput>();
   @Output() close = new EventEmitter<void>();
-  //! ADDITIONAL OUTPUT TO RELEVANT COMPONENTS ADD IN FIGMA
 
   // Component State
-  nameInput: string = '';
-  colorId: number | null = null;
+  nameInput: string = this.initialText;
+  selectedColorId: number | null = this.colorId;
 
   // Handle color selection from the child component
   onColorSelected(colorId: number | null) {
-    this.colorId = colorId;
+    this.selectedColorId = colorId;
   }
 
   // Handle create button click
   onCreateClicked() {
     // Emit the menu action with the specified structure
     this.menuAction.emit({
-      type: 'generate-board-submenu',
-      value: {
-        name: this.nameInput,
-        color: this.colorId,
-      },
+      name: this.nameInput,
+      colorId: this.selectedColorId,
     });
-    // Close the submenu
     this.close.emit();
   }
 

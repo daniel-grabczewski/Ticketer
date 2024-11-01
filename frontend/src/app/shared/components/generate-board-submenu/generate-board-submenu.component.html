@@ -7,12 +7,12 @@
 
   <!-- Text input section -->
   <div class="input-group">
-    <label for="nameInput">{{ textInputHeader }}</label>
+    <label for="nameInput">{{ textInputLabel }}</label>
     <input
       id="nameInput"
       type="text"
       [(ngModel)]="nameInput"
-      placeholder="Enter name"
+      [placeholder]="placeholder"
     />
   </div>
 
@@ -20,7 +20,7 @@
   <div class="color-selection-group">
     <label>{{ colorSelectionHeader }}</label>
     <app-background-selection-panel
-      [selectedColorId]="colorId"
+      [selectedColorId]="selectedColorId"
       (colorSelected)="onColorSelected($event)"
     ></app-background-selection-panel>
   </div>
