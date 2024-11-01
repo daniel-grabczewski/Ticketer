@@ -6,7 +6,9 @@ export type SubmenuTypes =
   | 'background-selection-submenu'
   | 'generate-board-submenu'
   | 'color-selection-submenu'
-  | 'dropdown-submenu';
+  | 'dropdown-submenu'
+  | 'create-board-item-submenu'
+  ;
 
 // Text Input Submenu
 export interface TextInputSubmenuInput {
@@ -16,10 +18,22 @@ export interface TextInputSubmenuInput {
   placeholder?: string;
   buttonText: string;
 }
-//initialText and placeHolder are optional because having a completely empty text input is allowed
+//initialText and placeholder are optional because having a completely empty text input is allowed
 
 export interface TextInputSubmenuOutput {
   text: string;
+}
+
+// Create Board Item Submenu
+export interface CreateBoardItemSubmenuInput {
+  title : string
+  placeholderText? : string
+  buttonText : string
+}
+// placeholder is optional because having a completely empty text input is allowed
+
+export interface CreateBoardItemSubmenuOutput {
+  text : string;
 }
 
 // Confirmation Submenu
@@ -55,7 +69,7 @@ export interface GenerateBoardSubmenuInput {
   colorSelectionHeader: string;
   buttonText: string;
 }
-//initialText and placeHolder are optional because having a completely empty text input is allowed
+//initialText and placeholder are optional because having a completely empty text input is allowed
 
 export interface GenerateBoardSubmenuOutput {
   name: string;
@@ -94,7 +108,8 @@ export type SubmenuInput =
   | BackgroundSelectionSubmenuInput
   | GenerateBoardSubmenuInput
   | ColorSelectionSubmenuInput
-  | DropdownSubmenuInput;
+  | DropdownSubmenuInput
+  | CreateBoardItemSubmenuInput;
 
 // Union type for the Submenu Output
 export type SubmenuOutput =
@@ -103,4 +118,5 @@ export type SubmenuOutput =
   | BackgroundSelectionSubmenuOutput
   | GenerateBoardSubmenuOutput
   | ColorSelectionSubmenuOutput
-  | DropdownSubmenuOutput;
+  | DropdownSubmenuOutput
+  | CreateBoardItemSubmenuOutput;
