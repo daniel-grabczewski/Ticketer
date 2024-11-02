@@ -22,11 +22,11 @@
             <!-- Text Input Submenu -->
             <app-text-input-submenu
               *ngSwitchCase="'text-input-submenu'"
-              [title]="getTextInputSubmenuPayload(index).title"
-              [textInputLabel]="getTextInputSubmenuPayload(index).textInputLabel"
-              [initialText]="getTextInputSubmenuPayload(index).initialText"
-              [placeholder]="getTextInputSubmenuPayload(index).placeholder"
-              [buttonText]="getTextInputSubmenuPayload(index).buttonText"
+              [title]="getTextInputSubmenuPayload(index).title || ''"
+              [textInputLabel]="getTextInputSubmenuPayload(index).textInputLabel || ''"
+              [initialText]="getTextInputSubmenuPayload(index).initialText || ''"
+              [placeholder]="getTextInputSubmenuPayload(index).placeholder || ''"
+              [buttonText]="getTextInputSubmenuPayload(index).buttonText || ''"
               (menuAction)="handleSubmenuAction($event)"
               (close)="closeSubmenu()"
             ></app-text-input-submenu>
@@ -34,9 +34,9 @@
             <!-- Confirmation Submenu -->
             <app-confirmation-submenu
               *ngSwitchCase="'confirmation-submenu'"
-              [title]="getConfirmationSubmenuPayload(index).title"
-              [confirmationMessage]="getConfirmationSubmenuPayload(index).confirmationMessage"
-              [buttonText]="getConfirmationSubmenuPayload(index).buttonText"
+              [title]="getConfirmationSubmenuPayload(index).title || ''"
+              [confirmationMessage]="getConfirmationSubmenuPayload(index).confirmationMessage || ''"
+              [buttonText]="getConfirmationSubmenuPayload(index).buttonText || ''"
               (menuAction)="handleSubmenuAction($event)"
               (close)="closeSubmenu()"
             ></app-confirmation-submenu>
@@ -44,10 +44,10 @@
             <!-- Background Selection Submenu -->
             <app-background-selection-submenu
               *ngSwitchCase="'background-selection-submenu'"
-              [title]="getBackgroundSelectionSubmenuPayload(index).title"
-              [colorId]="getBackgroundSelectionSubmenuPayload(index).colorId"
-              [colorSelectionHeader]="getBackgroundSelectionSubmenuPayload(index).colorSelectionHeader"
-              [buttonText]="getBackgroundSelectionSubmenuPayload(index).buttonText"
+              [title]="getBackgroundSelectionSubmenuPayload(index).title || ''"
+              [colorId]="getBackgroundSelectionSubmenuPayload(index).colorId || null"
+              [colorSelectionHeader]="getBackgroundSelectionSubmenuPayload(index).colorSelectionHeader || ''"
+              [buttonText]="getBackgroundSelectionSubmenuPayload(index).buttonText || ''"
               (menuAction)="handleSubmenuAction($event)"
               (close)="closeSubmenu()"
             ></app-background-selection-submenu>
@@ -55,9 +55,9 @@
             <!-- Color Selection Submenu -->
             <app-color-selection-submenu
               *ngSwitchCase="'color-selection-submenu'"
-              [title]="getColorSelectionSubmenuPayload(index).title"
-              [selectedColorId]="getColorSelectionSubmenuPayload(index).colorId"
-              [buttonText]="getColorSelectionSubmenuPayload(index).buttonText"
+              [title]="getColorSelectionSubmenuPayload(index).title || ''"
+              [colorId]="getColorSelectionSubmenuPayload(index).colorId || null"
+              [buttonText]="getColorSelectionSubmenuPayload(index).buttonText || ''"
               (menuAction)="handleSubmenuAction($event)"
               (close)="closeSubmenu()"
             ></app-color-selection-submenu>
@@ -65,11 +65,11 @@
             <!-- Dropdown Submenu -->
             <app-dropdown-submenu
               *ngSwitchCase="'dropdown-submenu'"
-              [title]="getDropdownSubmenuPayload(index).title"
-              [dropdownInputLabel]="getDropdownSubmenuPayload(index).dropdownInputLabel"
-              [dropdownOptions]="getDropdownSubmenuPayload(index).dropdownItems"
-              [dropdownPlaceholderText]="getDropdownSubmenuPayload(index).dropdownPlaceholderText"
-              [buttonText]="getDropdownSubmenuPayload(index).buttonText"
+              [title]="getDropdownSubmenuPayload(index).title || ''"
+              [dropdownInputLabel]="getDropdownSubmenuPayload(index).dropdownInputLabel || ''"
+              [dropdownItems]="getDropdownSubmenuPayload(index).dropdownItems || []"
+              [dropdownPlaceholderText]="getDropdownSubmenuPayload(index).dropdownPlaceholderText || ''"
+              [buttonText]="getDropdownSubmenuPayload(index).buttonText || ''"
               (menuAction)="handleSubmenuAction($event)"
               (close)="closeSubmenu()"
             ></app-dropdown-submenu>
@@ -77,13 +77,13 @@
             <!-- Generate Board Submenu -->
             <app-generate-board-submenu
               *ngSwitchCase="'generate-board-submenu'"
-              [title]="getGenerateBoardSubmenuPayload(index).title"
-              [textInputLabel]="getGenerateBoardSubmenuPayload(index).textInputLabel"
-              [initialText]="getGenerateBoardSubmenuPayload(index).initialText"
-              [placeholder]="getGenerateBoardSubmenuPayload(index).placeholder"
-              [colorSelectionHeader]="getGenerateBoardSubmenuPayload(index).colorSelectionHeader"
-              [buttonText]="getGenerateBoardSubmenuPayload(index).buttonText"
-              [colorId]="getGenerateBoardSubmenuPayload(index).colorId"
+              [title]="getGenerateBoardSubmenuPayload(index).title || ''"
+              [textInputLabel]="getGenerateBoardSubmenuPayload(index).textInputLabel || ''"
+              [initialText]="getGenerateBoardSubmenuPayload(index).initialText || ''"
+              [placeholder]="getGenerateBoardSubmenuPayload(index).placeholder || ''"
+              [colorSelectionHeader]="getGenerateBoardSubmenuPayload(index).colorSelectionHeader || ''"
+              [buttonText]="getGenerateBoardSubmenuPayload(index).buttonText || ''"
+              [colorId]="getGenerateBoardSubmenuPayload(index).colorId || null"
               (menuAction)="handleSubmenuAction($event)"
               (close)="closeSubmenu()"
             ></app-generate-board-submenu>
