@@ -1,0 +1,15 @@
+<div class="board-thumbnail" [ngStyle]="getBackgroundStyle()">
+  <div class="board-content">
+    <h3 class="board-name">{{ name }}</h3>
+    <button class="menu-button" (click)="toggleMenu()">⋮</button>
+  </div>
+
+  <!-- Menu Component -->
+  <div class="menu-wrapper" *ngIf="showMenu">
+    <app-menu
+      [menuConfig]="menuConfig"
+      (menuAction)="handleMenuAction($event)"
+      (close)="closeMenu()"
+    ></app-menu>
+  </div>
+</div>
