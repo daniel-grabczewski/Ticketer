@@ -7,6 +7,7 @@ import {
 
 // Used when parent of menu sends it desired menus
 export interface MenuConfig {
+  title : string
   submenus: {
     buttonText : string
     submenu : SubmenuTransfer
