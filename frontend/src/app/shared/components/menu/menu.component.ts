@@ -38,9 +38,10 @@ import { DropdownSubmenuComponent } from '../dropdown-submenu/dropdown-submenu.c
   ],
 })
 export class MenuComponent {
-  @Input() menuConfig: MenuConfig = { submenus: [] };
+  @Input() menuConfig: MenuConfig = { title: '', submenus: [] };
   @Input() orderBias: SubmenuTypes[] = ['confirmation-submenu']; // Default order bias
   @Output() menuAction = new EventEmitter<SubmenuTransfer>();
+  @Output() close = new EventEmitter<void>(); // New output for closing the menu
 
   // Control submenu visibility and active submenu index
   showSubmenu: boolean = false;
@@ -53,6 +54,9 @@ export class MenuComponent {
     this.rearrangeSubmenus();
   }
 
+  /**
+   * Rearranges the submenus based on the order bias.
+   */
   rearrangeSubmenus() {
     const submenus = this.menuConfig.submenus;
 
@@ -74,6 +78,7 @@ export class MenuComponent {
       }
     }
 
+    // Start with submenus not in bias (maintain original order)
     this.rearrangedSubmenus = [...submenusNotInBias];
 
     // Append submenus in bias at the end, in the order specified by orderBias
@@ -82,51 +87,82 @@ export class MenuComponent {
     }
   }
 
+  /**
+   * Opens the submenu corresponding to the clicked button.
+   * @param index The index of the submenu in rearrangedSubmenus.
+   */
   openSubmenu(index: number) {
     this.activeSubmenuIndex = index;
     this.showSubmenu = true;
   }
 
+  /**
+   * Handles the action emitted by the submenu and passes it to the parent component.
+   * @param submenuOutput The output from the submenu.
+   */
   handleSubmenuAction(submenuOutput: SubmenuOutput) {
     if (this.activeSubmenuIndex !== null) {
       const submenuItem = this.rearrangedSubmenus[this.activeSubmenuIndex];
+      // Build the SubmenuTransfer object to emit
       const submenuTransfer: SubmenuTransfer = {
         type: submenuItem.submenu.type,
         purpose: submenuItem.submenu.purpose,
         payload: submenuOutput,
       };
+      // Emit to parent component
       this.menuAction.emit(submenuTransfer);
+      // Close the submenu
       this.closeSubmenu();
     }
   }
 
+  /**
+   * Closes the currently open submenu.
+   */
   closeSubmenu() {
     this.showSubmenu = false;
     this.activeSubmenuIndex = null;
   }
 
-  // Helper methods to get payloads as the correct type, with fallbacks for optional values
+  /**
+   * Closes the entire menu.
+   */
+  closeMenu() {
+    this.close.emit();
+  }
+
+  // Helper methods to get payloads as the correct type
   getTextInputSubmenuPayload(index: number): TextInputSubmenuInput {
-    return this.rearrangedSubmenus[index].submenu.payload as TextInputSubmenuInput;
+    return this.rearrangedSubmenus[index].submenu
+      .payload as TextInputSubmenuInput;
   }
 
   getConfirmationSubmenuPayload(index: number): ConfirmationSubmenuInput {
-    return this.rearrangedSubmenus[index].submenu.payload as ConfirmationSubmenuInput;
+    return this.rearrangedSubmenus[index].submenu
+      .payload as ConfirmationSubmenuInput;
   }
 
-  getBackgroundSelectionSubmenuPayload(index: number): BackgroundSelectionSubmenuInput {
-    return this.rearrangedSubmenus[index].submenu.payload as BackgroundSelectionSubmenuInput;
+  getBackgroundSelectionSubmenuPayload(
+    index: number
+  ): BackgroundSelectionSubmenuInput {
+    return this.rearrangedSubmenus[index].submenu
+      .payload as BackgroundSelectionSubmenuInput;
   }
 
   getColorSelectionSubmenuPayload(index: number): ColorSelectionSubmenuInput {
-    return this.rearrangedSubmenus[index].submenu.payload as ColorSelectionSubmenuInput;
+    return this.rearrangedSubmenus[index].submenu
+      .payload as ColorSelectionSubmenuInput;
   }
 
   getDropdownSubmenuPayload(index: number): DropdownSubmenuInput {
-    return this.rearrangedSubmenus[index].submenu.payload as DropdownSubmenuInput;
+    return this.rearrangedSubmenus[index].submenu
+      .payload as DropdownSubmenuInput;
   }
 
-  getGenerateBoardSubmenuPayload(index: number): GenerateBoardSubmenuInput {
-    return this.rearrangedSubmenus[index].submenu.payload as GenerateBoardSubmenuInput;
+  getGenerateBoardSubmenuPayload(
+    index: number
+  ): GenerateBoardSubmenuInput {
+    return this.rearrangedSubmenus[index].submenu
+      .payload as GenerateBoardSubmenuInput;
   }
 }

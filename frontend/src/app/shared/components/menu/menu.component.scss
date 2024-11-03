@@ -5,6 +5,25 @@
   background-color: $neutral-lighter;
 }
 
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px; 
+}
+
+.menu-title {
+  margin: 0;
+  font-size: 16px;
+}
+
+.quit-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
 .menu-buttons {
   display: flex;
   flex-direction: column;
