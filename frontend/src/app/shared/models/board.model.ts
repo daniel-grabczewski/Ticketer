@@ -32,6 +32,8 @@ export interface BoardRequestBase {
   name: string;
 }
 
+export interface UpdateBoardRequest extends BoardRequestBase {}
+
 export interface CreateBoardRequest extends BoardRequestBase {}
 
 export interface CreateDuplicateBoardRequest {
@@ -41,4 +43,3 @@ export interface CreateDuplicateBoardRequest {
   colorId: number | null;
 }
 
-export interface UpdateBoardRequest extends BoardRequestBase {}
