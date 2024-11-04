@@ -28,6 +28,11 @@ export class TextInputSubmenuComponent implements TextInputSubmenuInput {
   // Component State
   textInputValue: string = this.initialText // Initialize with initialText if provided
 
+  ngOnInit() {
+    // Initialize with initialText if provided
+    this.textInputValue = this.initialText
+  }
+
   // Handle action button click
   onActionClicked() {
     // Emit the menu action with the specified structure
