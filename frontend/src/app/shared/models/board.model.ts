@@ -2,7 +2,9 @@ export interface GetBoardFullDetailsResponse {
   id: string;
   name: string;
   auth0Id: string;
-  colorId : number | null;
+  colorId: number | null;
+  createdAt: string; // ISO 8601 date string
+  updatedAt: string; // ISO 8601 date string
   lists: {
     id: string;
     name: string;
@@ -23,6 +25,8 @@ export interface GetAllBoardsDetailsResponse {
   colorId: number | null;
   listCount: number;
   ticketCount: number;
+  createdAt: string; // ISO 8601 date string
+  updatedAt: string; // ISO 8601 date string
 }
 [];
 
@@ -42,4 +46,3 @@ export interface CreateDuplicateBoardRequest {
   newName: string;
   colorId: number | null;
 }
-
