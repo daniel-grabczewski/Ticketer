@@ -26,9 +26,9 @@ export class TextInputSubmenuComponent implements TextInputSubmenuInput {
   @Output() close = new EventEmitter<void>()
 
   // Component State
-  textInputValue: string = this.initialText // Initialize with initialText if provided
+  textInputValue: string = ''
 
-  ngOnInit() {
+   ngOnInit() {
     // Initialize with initialText if provided
     this.textInputValue = this.initialText
   }
