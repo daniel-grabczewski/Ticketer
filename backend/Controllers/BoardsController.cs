@@ -40,7 +40,9 @@ namespace backend.Controllers
                     Name = b.Name,
                     ColorId = b.ColorId,
                     ListCount = b.Lists.Count,
-                    TicketCount = b.Lists.SelectMany(l => l.Tickets).Count()
+                    TicketCount = b.Lists.SelectMany(l => l.Tickets).Count(),
+                    CreatedAt = b.CreatedAt,
+                    UpdatedAt = b.UpdatedAt
                 })
                 .ToListAsync();
 
@@ -74,6 +76,8 @@ namespace backend.Controllers
                 Name = board.Name,
                 ColorId = board.ColorId,
                 Auth0Id = userId,
+                CreatedAt = board.CreatedAt,
+                UpdatedAt = board.UpdatedAt,
                 Lists = board.Lists.Select(l => new ListDTO
                 {
                     Id = l.Id,
@@ -95,10 +99,9 @@ namespace backend.Controllers
 
         // POST: api/boards
         [HttpPost]
-        [AllowAnonymous] // Allow guest users to create boards
+        [AllowAnonymous]
         public async Task<IActionResult> CreateBoard([FromBody] CreateBoardRequestDTO request)
         {
-            // Validate the request
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -110,13 +113,15 @@ namespace backend.Controllers
                 return Unauthorized("User is not authenticated or guest ID is missing.");
             }
 
-            // Create the new board
+            var currentTime = DateTime.UtcNow;
             var board = new Board
             {
                 Id = request.Id,
                 Name = request.Name,
                 ColorId = request.ColorId,
-                UserId = userId
+                UserId = userId,
+                CreatedAt = currentTime,
+                UpdatedAt = currentTime
             };
 
             await _context.Boards.AddAsync(board);
@@ -130,7 +135,6 @@ namespace backend.Controllers
         [Authorize]
         public async Task<IActionResult> DuplicateBoard([FromBody] CreateDuplicateBoardRequestDTO request)
         {
-            // Validate the request
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -142,7 +146,6 @@ namespace backend.Controllers
                 return Unauthorized("User is not authenticated.");
             }
 
-            // Retrieve the original board
             var originalBoard = await _context.Boards
                 .Include(b => b.Lists.OrderBy(l => l.Position))
                     .ThenInclude(l => l.Tickets.OrderBy(t => t.Position))
@@ -153,18 +156,19 @@ namespace backend.Controllers
                 return NotFound("Original board not found or you do not have access.");
             }
 
-            // Create the new board
+            var currentTime = DateTime.UtcNow;
             var newBoard = new Board
             {
                 Id = request.NewBoardId,
                 Name = request.NewName,
                 ColorId = request.ColorId,
-                UserId = userId
+                UserId = userId,
+                CreatedAt = currentTime,
+                UpdatedAt = currentTime
             };
 
             await _context.Boards.AddAsync(newBoard);
 
-            // Duplicate lists and tickets
             foreach (var list in originalBoard.Lists)
             {
                 var newList = new List
@@ -201,7 +205,6 @@ namespace backend.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateBoard([FromBody] UpdateBoardRequestDTO request)
         {
-            // Validate the request
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -213,7 +216,6 @@ namespace backend.Controllers
                 return Unauthorized("User is not authenticated.");
             }
 
-            // Retrieve the board
             var board = await _context.Boards.FirstOrDefaultAsync(b => b.Id == request.Id && b.UserId == userId);
 
             if (board == null)
@@ -221,9 +223,9 @@ namespace backend.Controllers
                 return NotFound("Board not found or you do not have access.");
             }
 
-            // Update board details
             board.Name = request.Name;
             board.ColorId = request.ColorId;
+            board.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
@@ -241,7 +243,6 @@ namespace backend.Controllers
                 return Unauthorized("User is not authenticated.");
             }
 
-            // Retrieve the board
             var board = await _context.Boards
                 .Include(b => b.Lists)
                     .ThenInclude(l => l.Tickets)
@@ -252,39 +253,31 @@ namespace backend.Controllers
                 return NotFound("Board not found or you do not have access.");
             }
 
-            // Remove the board (lists and tickets should be removed due to cascade delete)
             _context.Boards.Remove(board);
             await _context.SaveChangesAsync();
 
             return Ok(new { Message = "Board deleted successfully!" });
         }
 
-        // Helper method to get the user ID (Authenticated user ID or Guest ID)
         private async Task<string> GetUserIdAsync()
         {
-            // Check if the user is authenticated
             if (User.Identity.IsAuthenticated)
             {
                 return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             }
             else
             {
-                // Check if the user is a guest by checking the GuestId cookie
                 string guestId = Request.Cookies["GuestId"];
-
                 if (!string.IsNullOrEmpty(guestId))
                 {
-                    // Verify that the guest user exists
                     var guestUserExists = await _context.Users.AnyAsync(u => u.Id == guestId && u.IsGuest);
-
                     if (guestUserExists)
                     {
                         return guestId;
                     }
                 }
             }
-
-            return null; // User is neither authenticated nor a valid guest
+            return null;
         }
     }
 }

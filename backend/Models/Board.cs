@@ -11,10 +11,14 @@ namespace YourProject.Models
         [Required]
         public string Name { get; set; } // Name of the board as a string
 
-        public int? ColorId { get; set; } // Number ID that is related to a specific HEX code in the color table
+        public int? ColorId { get; set; } // Number ID related to a specific HEX code in the color table
 
         [Required]
         public string UserId { get; set; } // Alphanumeric Auth0-provided ID
+
+        // Timestamps
+        public DateTime CreatedAt { get; set; } // Automatically set to current time on creation
+        public DateTime UpdatedAt { get; set; } // Automatically updated to current time on modifications
 
         // Navigation properties
         [ForeignKey("ColorId")]

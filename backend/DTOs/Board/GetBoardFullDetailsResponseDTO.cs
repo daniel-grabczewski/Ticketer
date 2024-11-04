@@ -4,6 +4,8 @@ namespace DTOs.Board
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public DateTime CreatedAt { get; set; } 
+        public DateTime UpdatedAt { get; set; } 
         public string Auth0Id { get; set; }
         public int? ColorId { get; set; }
         public List<ListDTO> Lists { get; set; }
