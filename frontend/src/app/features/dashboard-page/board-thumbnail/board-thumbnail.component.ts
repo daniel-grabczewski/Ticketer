@@ -3,9 +3,7 @@ import { CommonModule } from '@angular/common'
 import { MenuComponent } from '../../../shared/components/menu/menu.component'
 import { MenuConfig, SubmenuTransfer } from '../../../shared/models/menu.model'
 import { SubmenuTypes, SubmenuOutput, TextInputSubmenuOutput, ConfirmationSubmenuOutput, ColorSelectionSubmenuOutput, GenerateBoardSubmenuOutput } from '../../../shared/models/submenuInputOutput.model'
-import { BoardService } from '../../../core/services/board.service'
-import { UpdateBoardRequest, CreateDuplicateBoardRequest, GetAllBoardsDetailsResponse } from '../../../shared/models/board.model'
-import { v4 as uuidv4 } from 'uuid'
+import { GetAllBoardsDetailsResponse } from '../../../shared/models/board.model'
 
 @Component({
   selector: 'app-board-thumbnail',
@@ -20,13 +18,11 @@ export class BoardThumbnailComponent implements OnChanges {
   @Input() colorId: number | null = null
 
   @Output() boardUpdated = new EventEmitter<Partial<GetAllBoardsDetailsResponse>>()
-  @Output() boardDeleted = new EventEmitter<{ boardId: string }>()
-  @Output() boardDuplicated = new EventEmitter<GetAllBoardsDetailsResponse>()
+  @Output() boardDeleted = new EventEmitter<string>()
+  @Output() boardDuplicated = new EventEmitter<{ newName: string; colorId: number | null; originalBoardId: string }>()
 
   showMenu: boolean = false
   menuConfig: MenuConfig = this.createMenuConfig()
-
-  constructor(private boardService: BoardService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['name'] || changes['colorId']) {
@@ -41,97 +37,23 @@ export class BoardThumbnailComponent implements OnChanges {
   handleMenuAction(submenuTransfer: SubmenuTransfer) {
     switch (submenuTransfer.purpose) {
       case 'editBackground':
-        this.handleEditBackground(submenuTransfer.payload as ColorSelectionSubmenuOutput)
+        this.boardUpdated.emit({ id: this.id, name: this.name, colorId: (submenuTransfer.payload as ColorSelectionSubmenuOutput).colorId })
         break
       case 'rename':
-        this.handleRename(submenuTransfer.payload as TextInputSubmenuOutput)
+        this.boardUpdated.emit({ id: this.id, name: (submenuTransfer.payload as TextInputSubmenuOutput).text, colorId: this.colorId })
         break
       case 'duplicate':
-        this.handleDuplicate(submenuTransfer.payload as GenerateBoardSubmenuOutput)
+        const duplicatePayload = submenuTransfer.payload as GenerateBoardSubmenuOutput
+        console.log("Emitting board duplicate with:", { newName: duplicatePayload.name.trim(), colorId: duplicatePayload.colorId, originalBoardId: this.id })
+        this.boardDuplicated.emit({ newName: duplicatePayload.name.trim(), colorId: duplicatePayload.colorId, originalBoardId: this.id })
         break
       case 'delete':
-        this.handleDelete(submenuTransfer.payload as ConfirmationSubmenuOutput)
+        if ((submenuTransfer.payload as ConfirmationSubmenuOutput).confirmationStatus) {
+          this.boardDeleted.emit(this.id)
+        }
         break
       default:
         console.warn('Unknown submenu action:', submenuTransfer)
-    }
-  }
-
-  handleEditBackground(payload: ColorSelectionSubmenuOutput) {
-    const newColorId = payload.colorId
-    const updateRequest: UpdateBoardRequest = {
-      id: this.id,
-      name: this.name,
-      colorId: newColorId,
-    }
-    this.boardService.updateBoard(updateRequest).subscribe({
-      next: () => {
-        this.colorId = newColorId
-        this.menuConfig = this.createMenuConfig() // Update menu with new colorId
-        this.boardUpdated.emit({ id: this.id, colorId: newColorId })
-      },
-      error: (error) => {
-        console.error('Failed to update board background:', error)
-      },
-    })
-  }
-
-  handleRename(payload: TextInputSubmenuOutput) {
-    const newName = payload.text.trim()
-    if (newName) {
-      const updateRequest: UpdateBoardRequest = {
-        id: this.id,
-        name: newName,
-        colorId: this.colorId,
-      }
-      this.boardService.updateBoard(updateRequest).subscribe({
-        next: () => {
-          this.name = newName
-          this.menuConfig = this.createMenuConfig() // Update menu with new name
-          this.boardUpdated.emit({ id: this.id, name: newName })
-        },
-        error: (error) => {
-          console.error('Failed to rename board:', error)
-        },
-      })
-    }
-  }
-
-  handleDuplicate(payload: GenerateBoardSubmenuOutput) {
-    const newBoardId = uuidv4()
-    const duplicateRequest: CreateDuplicateBoardRequest = {
-      originalBoardId: this.id,
-      newBoardId: newBoardId,
-      newName: payload.name.trim(),
-      colorId: payload.colorId,
-    }
-    this.boardService.duplicateBoard(duplicateRequest).subscribe({
-      next: () => {
-        const newBoard: GetAllBoardsDetailsResponse = {
-          id: newBoardId,
-          name: payload.name.trim(),
-          colorId: payload.colorId,
-          listCount: 0,
-          ticketCount: 0,
-        }
-        this.boardDuplicated.emit(newBoard)
-      },
-      error: (error) => {
-        console.error('Failed to duplicate board:', error)
-      },
-    })
-  }
-
-  handleDelete(payload: ConfirmationSubmenuOutput) {
-    if (payload.confirmationStatus) {
-      this.boardService.deleteBoard(this.id).subscribe({
-        next: () => {
-          this.boardDeleted.emit({ boardId: this.id })
-        },
-        error: (error) => {
-          console.error('Failed to delete board:', error)
-        },
-      })
     }
   }
 
