@@ -35,6 +35,7 @@ export class DashboardComponent implements OnInit {
     this.boardService.getAllBoards().subscribe({
       next: (data) => {
         this.boards = data.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+        console.log("Fetched and sorted boards:", this.boards)
       },
       error: (error) => {
         console.error('Error fetching boards:', error)
@@ -59,6 +60,7 @@ export class DashboardComponent implements OnInit {
     this.boardService.createBoard(request).subscribe({
       next: () => {
         this.boards.push({ id: newBoardId, name, colorId, listCount: 0, ticketCount: 0, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() })
+        console.log("Created new board:", { id: newBoardId, name, colorId })
       },
       error: (error) => {
         console.error('Error creating board:', error)
@@ -80,6 +82,7 @@ export class DashboardComponent implements OnInit {
         this.boards = this.boards.map(board => 
           board.id === boardId ? { ...board, ...updatedData, updatedAt: new Date().toISOString() } : board
         )
+        console.log("Updated board:", boardId, updatedData)
       },
       error: (error) => {
         console.error('Failed to update board:', error)
@@ -91,6 +94,7 @@ export class DashboardComponent implements OnInit {
     this.boardService.deleteBoard(boardId).subscribe({
       next: () => {
         this.boards = this.boards.filter(board => board.id !== boardId)
+        console.log("Deleted board:", boardId)
       },
       error: (error) => {
         console.error('Failed to delete board:', error)
@@ -130,7 +134,8 @@ export class DashboardComponent implements OnInit {
   }
 
   toggleBoardMenu(boardId: string) {
-    // Toggle the menu for the clicked board ID
+    console.log("Toggling menu for boardId:", boardId)
     this.openMenuBoardId = this.openMenuBoardId === boardId ? null : boardId
+    console.log("Current open menu board ID:", this.openMenuBoardId)
   }
 }

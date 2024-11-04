@@ -16,14 +16,13 @@ export class BoardThumbnailComponent implements OnChanges {
   @Input() id: string = ''
   @Input() name: string = ''
   @Input() colorId: number | null = null
-  @Input() showMenu: boolean = false // New input to control menu state from DashboardComponent
+  @Input() showMenu: boolean = false
 
   @Output() boardUpdated = new EventEmitter<Partial<GetAllBoardsDetailsResponse>>()
   @Output() boardDeleted = new EventEmitter<string>()
   @Output() boardDuplicated = new EventEmitter<{ newName: string; colorId: number | null; originalBoardId: string }>()
-  @Output() toggleMenu = new EventEmitter<void>() // Emit when menu is toggled
+  @Output() toggleMenu = new EventEmitter<void>()
 
-  // Define menuConfig to store configuration for the menu
   menuConfig: MenuConfig = this.createMenuConfig()
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -33,6 +32,7 @@ export class BoardThumbnailComponent implements OnChanges {
   }
 
   handleMenuAction(submenuTransfer: SubmenuTransfer) {
+    console.log("Handling submenu action:", submenuTransfer)
     switch (submenuTransfer.purpose) {
       case 'editBackground':
         this.boardUpdated.emit({ id: this.id, colorId: (submenuTransfer.payload as ColorSelectionSubmenuOutput).colorId })
@@ -61,7 +61,8 @@ export class BoardThumbnailComponent implements OnChanges {
   }
 
   closeMenu() {
-    this.toggleMenu.emit() // Notify DashboardComponent to close the menu
+    console.log("Closing menu from board-thumbnail component.")
+    this.toggleMenu.emit()
   }
 
   private createMenuConfig(): MenuConfig {

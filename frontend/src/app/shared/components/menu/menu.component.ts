@@ -1,26 +1,14 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  MenuConfig,
-  SubmenuTransfer,
-} from '../../models/menu.model';
-import { SubmenuTypes } from '../../models/submenuInputOutput.model';
-import {
-  SubmenuInput,
-  SubmenuOutput,
-  TextInputSubmenuInput,
-  ConfirmationSubmenuInput,
-  BackgroundSelectionSubmenuInput,
-  GenerateBoardSubmenuInput,
-  ColorSelectionSubmenuInput,
-  DropdownSubmenuInput,
-} from '../../models/submenuInputOutput.model';
-import { TextInputSubmenuComponent } from '../text-input-submenu/text-input-submenu.component';
-import { ConfirmationSubmenuComponent } from '../confirmation-submenu/confirmation-submenu.component';
-import { BackgroundSelectionSubmenuComponent } from '../background-selection-submenu/background-selection-submenu.component';
-import { GenerateBoardSubmenuComponent } from '../generate-board-submenu/generate-board-submenu.component';
-import { ColorSelectionSubmenuComponent } from '../color-selection-submenu/color-selection-submenu.component';
-import { DropdownSubmenuComponent } from '../dropdown-submenu/dropdown-submenu.component';
+import { Component, Input, Output, EventEmitter, ElementRef, OnDestroy, OnInit, AfterViewInit } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { MenuConfig, SubmenuTransfer } from '../../models/menu.model'
+import { SubmenuTypes } from '../../models/submenuInputOutput.model'
+import { SubmenuInput, SubmenuOutput, TextInputSubmenuInput, ConfirmationSubmenuInput, BackgroundSelectionSubmenuInput, GenerateBoardSubmenuInput, ColorSelectionSubmenuInput, DropdownSubmenuInput } from '../../models/submenuInputOutput.model'
+import { TextInputSubmenuComponent } from '../text-input-submenu/text-input-submenu.component'
+import { ConfirmationSubmenuComponent } from '../confirmation-submenu/confirmation-submenu.component'
+import { BackgroundSelectionSubmenuComponent } from '../background-selection-submenu/background-selection-submenu.component'
+import { GenerateBoardSubmenuComponent } from '../generate-board-submenu/generate-board-submenu.component'
+import { ColorSelectionSubmenuComponent } from '../color-selection-submenu/color-selection-submenu.component'
+import { DropdownSubmenuComponent } from '../dropdown-submenu/dropdown-submenu.component'
 
 @Component({
   selector: 'app-menu',
@@ -37,132 +25,134 @@ import { DropdownSubmenuComponent } from '../dropdown-submenu/dropdown-submenu.c
     DropdownSubmenuComponent,
   ],
 })
-export class MenuComponent {
-  @Input() menuConfig: MenuConfig = { title: '', submenus: [] };
-  @Input() orderBias: SubmenuTypes[] = ['confirmation-submenu']; // Default order bias
-  @Output() menuAction = new EventEmitter<SubmenuTransfer>();
-  @Output() close = new EventEmitter<void>(); // New output for closing the menu
+export class MenuComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() menuConfig: MenuConfig = { title: '', submenus: [] }
+  @Input() orderBias: SubmenuTypes[] = ['confirmation-submenu']
+  @Output() menuAction = new EventEmitter<SubmenuTransfer>()
+  @Output() close = new EventEmitter<void>()
 
-  // Control submenu visibility and active submenu index
-  showSubmenu: boolean = false;
-  activeSubmenuIndex: number | null = null;
+  showSubmenu: boolean = false
+  activeSubmenuIndex: number | null = null
+  rearrangedSubmenus: { buttonText: string; submenu: SubmenuTransfer }[] = []
 
-  // Store rearranged submenus based on order bias
-  rearrangedSubmenus: { buttonText: string; submenu: SubmenuTransfer }[] = [];
+  constructor(private elementRef: ElementRef) {}
 
   ngOnInit() {
-    this.rearrangeSubmenus();
+    this.rearrangeSubmenus()
+    console.log("Initialized menu component:", this.menuConfig)
   }
 
-  /**
-   * Rearranges the submenus based on the order bias.
-   */
+  ngAfterViewInit() {
+    this.enableOutsideClickDetection()
+  }
+
+  ngOnDestroy() {
+    document.removeEventListener('click', this.onClickOutside.bind(this))
+    console.log("Removed outside click listener")
+  }
+
   rearrangeSubmenus() {
-    const submenus = this.menuConfig.submenus;
+    const submenus = this.menuConfig.submenus
+    const submenusNotInBias: { buttonText: string; submenu: SubmenuTransfer }[] = []
+    const submenusInBias: { [type: string]: { buttonText: string; submenu: SubmenuTransfer }[] } = {}
 
-    const submenusNotInBias: { buttonText: string; submenu: SubmenuTransfer }[] = [];
-    const submenusInBias: { [type: string]: { buttonText: string; submenu: SubmenuTransfer }[] } = {};
-
-    // Initialize submenusInBias for each type in orderBias
     for (const type of this.orderBias) {
-      submenusInBias[type] = [];
+      submenusInBias[type] = []
     }
 
-    // Separate submenus into biased and non-biased
     for (const submenuItem of submenus) {
-      const type = submenuItem.submenu.type;
+      const type = submenuItem.submenu.type
       if (this.orderBias.includes(type)) {
-        submenusInBias[type].push(submenuItem);
+        submenusInBias[type].push(submenuItem)
       } else {
-        submenusNotInBias.push(submenuItem);
+        submenusNotInBias.push(submenuItem)
       }
     }
 
-    // Start with submenus not in bias (maintain original order)
-    this.rearrangedSubmenus = [...submenusNotInBias];
-
-    // Append submenus in bias at the end, in the order specified by orderBias
+    this.rearrangedSubmenus = [...submenusNotInBias]
     for (const type of this.orderBias) {
-      this.rearrangedSubmenus.push(...submenusInBias[type]);
+      this.rearrangedSubmenus.push(...submenusInBias[type])
     }
+    console.log("Rearranged submenus:", this.rearrangedSubmenus)
   }
 
-  /**
-   * Opens the submenu corresponding to the clicked button.
-   * @param index The index of the submenu in rearrangedSubmenus.
-   */
   openSubmenu(index: number) {
-    this.activeSubmenuIndex = index;
-    this.showSubmenu = true;
+    this.activeSubmenuIndex = index
+    this.showSubmenu = true
+    console.log("Opening submenu at index:", index)
   }
 
-  /**
-   * Handles the action emitted by the submenu and passes it to the parent component.
-   * @param submenuOutput The output from the submenu.
-   */
   handleSubmenuAction(submenuOutput: SubmenuOutput) {
     if (this.activeSubmenuIndex !== null) {
-      const submenuItem = this.rearrangedSubmenus[this.activeSubmenuIndex];
-      // Build the SubmenuTransfer object to emit
+      const submenuItem = this.rearrangedSubmenus[this.activeSubmenuIndex]
       const submenuTransfer: SubmenuTransfer = {
         type: submenuItem.submenu.type,
         purpose: submenuItem.submenu.purpose,
         payload: submenuOutput,
-      };
-      // Emit to parent component
-      this.menuAction.emit(submenuTransfer);
-      // Close the submenu
-      this.closeSubmenu();
+      }
+      this.menuAction.emit(submenuTransfer)
+      console.log("Submenu action emitted:", submenuTransfer)
+      this.closeSubmenu()
     }
   }
 
-  /**
-   * Closes the currently open submenu.
-   */
   closeSubmenu() {
-    this.showSubmenu = false;
-    this.activeSubmenuIndex = null;
+    this.showSubmenu = false
+    this.activeSubmenuIndex = null
+    console.log("Closed submenu")
   }
 
-  /**
-   * Closes the entire menu.
-   */
   closeMenu() {
-    this.close.emit();
+    this.close.emit()
+    console.log("Closed menu")
   }
 
-  // Helper methods to get payloads as the correct type
+  enableOutsideClickDetection() {
+    // Attach the outside click listener with a short delay to prevent immediate closure
+    setTimeout(() => {
+      document.addEventListener('click', this.onClickOutside.bind(this))
+      console.log("Enabled outside click detection")
+    }, 50)
+  }
+
+  private onClickOutside(event: MouseEvent) {
+    const target = event.target as HTMLElement
+    const clickedInsideMenu = this.elementRef.nativeElement.contains(target)
+
+    console.log("Outside click detected. Clicked inside menu:", clickedInsideMenu)
+
+    if (!clickedInsideMenu) {
+      if (this.showSubmenu) {
+        this.closeSubmenu()
+        console.log("Clicked outside submenu, closing submenu")
+      } else {
+        this.closeMenu()
+        console.log("Clicked outside menu, closing menu")
+      }
+    }
+  }
+
   getTextInputSubmenuPayload(index: number): TextInputSubmenuInput {
-    return this.rearrangedSubmenus[index].submenu
-      .payload as TextInputSubmenuInput;
+    return this.rearrangedSubmenus[index].submenu.payload as TextInputSubmenuInput
   }
 
   getConfirmationSubmenuPayload(index: number): ConfirmationSubmenuInput {
-    return this.rearrangedSubmenus[index].submenu
-      .payload as ConfirmationSubmenuInput;
+    return this.rearrangedSubmenus[index].submenu.payload as ConfirmationSubmenuInput
   }
 
-  getBackgroundSelectionSubmenuPayload(
-    index: number
-  ): BackgroundSelectionSubmenuInput {
-    return this.rearrangedSubmenus[index].submenu
-      .payload as BackgroundSelectionSubmenuInput;
+  getBackgroundSelectionSubmenuPayload(index: number): BackgroundSelectionSubmenuInput {
+    return this.rearrangedSubmenus[index].submenu.payload as BackgroundSelectionSubmenuInput
   }
 
   getColorSelectionSubmenuPayload(index: number): ColorSelectionSubmenuInput {
-    return this.rearrangedSubmenus[index].submenu
-      .payload as ColorSelectionSubmenuInput;
+    return this.rearrangedSubmenus[index].submenu.payload as ColorSelectionSubmenuInput
   }
 
   getDropdownSubmenuPayload(index: number): DropdownSubmenuInput {
-    return this.rearrangedSubmenus[index].submenu
-      .payload as DropdownSubmenuInput;
+    return this.rearrangedSubmenus[index].submenu.payload as DropdownSubmenuInput
   }
 
-  getGenerateBoardSubmenuPayload(
-    index: number
-  ): GenerateBoardSubmenuInput {
-    return this.rearrangedSubmenus[index].submenu
-      .payload as GenerateBoardSubmenuInput;
+  getGenerateBoardSubmenuPayload(index: number): GenerateBoardSubmenuInput {
+    return this.rearrangedSubmenus[index].submenu.payload as GenerateBoardSubmenuInput
   }
 }
