@@ -1,0 +1,45 @@
+.list-container {
+  background-color: $neutral-lighter;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.list-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: $secondary;
+  border: none;
+  background: transparent;
+  outline: none;
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.ticket-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.add-ticket {
+  background: none;
+  border: none;
+  color: $primary;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 8px;
+}
