@@ -31,8 +31,13 @@ export class GenerateBoardSubmenuComponent
   @Output() close = new EventEmitter<void>();
 
   // Component State
-  nameInput: string = this.initialText;
-  selectedColorId: number | null = this.colorId;
+  nameInput: string = ''
+  selectedColorId: number | null = null
+
+  ngOnInit() {
+    this.selectedColorId = this.colorId;
+    this.nameInput = this.initialText;
+  }
 
   // Handle color selection from the child component
   onColorSelected(colorId: number | null) {
