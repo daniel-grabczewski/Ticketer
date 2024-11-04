@@ -1,7 +1,7 @@
 <div class="board-thumbnail" [ngStyle]="getBackgroundStyle()">
   <div class="board-content">
     <h3 class="board-name">{{ name }}</h3>
-    <button class="menu-button" (click)="toggleMenu()">⋮</button>
+    <button class="menu-button" (click)="toggleMenu.emit()">⋮</button> 
   </div>
 
   <!-- Menu Component -->

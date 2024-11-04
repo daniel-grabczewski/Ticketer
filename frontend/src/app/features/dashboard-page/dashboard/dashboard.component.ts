@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
 
   showSubmenu: boolean = false
   boards: GetAllBoardsDetailsResponse[] = []
+  openMenuBoardId: string | null = null // Track the ID of the open menu
 
   constructor(private boardService: BoardService) {}
 
@@ -40,7 +41,6 @@ export class DashboardComponent implements OnInit {
       },
     })
   }
-  
 
   openSubmenu() {
     this.showSubmenu = true
@@ -69,13 +69,10 @@ export class DashboardComponent implements OnInit {
   }
 
   onBoardUpdated(boardId: string, updatedData: Partial<GetAllBoardsDetailsResponse>) {
-    const existingBoard = this.boards.find(board => board.id === boardId)
-    if (!existingBoard) return
-
     const updateRequest: UpdateBoardRequest = {
       id: boardId,
-      name: updatedData.name ?? existingBoard.name, // Ensure name is updated or remains current
-      colorId: updatedData.colorId ?? existingBoard.colorId, // Ensure colorId is updated or remains current
+      name: updatedData.name ?? '',
+      colorId: updatedData.colorId ?? null,
     }
   
     this.boardService.updateBoard(updateRequest).subscribe({
@@ -89,7 +86,6 @@ export class DashboardComponent implements OnInit {
       },
     })
   }
-  
 
   onBoardDeleted(boardId: string) {
     this.boardService.deleteBoard(boardId).subscribe({
@@ -131,5 +127,10 @@ export class DashboardComponent implements OnInit {
         console.error('Failed to duplicate board:', error)
       },
     })
+  }
+
+  toggleBoardMenu(boardId: string) {
+    // Toggle the menu for the clicked board ID
+    this.openMenuBoardId = this.openMenuBoardId === boardId ? null : boardId
   }
 }

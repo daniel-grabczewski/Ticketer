@@ -16,12 +16,14 @@ export class BoardThumbnailComponent implements OnChanges {
   @Input() id: string = ''
   @Input() name: string = ''
   @Input() colorId: number | null = null
+  @Input() showMenu: boolean = false // New input to control menu state from DashboardComponent
 
   @Output() boardUpdated = new EventEmitter<Partial<GetAllBoardsDetailsResponse>>()
   @Output() boardDeleted = new EventEmitter<string>()
   @Output() boardDuplicated = new EventEmitter<{ newName: string; colorId: number | null; originalBoardId: string }>()
+  @Output() toggleMenu = new EventEmitter<void>() // Emit when menu is toggled
 
-  showMenu: boolean = false
+  // Define menuConfig to store configuration for the menu
   menuConfig: MenuConfig = this.createMenuConfig()
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -30,21 +32,16 @@ export class BoardThumbnailComponent implements OnChanges {
     }
   }
 
-  toggleMenu() {
-    this.showMenu = !this.showMenu
-  }
-
   handleMenuAction(submenuTransfer: SubmenuTransfer) {
     switch (submenuTransfer.purpose) {
       case 'editBackground':
-        this.boardUpdated.emit({ id: this.id, name: this.name, colorId: (submenuTransfer.payload as ColorSelectionSubmenuOutput).colorId })
+        this.boardUpdated.emit({ id: this.id, colorId: (submenuTransfer.payload as ColorSelectionSubmenuOutput).colorId })
         break
       case 'rename':
-        this.boardUpdated.emit({ id: this.id, name: (submenuTransfer.payload as TextInputSubmenuOutput).text, colorId: this.colorId })
+        this.boardUpdated.emit({ id: this.id, name: (submenuTransfer.payload as TextInputSubmenuOutput).text })
         break
       case 'duplicate':
         const duplicatePayload = submenuTransfer.payload as GenerateBoardSubmenuOutput
-        console.log("Emitting board duplicate with:", { newName: duplicatePayload.name.trim(), colorId: duplicatePayload.colorId, originalBoardId: this.id })
         this.boardDuplicated.emit({ newName: duplicatePayload.name.trim(), colorId: duplicatePayload.colorId, originalBoardId: this.id })
         break
       case 'delete':
@@ -64,7 +61,7 @@ export class BoardThumbnailComponent implements OnChanges {
   }
 
   closeMenu() {
-    this.showMenu = false
+    this.toggleMenu.emit() // Notify DashboardComponent to close the menu
   }
 
   private createMenuConfig(): MenuConfig {
@@ -78,7 +75,7 @@ export class BoardThumbnailComponent implements OnChanges {
             purpose: 'editBackground',
             payload: {
               title: 'Edit Background',
-              colorSelectionHeader : 'Select background',
+              colorSelectionHeader: 'Select background',
               colorId: this.colorId,
               buttonText: 'Done',
             },

@@ -1,21 +1,20 @@
 <div class="dashboard">
-  <!-- Board Thumbnails -->
   <div class="board-grid">
     <app-board-thumbnail
       *ngFor="let board of boards"
       [id]="board.id"
       [name]="board.name"
       [colorId]="board.colorId"
+      [showMenu]="openMenuBoardId === board.id" 
+      (toggleMenu)="toggleBoardMenu(board.id)" 
       (boardUpdated)="onBoardUpdated(board.id, $event)"
       (boardDeleted)="onBoardDeleted(board.id)"
       (boardDuplicated)="onBoardDuplicated($event)"
     ></app-board-thumbnail>
   </div>
 
-  <!-- Button to open the submenu for creating a new board -->
   <button class="open-submenu-button" (click)="openSubmenu()">Create Board</button>
 
-  <!-- Generate Board Submenu -->
   <app-generate-board-submenu
     *ngIf="showSubmenu"
     [title]="submenuTitle"
