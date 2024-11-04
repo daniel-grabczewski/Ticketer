@@ -30,5 +30,10 @@ export const routes: Routes = [
     component: MenuComponent,
     // Guard removed to allow guest access
   },
+  {
+    path: 'board',
+    component: MenuComponent,
+    // Guard removed to allow guest access
+  },
   { path: '**', redirectTo: '' }, // Redirect unknown paths to home
 ];

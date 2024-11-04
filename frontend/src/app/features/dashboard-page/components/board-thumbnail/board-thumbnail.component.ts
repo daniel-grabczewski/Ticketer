@@ -1,9 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { MenuComponent } from '../../../shared/components/menu/menu.component'
-import { MenuConfig, SubmenuTransfer } from '../../../shared/models/menu.model'
-import { SubmenuTypes, SubmenuOutput, TextInputSubmenuOutput, ConfirmationSubmenuOutput, ColorSelectionSubmenuOutput, GenerateBoardSubmenuOutput } from '../../../shared/models/submenuInputOutput.model'
-import { GetAllBoardsDetailsResponse } from '../../../shared/models/board.model'
+import { MenuComponent } from '../../../../shared/components/menu/menu.component'
+import { MenuConfig, SubmenuTransfer } from '../../../../shared/models/menu.model'
+import { SubmenuTypes, SubmenuOutput, TextInputSubmenuOutput, ConfirmationSubmenuOutput, ColorSelectionSubmenuOutput, GenerateBoardSubmenuOutput } from '../../../../shared/models/submenuInputOutput.model'
+import { GetAllBoardsDetailsResponse } from '../../../../shared/models/board.model'
 
 @Component({
   selector: 'app-board-thumbnail',

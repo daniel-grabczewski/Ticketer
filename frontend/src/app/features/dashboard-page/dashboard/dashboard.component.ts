@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common'
 import { BoardService } from '../../../core/services/board.service'
 import { CreateBoardRequest, GetAllBoardsDetailsResponse, UpdateBoardRequest } from '../../../shared/models/board.model'
 import { GenerateBoardSubmenuComponent } from '../../../shared/components/generate-board-submenu/generate-board-submenu.component'
-import { BoardThumbnailComponent } from '../board-thumbnail/board-thumbnail.component'
+import { BoardThumbnailComponent } from '../components/board-thumbnail/board-thumbnail.component'
 import { GenerateBoardSubmenuOutput } from '../../../shared/models/submenuInputOutput.model'
 
 @Component({
