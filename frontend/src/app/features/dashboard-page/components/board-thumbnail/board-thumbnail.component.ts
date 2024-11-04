@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core'
 import { CommonModule } from '@angular/common'
+import { Router } from '@angular/router' // Import Angular Router
 import { MenuComponent } from '../../../../shared/components/menu/menu.component'
 import { MenuConfig, SubmenuTransfer } from '../../../../shared/models/menu.model'
 import { SubmenuTypes, SubmenuOutput, TextInputSubmenuOutput, ConfirmationSubmenuOutput, ColorSelectionSubmenuOutput, GenerateBoardSubmenuOutput } from '../../../../shared/models/submenuInputOutput.model'
@@ -25,10 +26,18 @@ export class BoardThumbnailComponent implements OnChanges {
 
   menuConfig: MenuConfig = this.createMenuConfig()
 
+  constructor(private router: Router) {} // Inject Router for navigation
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['name'] || changes['colorId']) {
       this.menuConfig = this.createMenuConfig()
     }
+  }
+
+  // Navigate to the board page when the thumbnail is clicked
+  navigateToBoard() {
+    const slug = this.name.replace(/\s+/g, '-').toLowerCase() // Simple slug generation
+    this.router.navigate([`/board`, this.id, slug])
   }
 
   handleMenuAction(submenuTransfer: SubmenuTransfer) {

@@ -12,6 +12,7 @@ import { ColorSelectionPanelComponent } from './shared/components/color-selectio
 import { ColorSelectionSubmenuComponent } from './shared/components/color-selection-submenu/color-selection-submenu.component';
 import { CreateBoardItemSubmenuComponent } from './shared/components/create-board-item-submenu/create-board-item-submenu.component';
 import { MenuComponent } from './shared/components/menu/menu.component';
+import { BoardComponent } from './features/board-page/board/board.component';
 
 export const routes: Routes = [
   { path: '', component: DashboardComponent }, // Public route
@@ -31,9 +32,14 @@ export const routes: Routes = [
     // Guard removed to allow guest access
   },
   {
-    path: 'board',
-    component: MenuComponent,
-    // Guard removed to allow guest access
+    path: 'board/:boardId/:boardNameSlug',
+    component: BoardComponent,
+    pathMatch: 'full' // Ensures exact matching
+  },
+  {
+    path: 'board/:boardId', // Add a separate path without the slug
+    component: BoardComponent,
+    pathMatch: 'full'
   },
   { path: '**', redirectTo: '' }, // Redirect unknown paths to home
 ];
