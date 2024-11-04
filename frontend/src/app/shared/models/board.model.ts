@@ -1,5 +1,5 @@
 export interface GetBoardFullDetailsResponse {
-  id: number;
+  id: string;
   name: string;
   auth0Id: string;
   colorId : number | null;
@@ -18,7 +18,7 @@ export interface GetBoardFullDetailsResponse {
 }
 
 export interface GetAllBoardsDetailsResponse {
-  id: number;
+  id: string;
   name: string;
   colorId: number | null;
   listCount: number;
