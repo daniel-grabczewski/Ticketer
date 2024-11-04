@@ -1,0 +1,24 @@
+@import '../../../assets/styles/main.scss';
+
+.ticket-container {
+  background-color: $neutral-darker;
+  padding: 8px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  max-width: 200px;
+}
+
+.color-strip {
+  height: 4px;
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+}
+
+.ticket-name {
+  color: $secondary;
+  font-size: 14px;
+  margin-top: 8px;
+}
