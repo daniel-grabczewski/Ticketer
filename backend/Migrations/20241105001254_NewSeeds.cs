@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class ReworkDatabase : Migration
+    public partial class NewSeeds : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -55,9 +56,11 @@ namespace backend.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ColorId = table.Column<int>(type: "int", nullable: false),
+                    ColorId = table.Column<int>(type: "int", nullable: true),
                     UserId = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -113,7 +116,7 @@ namespace backend.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ColorId = table.Column<int>(type: "int", nullable: false),
+                    ColorId = table.Column<int>(type: "int", nullable: true),
                     Position = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -141,10 +144,48 @@ namespace backend.Migrations
                 {
                     { 1, "#50C996" },
                     { 2, "#3BBA3B" },
-                    { 4, "#8131F9" },
-                    { 5, "#FEA362" },
-                    { 6, "#F773BE" },
-                    { 7, "#EE4646" }
+                    { 3, "#8131F9" },
+                    { 4, "#FEA362" },
+                    { 5, "#F773BE" },
+                    { 6, "#EE4646" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "IsGuest", "UserName" },
+                values: new object[] { "google-oauth2|116927637409288985519", false, "User" });
+
+            migrationBuilder.InsertData(
+                table: "Boards",
+                columns: new[] { "Id", "ColorId", "CreatedAt", "Name", "UpdatedAt", "UserId" },
+                values: new object[] { "test-id-123", 1, new DateTime(2024, 11, 5, 0, 12, 54, 327, DateTimeKind.Utc).AddTicks(4165), "test marketing board", new DateTime(2024, 11, 5, 0, 12, 54, 327, DateTimeKind.Utc).AddTicks(4167), "google-oauth2|116927637409288985519" });
+
+            migrationBuilder.InsertData(
+                table: "Lists",
+                columns: new[] { "Id", "BoardId", "Name", "Position" },
+                values: new object[,]
+                {
+                    { "list-1", "test-id-123", "To Do", 1 },
+                    { "list-2", "test-id-123", "In Progress", 2 },
+                    { "list-3", "test-id-123", "Review", 3 },
+                    { "list-4", "test-id-123", "Completed", 4 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Tickets",
+                columns: new[] { "Id", "ColorId", "Description", "ListId", "Name", "Position" },
+                values: new object[,]
+                {
+                    { "ticket-1", 2, "Outline key strategies.", "list-1", "Create Marketing Plan", 1 },
+                    { "ticket-10", 4, "Send out to subscribers.", "list-4", "Launch Survey", 3 },
+                    { "ticket-2", 3, "Gather competitive insights.", "list-1", "Research Competitors", 2 },
+                    { "ticket-3", 4, "Draft posts for Q1.", "list-2", "Social Media Campaign", 1 },
+                    { "ticket-4", 5, "Initial design concept.", "list-2", "Design Landing Page", 2 },
+                    { "ticket-5", 6, "SEO-focused articles.", "list-2", "Write Blog Posts", 3 },
+                    { "ticket-6", 2, "Get approval from finance.", "list-3", "Budget Approval", 1 },
+                    { "ticket-7", 4, "Prepare Q1 newsletter.", "list-3", "Draft Newsletter", 2 },
+                    { "ticket-8", 1, "Google Analytics setup.", "list-4", "Set Up Analytics", 1 },
+                    { "ticket-9", 2, "Discuss goals and milestones.", "list-4", "Team Meeting", 2 }
                 });
 
             migrationBuilder.CreateIndex(
