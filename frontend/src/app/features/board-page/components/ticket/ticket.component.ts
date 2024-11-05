@@ -1,34 +1,29 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { TicketInput, TicketOutput } from '../../../../shared/models/uniqueComonentInputOutput.model'
+// ticket.component.ts
+
+import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-ticket',
   templateUrl: './ticket.component.html',
   styleUrls: ['./ticket.component.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, DragDropModule],
 })
 export class TicketComponent implements OnInit {
-  @Input() ticketData!: TicketInput
-  @Output() ticketMoved = new EventEmitter<TicketOutput>()
+  @Input() id: string = '';
+  @Input() name: string = '';
+  @Input() description: string = '';
+  @Input() position: number = 0;
+  @Input() colorId: number | null = null;
+  @Input() colorMap: { [key: number]: string } = {};
 
-  colorHex: string = ''  // Stores the hex color based on colorMap and colorId
+  colorHex: string = ''; // Stores the hex color based on colorMap and colorId
 
-  ngOnInit() {
-    // Set the hex color using colorMap if colorId exists
-    if (this.ticketData.colorId !== null && this.ticketData.colorMap[this.ticketData.colorId]) {
-      this.colorHex = this.ticketData.colorMap[this.ticketData.colorId]
+  ngOnInit(): void {
+    if (this.colorId !== null && this.colorMap[this.colorId]) {
+      this.colorHex = this.colorMap[this.colorId];
     }
-  }
-
-  // Emit ticket move event for drag-and-drop actions
-  moveTicket(targetListId: string, newPosition: number) {
-    const outputData: TicketOutput = {
-      id: this.ticketData.id,
-      targetListId,
-      newPosition
-    }
-    this.ticketMoved.emit(outputData)
   }
 }

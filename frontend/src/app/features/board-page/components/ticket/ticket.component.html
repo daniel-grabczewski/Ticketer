@@ -1,7 +1,9 @@
-<div class="ticket-container">
+<!-- ticket.component.html -->
+
+<div class="ticket-container" cdkDrag>
   <!-- Color Strip -->
   <div class="color-strip" [style.backgroundColor]="colorHex"></div>
 
   <!-- Ticket Name -->
-  <div class="ticket-name">{{ ticketData.name }}</div>
+  <div class="ticket-name">{{ name }}</div>
 </div>
