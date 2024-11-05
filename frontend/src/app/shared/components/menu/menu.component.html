@@ -1,4 +1,4 @@
-<div class="menu-container">
+<div class="menu-container" (click)="$event.stopPropagation()">
   <!-- Header with title and quit button -->
   <div class="menu-header">
     <h3 class="menu-title">{{ menuConfig.title }}</h3>
@@ -16,14 +16,14 @@
         [ngClass]="{
           'confirmation-button': submenuItem.submenu.type === 'confirmation-submenu'
         }"
-        (click)="openSubmenu(index)"
+        (click)="openSubmenu(index); $event.stopPropagation()"
       >
         {{ submenuItem.buttonText }}
       </button>
 
       <!-- Submenu -->
       <ng-container *ngIf="showSubmenu && activeSubmenuIndex === index">
-        <div class="submenu-container">
+        <div class="submenu-container" (click)="$event.stopPropagation()">
           <ng-container [ngSwitch]="submenuItem.submenu.type">
             <!-- Text Input Submenu -->
             <app-text-input-submenu
@@ -47,52 +47,8 @@
               (close)="closeSubmenu()"
             ></app-confirmation-submenu>
 
-            <!-- Background Selection Submenu -->
-            <app-background-selection-submenu
-              *ngSwitchCase="'background-selection-submenu'"
-              [title]="getBackgroundSelectionSubmenuPayload(index).title || ''"
-              [colorId]="getBackgroundSelectionSubmenuPayload(index).colorId || null"
-              [colorSelectionHeader]="getBackgroundSelectionSubmenuPayload(index).colorSelectionHeader || ''"
-              [buttonText]="getBackgroundSelectionSubmenuPayload(index).buttonText || ''"
-              (menuAction)="handleSubmenuAction($event)"
-              (close)="closeSubmenu()"
-            ></app-background-selection-submenu>
-
-            <!-- Color Selection Submenu -->
-            <app-color-selection-submenu
-              *ngSwitchCase="'color-selection-submenu'"
-              [title]="getColorSelectionSubmenuPayload(index).title || ''"
-              [colorId]="getColorSelectionSubmenuPayload(index).colorId || null" 
-              [buttonText]="getColorSelectionSubmenuPayload(index).buttonText || ''"
-              (menuAction)="handleSubmenuAction($event)"
-              (close)="closeSubmenu()"
-            ></app-color-selection-submenu>
-
-            <!-- Dropdown Submenu -->
-            <app-dropdown-submenu
-              *ngSwitchCase="'dropdown-submenu'"
-              [title]="getDropdownSubmenuPayload(index).title || ''"
-              [dropdownInputLabel]="getDropdownSubmenuPayload(index).dropdownInputLabel || ''"
-              [dropdownItems]="getDropdownSubmenuPayload(index).dropdownItems || []" 
-              [dropdownPlaceholderText]="getDropdownSubmenuPayload(index).dropdownPlaceholderText || ''"
-              [buttonText]="getDropdownSubmenuPayload(index).buttonText || ''"
-              (menuAction)="handleSubmenuAction($event)"
-              (close)="closeSubmenu()"
-            ></app-dropdown-submenu>
-
-            <!-- Generate Board Submenu -->
-            <app-generate-board-submenu
-              *ngSwitchCase="'generate-board-submenu'"
-              [title]="getGenerateBoardSubmenuPayload(index).title || ''"
-              [textInputLabel]="getGenerateBoardSubmenuPayload(index).textInputLabel || ''"
-              [initialText]="getGenerateBoardSubmenuPayload(index).initialText || ''"
-              [placeholder]="getGenerateBoardSubmenuPayload(index).placeholder || ''"
-              [colorSelectionHeader]="getGenerateBoardSubmenuPayload(index).colorSelectionHeader || ''"
-              [buttonText]="getGenerateBoardSubmenuPayload(index).buttonText || ''"
-              [colorId]="getGenerateBoardSubmenuPayload(index).colorId || null"
-              (menuAction)="handleSubmenuAction($event)"
-              (close)="closeSubmenu()"
-            ></app-generate-board-submenu>
+            <!-- Other Submenus -->
+            <!-- Add other submenu components here as needed -->
 
             <!-- Default Case -->
             <div *ngSwitchDefault>

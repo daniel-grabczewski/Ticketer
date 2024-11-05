@@ -3,6 +3,7 @@
 .menu-container {
   position: relative;
   background-color: $neutral-lighter;
+  z-index: 1000; /* Ensure menu is above other elements */
 }
 
 .menu-header {
@@ -53,7 +54,7 @@
 .submenu-container {
   position: absolute;
   top: 0;
-  left: 100%; // Position to the right of the button
-  z-index: 1000;
+  left: 100%; /* Position to the right of the button */
+  z-index: 1001; /* Ensure submenu is above the menu */
   margin-left: 8px;
 }
