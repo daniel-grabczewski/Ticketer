@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Added FormsModule for ngModel
+import { FormsModule } from '@angular/forms';
 import {
   DragDropModule,
   CdkDragDrop,
@@ -19,13 +19,13 @@ import { UpdateTicketPositionRequest } from '../../../../shared/models/ticket.mo
   standalone: true,
   imports: [CommonModule, FormsModule, DragDropModule, TicketComponent],
 })
-export class ListComponent {
+export class ListComponent implements OnInit {
   @Input() id: string = '';
   @Input() name: string = '';
   @Input() position: number = 0;
   @Input() tickets: TicketInput[] = [];
   @Input() colorMap: { [key: number]: string } = {};
-  @Input() connectedDropLists: string[] = []; // List IDs for connected drop lists
+  @Input() connectedDropLists: string[] = [];
 
   @Output() ticketPositionChanged = new EventEmitter<{
     ticketId: string;
@@ -38,20 +38,32 @@ export class ListComponent {
   @Output() listDeleted = new EventEmitter<string>();
   @Output() ticketCreated = new EventEmitter<{ listId: string; name: string }>();
 
+  cdkDropListId!: string;
+
   constructor(private ticketService: TicketService) {}
+
+  ngOnInit(): void {
+    // Set a unique cdkDropListId
+    this.cdkDropListId = 'cdk-drop-list-' + this.id;
+  }
 
   // Handler for reordering tickets within the list or moving between lists
   onTicketDrop(event: CdkDragDrop<TicketInput[]>): void {
+    if (!event.item.data) {
+      console.error('Dragged item data is undefined.');
+      return;
+    }
+
+    const ticket: TicketInput = event.item.data;
+
     if (event.previousContainer === event.container) {
       // Moved within the same list
-      moveItemInArray(this.tickets, event.previousIndex, event.currentIndex);
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
 
       // Update positions locally
-      this.tickets.forEach((ticket, index) => {
-        ticket.position = index + 1;
+      event.container.data.forEach((t, index) => {
+        t.position = index + 1;
       });
-
-      const ticket = this.tickets[event.currentIndex];
 
       const request: UpdateTicketPositionRequest = {
         id: ticket.id,
@@ -84,18 +96,20 @@ export class ListComponent {
       );
 
       // Update positions in both lists
-      (event.container.data as TicketInput[]).forEach((ticket, index) => {
-        ticket.position = index + 1;
+      event.container.data.forEach((t, index) => {
+        t.position = index + 1;
       });
-      (event.previousContainer.data as TicketInput[]).forEach((ticket, index) => {
-        ticket.position = index + 1;
+      event.previousContainer.data.forEach((t, index) => {
+        t.position = index + 1;
       });
 
-      const ticket = event.container.data[event.currentIndex];
+      // Extract list IDs by removing the prefix
+      const oldListId = event.previousContainer.id.replace('cdk-drop-list-', '');
+      const newListId = this.id;
 
       const request: UpdateTicketPositionRequest = {
         id: ticket.id,
-        listId: this.id, // New list ID
+        listId: newListId,
         newPosition: ticket.position,
       };
 
@@ -110,8 +124,8 @@ export class ListComponent {
 
       this.ticketPositionChanged.emit({
         ticketId: ticket.id,
-        oldListId: event.previousContainer.id,
-        newListId: this.id,
+        oldListId: oldListId,
+        newListId: newListId,
         newPosition: ticket.position,
       });
     }

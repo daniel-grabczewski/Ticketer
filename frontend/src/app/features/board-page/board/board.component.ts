@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { BoardService } from '../../../core/services/board.service';
-import { ListService } from '../../../core/services/list.service'; // Import ListService
+import { ListService } from '../../../core/services/list.service';
 import { GetBoardFullDetailsResponse } from '../../../shared/models/board.model';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ListComponent } from '../components/list/list.component';
@@ -18,12 +18,12 @@ import { UpdateListPositionRequest } from '../../../shared/models/list.model';
 export class BoardComponent implements OnInit {
   boardDetails: GetBoardFullDetailsResponse | null = null;
   colorMap: { [key: number]: string } = {};
-  listIds: string[] = []; // List of all list IDs
+  listIds: string[] = []; // List of all cdkDropListIds
 
   constructor(
     private route: ActivatedRoute,
     private boardService: BoardService,
-    private listService: ListService // Inject ListService
+    private listService: ListService
   ) {}
 
   ngOnInit(): void {
@@ -38,7 +38,8 @@ export class BoardComponent implements OnInit {
     this.boardService.getBoardById(boardId).subscribe({
       next: (data) => {
         this.boardDetails = data;
-        this.listIds = this.boardDetails.lists.map((list) => list.id); // Store list IDs
+        // Generate listIds with prefixes
+        this.listIds = this.boardDetails.lists.map((list) => 'cdk-drop-list-' + list.id);
         console.log('Board details retrieved:', this.boardDetails);
       },
       error: (error) => {
@@ -65,7 +66,7 @@ export class BoardComponent implements OnInit {
 
       // Update positions locally
       this.boardDetails.lists.forEach((list, index) => {
-        list.position = index + 1; // Assuming positions start from 1
+        list.position = index + 1;
       });
 
       // Prepare update requests for the backend
@@ -96,6 +97,6 @@ export class BoardComponent implements OnInit {
     newPosition: number;
   }): void {
     console.log('Ticket position changed:', event);
-    // Implement ticket position update logic here if needed
+    // Implement additional logic here if needed
   }
 }

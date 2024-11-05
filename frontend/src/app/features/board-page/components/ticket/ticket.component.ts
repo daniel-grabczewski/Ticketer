@@ -1,15 +1,12 @@
-// ticket.component.ts
-
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-ticket',
   templateUrl: './ticket.component.html',
   styleUrls: ['./ticket.component.scss'],
   standalone: true,
-  imports: [CommonModule, DragDropModule],
+  imports: [CommonModule],
 })
 export class TicketComponent implements OnInit {
   @Input() id: string = '';

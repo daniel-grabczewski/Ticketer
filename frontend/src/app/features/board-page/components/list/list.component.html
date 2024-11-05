@@ -14,20 +14,33 @@
     cdkDropList
     [cdkDropListData]="tickets"
     [cdkDropListConnectedTo]="connectedDropLists"
-    [id]="id"
+    [id]="cdkDropListId"
     class="ticket-list"
     (cdkDropListDropped)="onTicketDrop($event)"
   >
-    <app-ticket
-      *ngFor="let ticket of tickets"
-      cdkDrag
-      [id]="ticket.id"
-      [name]="ticket.name"
-      [description]="ticket.description"
-      [colorId]="ticket.colorId"
-      [position]="ticket.position"
-      [colorMap]="colorMap"
-    ></app-ticket>
+    <!-- Placeholder for Empty List -->
+    <div *ngIf="tickets.length === 0" class="empty-list-placeholder">
+      Drop tickets here
+    </div>
+
+    <ng-container *ngFor="let ticket of tickets; let i = index">
+      <div cdkDrag [cdkDragData]="ticket" class="ticket-wrapper">
+        <app-ticket
+          [id]="ticket.id"
+          [name]="ticket.name"
+          [description]="ticket.description"
+          [colorId]="ticket.colorId"
+          [position]="ticket.position"
+          [colorMap]="colorMap"
+        ></app-ticket>
+
+        <!-- Custom Placeholder -->
+        <div
+          *cdkDragPlaceholder
+          class="ticket-placeholder"
+        ></div>
+      </div>
+    </ng-container>
   </div>
 
   <!-- Add Ticket Button -->
