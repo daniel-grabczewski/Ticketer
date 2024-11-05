@@ -5,23 +5,41 @@ import { BoardService } from '../../../core/services/board.service';
 import { ListService } from '../../../core/services/list.service';
 import { TicketService } from '../../../core/services/ticket.service';
 import { GetBoardFullDetailsResponse } from '../../../shared/models/board.model';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { ListComponent } from '../components/list/list.component';
-import { UpdateListPositionRequest, UpdateListRequest, CreateDuplicateListRequest } from '../../../shared/models/list.model';
+import {
+  UpdateListPositionRequest,
+  UpdateListRequest,
+  CreateDuplicateListRequest,
+  CreateListRequest,
+} from '../../../shared/models/list.model';
 import { CreateTicketRequest } from '../../../shared/models/ticket.model';
 import { v4 as uuidv4 } from 'uuid';
+import { CreateBoardItemSubmenuComponent } from '../../../shared/components/create-board-item-submenu/create-board-item-submenu.component';
+import { CreateBoardItemSubmenuOutput } from '../../../shared/models/submenuInputOutput.model';
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
   standalone: true,
-  imports: [CommonModule, DragDropModule, ListComponent],
+  imports: [
+    CommonModule,
+    DragDropModule,
+    ListComponent,
+    CreateBoardItemSubmenuComponent,
+  ],
 })
 export class BoardComponent implements OnInit {
   boardDetails: GetBoardFullDetailsResponse | null = null;
   colorMap: { [key: number]: string } = {};
   listIds: string[] = []; // List of all cdkDropListIds
+
+  showCreateListSubmenu: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -43,7 +61,9 @@ export class BoardComponent implements OnInit {
       next: (data) => {
         this.boardDetails = data;
         // Generate listIds with prefixes
-        this.listIds = this.boardDetails.lists.map((list) => 'cdk-drop-list-' + list.id);
+        this.listIds = this.boardDetails.lists.map(
+          (list) => 'cdk-drop-list-' + list.id
+        );
         console.log('Board details retrieved:', this.boardDetails);
       },
       error: (error) => {
@@ -66,7 +86,11 @@ export class BoardComponent implements OnInit {
   // Event handler for dragging lists
   onListDrop(event: CdkDragDrop<any[]>): void {
     if (this.boardDetails && this.boardDetails.lists) {
-      moveItemInArray(this.boardDetails.lists, event.previousIndex, event.currentIndex);
+      moveItemInArray(
+        this.boardDetails.lists,
+        event.previousIndex,
+        event.currentIndex
+      );
 
       // Update positions locally
       this.boardDetails.lists.forEach((list, index) => {
@@ -74,19 +98,25 @@ export class BoardComponent implements OnInit {
       });
 
       // Prepare update requests for the backend
-      const updateRequests: UpdateListPositionRequest[] = this.boardDetails.lists.map((list) => ({
-        id: list.id,
-        newPosition: list.position,
-      }));
+      const updateRequests: UpdateListPositionRequest[] =
+        this.boardDetails.lists.map((list) => ({
+          id: list.id,
+          newPosition: list.position,
+        }));
 
       // Send update requests to the backend
       updateRequests.forEach((request) => {
         this.listService.updateListPosition(request).subscribe({
           next: () => {
-            console.log(`List ${request.id} position updated to ${request.newPosition}`);
+            console.log(
+              `List ${request.id} position updated to ${request.newPosition}`
+            );
           },
           error: (error) => {
-            console.error(`Failed to update position for list ${request.id}:`, error);
+            console.error(
+              `Failed to update position for list ${request.id}:`,
+              error
+            );
           },
         });
       });
@@ -108,7 +138,9 @@ export class BoardComponent implements OnInit {
   onListRenamed(event: { id: string; newName: string }): void {
     console.log('List renamed:', event);
     if (this.boardDetails && this.boardDetails.lists) {
-      const listToRename = this.boardDetails.lists.find((list) => list.id === event.id);
+      const listToRename = this.boardDetails.lists.find(
+        (list) => list.id === event.id
+      );
       if (listToRename) {
         const updateRequest: UpdateListRequest = {
           id: event.id,
@@ -128,7 +160,11 @@ export class BoardComponent implements OnInit {
   }
 
   // Handler for list duplicated
-  onListDuplicated(event: { originalListId: string; newListId: string; newListName: string }): void {
+  onListDuplicated(event: {
+    originalListId: string;
+    newListId: string;
+    newListName: string;
+  }): void {
     console.log('List duplicated:', event);
     if (this.boardDetails && this.boardDetails.lists) {
       const duplicateRequest: CreateDuplicateListRequest = {
@@ -141,10 +177,15 @@ export class BoardComponent implements OnInit {
         next: () => {
           // Fetch the board details again to get the updated lists
           this.fetchBoardDetails(this.boardDetails!.id);
-          console.log(`List ${event.originalListId} duplicated as ${event.newListId}`);
+          console.log(
+            `List ${event.originalListId} duplicated as ${event.newListId}`
+          );
         },
         error: (error) => {
-          console.error(`Failed to duplicate list ${event.originalListId}:`, error);
+          console.error(
+            `Failed to duplicate list ${event.originalListId}:`,
+            error
+          );
         },
       });
     }
@@ -157,7 +198,9 @@ export class BoardComponent implements OnInit {
       this.listService.deleteList(listId).subscribe({
         next: () => {
           // Remove the list from the local array
-          this.boardDetails!.lists = this.boardDetails!.lists.filter((list) => list.id !== listId);
+          this.boardDetails!.lists = this.boardDetails!.lists.filter(
+            (list) => list.id !== listId
+          );
           console.log(`List ${listId} deleted`);
         },
         error: (error) => {
@@ -179,7 +222,9 @@ export class BoardComponent implements OnInit {
       next: () => {
         // Add the ticket to the local list
         if (this.boardDetails && this.boardDetails.lists) {
-          const list = this.boardDetails.lists.find((l) => l.id === event.listId);
+          const list = this.boardDetails.lists.find(
+            (l) => l.id === event.listId
+          );
           if (list) {
             const newTicket = {
               id: event.id,
@@ -197,5 +242,34 @@ export class BoardComponent implements OnInit {
         console.error(`Failed to create ticket ${event.id}:`, error);
       },
     });
+  }
+
+  // Methods for the Create List Submenu
+  onAddListButtonClick(): void {
+    this.showCreateListSubmenu = true;
+  }
+
+  onCreateListSubmenuAction(output: CreateBoardItemSubmenuOutput): void {
+    const newListId = uuidv4();
+    const request: CreateListRequest = {
+      id: newListId,
+      boardId: this.boardDetails!.id,
+      name: output.text.trim(),
+    };
+    this.listService.createList(request).subscribe({
+      next: () => {
+        // Fetch the board details again to get the updated lists
+        this.fetchBoardDetails(this.boardDetails!.id);
+        console.log(`List ${newListId} created`);
+      },
+      error: (error) => {
+        console.error(`Failed to create list ${newListId}:`, error);
+      },
+    });
+    this.showCreateListSubmenu = false;
+  }
+
+  onCreateListSubmenuClose(): void {
+    this.showCreateListSubmenu = false;
   }
 }

@@ -1,3 +1,5 @@
+@import '../../../assets/styles/main.scss';
+
 .board-container {
   display: flex;
   flex-direction: row;
@@ -10,3 +12,23 @@
   flex-direction: row;
   gap: 16px;
 }
+
+.add-list-section {
+  width: 300px; // Same width as list
+  min-width: 300px;
+  background-color: $neutral-lighter;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-list-button {
+  background: none;
+  border: none;
+  color: $primary;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: left;
+}
+

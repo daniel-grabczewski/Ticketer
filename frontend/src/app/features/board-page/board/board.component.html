@@ -1,8 +1,5 @@
 <div class="board-container">
-  <div
-    cdkDropListGroup
-    *ngIf="boardDetails"
-  >
+  <div cdkDropListGroup *ngIf="boardDetails">
     <div
       cdkDropList
       class="list-container"
@@ -24,6 +21,23 @@
           (listDeleted)="onListDeleted($event)"
           (ticketCreated)="onTicketCreated($event)"
         ></app-list>
+      </div>
+
+      <!-- Add List Section -->
+      <div class="add-list-section">
+        <ng-container *ngIf="!showCreateListSubmenu">
+          <button class="add-list-button" (click)="onAddListButtonClick()">
+            + Add another list
+          </button>
+        </ng-container>
+        <ng-container *ngIf="showCreateListSubmenu">
+          <app-create-board-item-submenu
+            [placeholder]="'Enter list name...'"
+            [buttonText]="'Add list'"
+            (menuAction)="onCreateListSubmenuAction($event)"
+            (close)="onCreateListSubmenuClose()"
+          ></app-create-board-item-submenu>
+        </ng-container>
       </div>
     </div>
   </div>
