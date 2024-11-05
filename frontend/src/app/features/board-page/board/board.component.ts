@@ -1,27 +1,29 @@
-// board.component.ts
-
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Added for common directives
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { BoardService } from '../../../core/services/board.service';
+import { ListService } from '../../../core/services/list.service'; // Import ListService
 import { GetBoardFullDetailsResponse } from '../../../shared/models/board.model';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop'; // Imported DragDropModule and moveItemInArray
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ListComponent } from '../components/list/list.component';
+import { UpdateListPositionRequest } from '../../../shared/models/list.model';
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
   standalone: true,
-  imports: [CommonModule, DragDropModule, ListComponent], // Added imports
+  imports: [CommonModule, DragDropModule, ListComponent],
 })
 export class BoardComponent implements OnInit {
   boardDetails: GetBoardFullDetailsResponse | null = null;
   colorMap: { [key: number]: string } = {};
+  listIds: string[] = []; // List of all list IDs
 
   constructor(
     private route: ActivatedRoute,
-    private boardService: BoardService
+    private boardService: BoardService,
+    private listService: ListService // Inject ListService
   ) {}
 
   ngOnInit(): void {
@@ -36,6 +38,7 @@ export class BoardComponent implements OnInit {
     this.boardService.getBoardById(boardId).subscribe({
       next: (data) => {
         this.boardDetails = data;
+        this.listIds = this.boardDetails.lists.map((list) => list.id); // Store list IDs
         console.log('Board details retrieved:', this.boardDetails);
       },
       error: (error) => {
@@ -59,15 +62,40 @@ export class BoardComponent implements OnInit {
   onListDrop(event: CdkDragDrop<any[]>): void {
     if (this.boardDetails && this.boardDetails.lists) {
       moveItemInArray(this.boardDetails.lists, event.previousIndex, event.currentIndex);
-      // Implement list position update logic here
-      const listId = this.boardDetails.lists[event.currentIndex].id;
-      console.log('List position changed:', { listId, newPosition: event.currentIndex });
-      // Call service to update list positions
+
+      // Update positions locally
+      this.boardDetails.lists.forEach((list, index) => {
+        list.position = index + 1; // Assuming positions start from 1
+      });
+
+      // Prepare update requests for the backend
+      const updateRequests: UpdateListPositionRequest[] = this.boardDetails.lists.map((list) => ({
+        id: list.id,
+        newPosition: list.position,
+      }));
+
+      // Send update requests to the backend
+      updateRequests.forEach((request) => {
+        this.listService.updateListPosition(request).subscribe({
+          next: () => {
+            console.log(`List ${request.id} position updated to ${request.newPosition}`);
+          },
+          error: (error) => {
+            console.error(`Failed to update position for list ${request.id}:`, error);
+          },
+        });
+      });
     }
   }
 
-  onTicketPositionChanged(event: { ticketId: string; listId: string; newPosition: number }): void {
+  // Handler for ticket position changes
+  onTicketPositionChanged(event: {
+    ticketId: string;
+    oldListId: string;
+    newListId: string;
+    newPosition: number;
+  }): void {
     console.log('Ticket position changed:', event);
-    // Implement ticket position update logic here
+    // Implement ticket position update logic here if needed
   }
 }

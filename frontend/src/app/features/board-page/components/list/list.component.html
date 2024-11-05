@@ -1,23 +1,26 @@
-<!-- list.component.html -->
-
 <div class="list-container">
   <!-- List Title and Menu Button -->
   <div class="list-header">
-    <input 
-      class="list-title" 
-      [(ngModel)]="name" 
-      (blur)="onRenameList(name)" 
+    <input
+      class="list-title"
+      [(ngModel)]="name"
+      (blur)="onRenameList(name)"
     />
-    <button class="menu-button">⋮</button> <!-- Placeholder for menu -->
+    <button class="menu-button">⋮</button>
   </div>
 
   <!-- Tickets Drag-and-Drop Container -->
-  <div cdkDropList 
-       [cdkDropListData]="tickets" 
-       class="ticket-list" 
-       (cdkDropListDropped)="onTicketDrop($event)">
+  <div
+    cdkDropList
+    [cdkDropListData]="tickets"
+    [cdkDropListConnectedTo]="connectedDropLists"
+    [id]="id"
+    class="ticket-list"
+    (cdkDropListDropped)="onTicketDrop($event)"
+  >
     <app-ticket
       *ngFor="let ticket of tickets"
+      cdkDrag
       [id]="ticket.id"
       [name]="ticket.name"
       [description]="ticket.description"
