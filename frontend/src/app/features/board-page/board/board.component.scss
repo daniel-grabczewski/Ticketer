@@ -1,0 +1,14 @@
+// board.component.scss
+
+.board-container {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  padding: 16px;
+}
+
+.list-container {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}

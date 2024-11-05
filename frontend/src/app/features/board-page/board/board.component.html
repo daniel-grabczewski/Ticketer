@@ -1,1 +1,23 @@
-<p>board works!</p>
+<!-- board.component.html -->
+
+<div class="board-container">
+  <div
+    cdkDropList
+    class="list-container"
+    (cdkDropListDropped)="onListDrop($event)"
+    *ngIf="boardDetails"
+    [cdkDropListData]="boardDetails.lists"
+    cdkDropListOrientation="horizontal"
+  >
+    <div *ngFor="let list of boardDetails.lists; let i = index" cdkDrag>
+      <app-list
+        [id]="list.id"
+        [name]="list.name"
+        [position]="list.position"
+        [tickets]="list.tickets"
+        [colorMap]="colorMap"
+        (ticketPositionChanged)="onTicketPositionChanged($event)"
+      ></app-list>
+    </div>
+  </div>
+</div>
