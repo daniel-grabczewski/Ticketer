@@ -7,10 +7,9 @@ export interface BoardThumbnailInput {
 export interface TicketInput {
   id: string;
   name: string;
+  description: string;
   colorId: number | null;
-  listId: string;
   position: number;
-  colorMap: { [key: number]: string }; // Map of color IDs to their HEX codes
 }
 
 export interface TicketOutput {
