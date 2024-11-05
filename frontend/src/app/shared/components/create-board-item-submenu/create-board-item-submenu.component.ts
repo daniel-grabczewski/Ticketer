@@ -15,8 +15,7 @@ import {
 })
 export class CreateBoardItemSubmenuComponent implements CreateBoardItemSubmenuInput {
   // Inputs based on CreateBoardItemSubmenuInput
-  @Input() title: string = ''
-  @Input() placeholderText?: string = '' // Optional placeholder
+  @Input() placeholder: string = ''
   @Input() buttonText: string = ''
 
   // Outputs

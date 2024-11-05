@@ -26,8 +26,7 @@ export interface TextInputSubmenuOutput {
 
 // Create Board Item Submenu
 export interface CreateBoardItemSubmenuInput {
-  title : string
-  placeholderText? : string
+  placeholder : string
   buttonText : string
 }
 // placeholder is optional because having a completely empty text input is allowed
