@@ -12,17 +12,33 @@ import { TicketInput } from '../../../../shared/models/uniqueComponentInputOutpu
 import { TicketService } from '../../../../core/services/ticket.service';
 import { UpdateTicketPositionRequest } from '../../../../shared/models/ticket.model';
 import { MenuComponent } from '../../../../shared/components/menu/menu.component';
-import { MenuConfig, SubmenuTransfer } from '../../../../shared/models/menu.model';
-import { SubmenuTypes, TextInputSubmenuOutput, ConfirmationSubmenuOutput } from '../../../../shared/models/submenuInputOutput.model';
+import {
+  MenuConfig,
+  SubmenuTransfer,
+} from '../../../../shared/models/menu.model';
+import {
+  SubmenuTypes,
+  TextInputSubmenuOutput,
+  ConfirmationSubmenuOutput,
+  CreateBoardItemSubmenuOutput,
+} from '../../../../shared/models/submenuInputOutput.model';
 import { generateListActionsMenuConfig } from '../../../../shared/menuConfigs/listMenuConfig';
 import { v4 as uuidv4 } from 'uuid';
+import { CreateBoardItemSubmenuComponent } from '../../../../shared/components/create-board-item-submenu/create-board-item-submenu.component';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, DragDropModule, TicketComponent, MenuComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DragDropModule,
+    TicketComponent,
+    MenuComponent,
+    CreateBoardItemSubmenuComponent,
+  ],
 })
 export class ListComponent implements OnInit {
   @Input() id: string = '';
@@ -32,21 +48,35 @@ export class ListComponent implements OnInit {
   @Input() colorMap: { [key: number]: string } = {};
   @Input() connectedDropLists: string[] = [];
 
-  @Output() ticketPositionChanged = new EventEmitter<{
+  @Output()
+  ticketPositionChanged = new EventEmitter<{
     ticketId: string;
     oldListId: string;
     newListId: string;
     newPosition: number;
   }>();
   @Output() listRenamed = new EventEmitter<{ id: string; newName: string }>();
-  @Output() listDuplicated = new EventEmitter<{ originalListId: string; newListId: string; newListName: string }>();
+  @Output()
+  listDuplicated = new EventEmitter<{
+    originalListId: string;
+    newListId: string;
+    newListName: string;
+  }>();
   @Output() listDeleted = new EventEmitter<string>();
-  @Output() ticketCreated = new EventEmitter<{ listId: string; id: string; name: string }>();
+  @Output()
+  ticketCreated = new EventEmitter<{
+    listId: string;
+    id: string;
+    name: string;
+  }>();
 
   cdkDropListId!: string;
 
   showMenu: boolean = false;
   menuConfig!: MenuConfig;
+
+  // New state variable for the submenu
+  showCreateTicketSubmenu: boolean = false;
 
   constructor(private ticketService: TicketService) {}
 
@@ -72,7 +102,11 @@ export class ListComponent implements OnInit {
 
     if (event.previousContainer === event.container) {
       // Moved within the same list
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
 
       // Update positions locally
       event.container.data.forEach((t, index) => {
@@ -87,10 +121,15 @@ export class ListComponent implements OnInit {
 
       this.ticketService.updateTicketPosition(request).subscribe({
         next: () => {
-          console.log(`Ticket ${request.id} position updated to ${request.newPosition} in list ${request.listId}`);
+          console.log(
+            `Ticket ${request.id} position updated to ${request.newPosition} in list ${request.listId}`
+          );
         },
         error: (error) => {
-          console.error(`Failed to update position for ticket ${request.id}:`, error);
+          console.error(
+            `Failed to update position for ticket ${request.id}:`,
+            error
+          );
         },
       });
 
@@ -118,7 +157,10 @@ export class ListComponent implements OnInit {
       });
 
       // Extract list IDs by removing the prefix
-      const oldListId = event.previousContainer.id.replace('cdk-drop-list-', '');
+      const oldListId = event.previousContainer.id.replace(
+        'cdk-drop-list-',
+        ''
+      );
       const newListId = this.id;
 
       const request: UpdateTicketPositionRequest = {
@@ -129,7 +171,9 @@ export class ListComponent implements OnInit {
 
       this.ticketService.updateTicketPosition(request).subscribe({
         next: () => {
-          console.log(`Ticket ${request.id} moved to list ${request.listId} at position ${request.newPosition}`);
+          console.log(
+            `Ticket ${request.id} moved to list ${request.listId} at position ${request.newPosition}`
+          );
         },
         error: (error) => {
           console.error(`Failed to move ticket ${request.id}:`, error);
@@ -158,7 +202,8 @@ export class ListComponent implements OnInit {
     console.log('Handling submenu action:', submenuTransfer);
     switch (submenuTransfer.purpose) {
       case 'addATicket':
-        const addTicketPayload = submenuTransfer.payload as TextInputSubmenuOutput;
+        const addTicketPayload =
+          submenuTransfer.payload as TextInputSubmenuOutput;
         const newTicketId = this.generateUUID();
         this.ticketCreated.emit({
           listId: this.id,
@@ -167,7 +212,8 @@ export class ListComponent implements OnInit {
         });
         break;
       case 'duplicateList':
-        const duplicatePayload = submenuTransfer.payload as TextInputSubmenuOutput;
+        const duplicatePayload =
+          submenuTransfer.payload as TextInputSubmenuOutput;
         const newListId = this.generateUUID();
         this.listDuplicated.emit({
           originalListId: this.id,
@@ -176,7 +222,8 @@ export class ListComponent implements OnInit {
         });
         break;
       case 'deleteList':
-        const confirmationPayload = submenuTransfer.payload as ConfirmationSubmenuOutput;
+        const confirmationPayload =
+          submenuTransfer.payload as ConfirmationSubmenuOutput;
         if (confirmationPayload.confirmationStatus) {
           this.listDeleted.emit(this.id);
         }
@@ -189,5 +236,24 @@ export class ListComponent implements OnInit {
 
   closeMenu(): void {
     this.showMenu = false;
+  }
+
+  // Methods for the Create Ticket Submenu
+  onAddTicketButtonClick(): void {
+    this.showCreateTicketSubmenu = true;
+  }
+
+  onCreateTicketSubmenuAction(output: CreateBoardItemSubmenuOutput): void {
+    const newTicketId = this.generateUUID();
+    this.ticketCreated.emit({
+      listId: this.id,
+      id: newTicketId,
+      name: output.text.trim(),
+    });
+    this.showCreateTicketSubmenu = false;
+  }
+
+  onCreateTicketSubmenuClose(): void {
+    this.showCreateTicketSubmenu = false;
   }
 }

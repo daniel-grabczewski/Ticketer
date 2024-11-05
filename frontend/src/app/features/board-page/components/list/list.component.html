@@ -6,7 +6,12 @@
       [(ngModel)]="name"
       (blur)="onRenameList(name)"
     />
-    <button class="menu-button" (click)="toggleMenu(); $event.stopPropagation()">⋮</button>
+    <button
+      class="menu-button"
+      (click)="toggleMenu(); $event.stopPropagation()"
+    >
+      ⋮
+    </button>
   </div>
 
   <!-- Menu Component -->
@@ -44,16 +49,25 @@
         ></app-ticket>
 
         <!-- Custom Placeholder -->
-        <div
-          *cdkDragPlaceholder
-          class="ticket-placeholder"
-        ></div>
+        <div *cdkDragPlaceholder class="ticket-placeholder"></div>
       </div>
     </ng-container>
   </div>
 
-  <!-- Add Ticket Button -->
-  <button class="add-ticket" (click)="ticketCreated.emit({ listId: id, id: generateUUID(), name: 'New Ticket' })">
-    + Add a ticket
-  </button>  
+  <!-- Add Ticket Section -->
+  <div class="add-ticket-section">
+    <ng-container *ngIf="!showCreateTicketSubmenu">
+      <button class="add-ticket" (click)="onAddTicketButtonClick()">
+        + Add a ticket
+      </button>
+    </ng-container>
+    <ng-container *ngIf="showCreateTicketSubmenu">
+      <app-create-board-item-submenu
+        [placeholder]="'Enter ticket name...'"
+        [buttonText]="'Add ticket'"
+        (menuAction)="onCreateTicketSubmenuAction($event)"
+        (close)="onCreateTicketSubmenuClose()"
+      ></app-create-board-item-submenu>
+    </ng-container>
+  </div>
 </div>
