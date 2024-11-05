@@ -19,6 +19,10 @@
           [colorMap]="colorMap"
           [connectedDropLists]="listIds"
           (ticketPositionChanged)="onTicketPositionChanged($event)"
+          (listRenamed)="onListRenamed($event)"
+          (listDuplicated)="onListDuplicated($event)"
+          (listDeleted)="onListDeleted($event)"
+          (ticketCreated)="onTicketCreated($event)"
         ></app-list>
       </div>
     </div>

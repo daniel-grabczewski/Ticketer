@@ -11,13 +11,18 @@ import { TicketComponent } from '../ticket/ticket.component';
 import { TicketInput } from '../../../../shared/models/uniqueComponentInputOutput.model';
 import { TicketService } from '../../../../core/services/ticket.service';
 import { UpdateTicketPositionRequest } from '../../../../shared/models/ticket.model';
+import { MenuComponent } from '../../../../shared/components/menu/menu.component';
+import { MenuConfig, SubmenuTransfer } from '../../../../shared/models/menu.model';
+import { SubmenuTypes, TextInputSubmenuOutput, ConfirmationSubmenuOutput } from '../../../../shared/models/submenuInputOutput.model';
+import { generateListActionsMenuConfig } from '../../../../shared/menuConfigs/listMenuConfig';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, DragDropModule, TicketComponent],
+  imports: [CommonModule, FormsModule, DragDropModule, TicketComponent, MenuComponent],
 })
 export class ListComponent implements OnInit {
   @Input() id: string = '';
@@ -34,17 +39,26 @@ export class ListComponent implements OnInit {
     newPosition: number;
   }>();
   @Output() listRenamed = new EventEmitter<{ id: string; newName: string }>();
-  @Output() listDuplicated = new EventEmitter<string>();
+  @Output() listDuplicated = new EventEmitter<{ originalListId: string; newListId: string; newListName: string }>();
   @Output() listDeleted = new EventEmitter<string>();
-  @Output() ticketCreated = new EventEmitter<{ listId: string; name: string }>();
+  @Output() ticketCreated = new EventEmitter<{ listId: string; id: string; name: string }>();
 
   cdkDropListId!: string;
+
+  showMenu: boolean = false;
+  menuConfig!: MenuConfig;
 
   constructor(private ticketService: TicketService) {}
 
   ngOnInit(): void {
     // Set a unique cdkDropListId
     this.cdkDropListId = 'cdk-drop-list-' + this.id;
+    this.menuConfig = generateListActionsMenuConfig(this.name);
+  }
+
+  // Method to generate UUID for new tickets
+  generateUUID(): string {
+    return uuidv4();
   }
 
   // Handler for reordering tickets within the list or moving between lists
@@ -134,5 +148,46 @@ export class ListComponent implements OnInit {
   // Placeholder for renaming the list title
   onRenameList(newName: string): void {
     this.listRenamed.emit({ id: this.id, newName });
+  }
+
+  toggleMenu(): void {
+    this.showMenu = !this.showMenu;
+  }
+
+  handleMenuAction(submenuTransfer: SubmenuTransfer): void {
+    console.log('Handling submenu action:', submenuTransfer);
+    switch (submenuTransfer.purpose) {
+      case 'addATicket':
+        const addTicketPayload = submenuTransfer.payload as TextInputSubmenuOutput;
+        const newTicketId = this.generateUUID();
+        this.ticketCreated.emit({
+          listId: this.id,
+          id: newTicketId,
+          name: addTicketPayload.text.trim(),
+        });
+        break;
+      case 'duplicateList':
+        const duplicatePayload = submenuTransfer.payload as TextInputSubmenuOutput;
+        const newListId = this.generateUUID();
+        this.listDuplicated.emit({
+          originalListId: this.id,
+          newListId: newListId,
+          newListName: duplicatePayload.text.trim(),
+        });
+        break;
+      case 'deleteList':
+        const confirmationPayload = submenuTransfer.payload as ConfirmationSubmenuOutput;
+        if (confirmationPayload.confirmationStatus) {
+          this.listDeleted.emit(this.id);
+        }
+        break;
+      default:
+        console.warn('Unknown submenu action:', submenuTransfer);
+    }
+    this.closeMenu();
+  }
+
+  closeMenu(): void {
+    this.showMenu = false;
   }
 }

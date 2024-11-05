@@ -1,5 +1,5 @@
-
 @import '../../../../assets/styles/main.scss';
+
 .list-container {
   background-color: $neutral-lighter;
   border-radius: 8px;
@@ -9,6 +9,7 @@
   width: 300px;
   min-width: 300px;
   max-height: 80vh; /* Set maximum height */
+  position: relative; /* Added for positioning the menu */
 }
 
 .list-header {
@@ -32,6 +33,13 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
+}
+
+.menu-wrapper {
+  position: absolute;
+  top: 40px; /* Adjust as needed */
+  right: 0;
+  z-index: 1000;
 }
 
 .ticket-list {

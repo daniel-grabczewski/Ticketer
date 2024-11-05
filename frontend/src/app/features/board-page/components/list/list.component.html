@@ -6,7 +6,16 @@
       [(ngModel)]="name"
       (blur)="onRenameList(name)"
     />
-    <button class="menu-button">⋮</button>
+    <button class="menu-button" (click)="toggleMenu(); $event.stopPropagation()">⋮</button>
+  </div>
+
+  <!-- Menu Component -->
+  <div class="menu-wrapper" *ngIf="showMenu">
+    <app-menu
+      [menuConfig]="menuConfig"
+      (menuAction)="handleMenuAction($event)"
+      (close)="closeMenu()"
+    ></app-menu>
   </div>
 
   <!-- Tickets Drag-and-Drop Container -->
@@ -44,7 +53,7 @@
   </div>
 
   <!-- Add Ticket Button -->
-  <button class="add-ticket" (click)="ticketCreated.emit({ listId: id, name: 'New Ticket' })">
+  <button class="add-ticket" (click)="ticketCreated.emit({ listId: id, id: generateUUID(), name: 'New Ticket' })">
     + Add a ticket
-  </button>
+  </button>  
 </div>
