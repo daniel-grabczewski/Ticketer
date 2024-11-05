@@ -1,9 +1,13 @@
+// list.component.scss
+@import '../../../../assets/styles/main.scss';
 .list-container {
   background-color: $neutral-lighter;
   border-radius: 8px;
   padding: 8px;
   display: flex;
   flex-direction: column;
+  width: 300px;
+  min-width: 300px;
 }
 
 .list-header {
