@@ -91,7 +91,7 @@ export interface DropdownSubmenuInput {
   title: string;
   dropdownInputLabel: string;
   dropdownItems: { id: string; name: string }[];
-  dropdownPlaceholderText: string; //Initial text in dropdown, e.g. 'Pick one of the below...'
+  dropdownPlaceholder: string; //Initial text in dropdown, e.g. 'Pick one of the below...'
   buttonText: string;
 }
 

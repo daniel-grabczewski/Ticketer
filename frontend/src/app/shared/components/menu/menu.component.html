@@ -74,7 +74,7 @@
             [title]="getDropdownSubmenuPayload(index).title || ''"
             [dropdownInputLabel]="getDropdownSubmenuPayload(index).dropdownInputLabel || ''"
             [dropdownItems]="getDropdownSubmenuPayload(index).dropdownItems || []" 
-            [dropdownPlaceholderText]="getDropdownSubmenuPayload(index).dropdownPlaceholderText || ''"
+            [dropdownPlaceholder]="getDropdownSubmenuPayload(index).dropdownPlaceholder || ''"
             [buttonText]="getDropdownSubmenuPayload(index).buttonText || ''"
             (menuAction)="handleSubmenuAction($event)"
             (close)="closeSubmenu()"
