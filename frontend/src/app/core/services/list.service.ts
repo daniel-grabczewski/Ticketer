@@ -31,10 +31,10 @@ export class ListService {
    * @param boardId The ID of the board.
    * @returns An Observable of an array of GetAllListsDetailsResponse.
    */
-  getAllLists(boardId: string): Observable<GetAllListsDetailsResponse> {
+  getAllLists(boardId: string): Observable<GetAllListsDetailsResponse[]> {
     const url = `${this.baseUrl}/${boardId}`;
     return this.http
-      .get<GetAllListsDetailsResponse>(url)
+      .get<GetAllListsDetailsResponse[]>(url)
       .pipe(catchError(this.errorHandlingService.handleError));
   }
 

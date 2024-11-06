@@ -3,7 +3,7 @@ export interface ListDetailsBase {
   name: string;
 }
 
-export interface GetAllListsDetailsResponse extends ListDetailsBase {}[]
+export interface GetAllListsDetailsResponse extends ListDetailsBase {}
 
 export interface CreateDuplicateListRequest {
   originalListId: string;
