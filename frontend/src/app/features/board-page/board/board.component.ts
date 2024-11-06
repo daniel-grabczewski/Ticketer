@@ -31,6 +31,7 @@ import {
   GenerateBoardSubmenuOutput,
 } from '../../../shared/models/submenuInputOutput.model';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-board',
@@ -58,6 +59,7 @@ export class BoardComponent implements OnInit {
 
   isRenamingBoard: boolean = false;
   newBoardName: string = '';
+  private routeSub!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -68,11 +70,13 @@ export class BoardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const boardId = this.route.snapshot.paramMap.get('boardId');
-    if (boardId) {
-      this.fetchBoardDetails(boardId);
-      this.loadColorMap();
-    }
+    this.routeSub = this.route.paramMap.subscribe((params) => {
+      const boardId = params.get('boardId');
+      if (boardId) {
+        this.fetchBoardDetails(boardId);
+        this.loadColorMap();
+      }
+    });
   }
 
   private fetchBoardDetails(boardId: string): void {
