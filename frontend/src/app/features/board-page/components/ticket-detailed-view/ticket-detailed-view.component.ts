@@ -23,6 +23,8 @@ import {
   ConfirmationSubmenuInput,
   ConfirmationSubmenuOutput,
 } from '../../../../shared/models/submenuInputOutput.model';
+import { TicketUpdateService } from '../../../../core/services/ticket-update.service';
+import { TicketInput } from '../../../../shared/models/uniqueComponentInputOutput.model';
 
 @Component({
   selector: 'app-ticket-detailed-view',
@@ -67,7 +69,8 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
     private router: Router,
     private ticketService: TicketService,
     private listService: ListService,
-    private colorService: ColorService
+    private colorService: ColorService,
+    private ticketUpdateService: TicketUpdateService
   ) {}
 
   ngOnInit(): void {
@@ -181,6 +184,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
         next: () => {
           this.ticketDetails.name = this.newName.trim();
           this.isEditingName = false;
+          this.ticketUpdateService.emitTicketUpdate(this.ticketDetails);
         },
         error: (error) => {
           console.error('Failed to update ticket name:', error);
@@ -211,6 +215,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
       next: () => {
         this.ticketDetails.description = this.newDescription;
         this.isEditingDescription = false;
+        this.ticketUpdateService.emitTicketUpdate(this.ticketDetails);
       },
       error: (error) => {
         console.error('Failed to update ticket description:', error);
@@ -263,6 +268,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
         this.ticketDetails.listId = output.id;
         this.ticketDetails.listName = output.name;
         this.showDropdownSubmenu = false;
+        this.ticketUpdateService.emitTicketUpdate(this.ticketDetails);
       },
       error: (error) => {
         console.error('Failed to move ticket:', error);
@@ -300,6 +306,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
           this.colorHex = '#CCCCCC';
         }
         this.showColorSelectionSubmenu = false;
+        this.ticketUpdateService.emitTicketUpdate(this.ticketDetails);
       },
       error: (error) => {
         console.error('Failed to update ticket color:', error);
@@ -326,6 +333,10 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
       this.ticketService.deleteTicket(this.ticketDetails.id).subscribe({
         next: () => {
           // Close the ticket view and possibly refresh the board
+          this.ticketUpdateService.emitTicketUpdate({
+            ...this.ticketDetails,
+            deleted: true,
+          } as TicketInput);
           this.closeTicketView();
         },
         error: (error) => {

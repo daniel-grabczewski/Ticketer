@@ -33,6 +33,8 @@ import {
 } from '../../../shared/models/submenuInputOutput.model';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { TicketUpdateService } from '../../../core/services/ticket-update.service';
+import { TicketInput } from '../../../shared/models/uniqueComponentInputOutput.model';
 
 @Component({
   selector: 'app-board',
@@ -46,7 +48,7 @@ import { Subscription } from 'rxjs';
     ListComponent,
     CreateBoardItemSubmenuComponent,
     MenuComponent,
-    RouterModule
+    RouterModule,
   ],
 })
 export class BoardComponent implements OnInit {
@@ -62,13 +64,15 @@ export class BoardComponent implements OnInit {
   isRenamingBoard: boolean = false;
   newBoardName: string = '';
   private routeSub!: Subscription;
+  private ticketUpdateSub!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private boardService: BoardService,
     private listService: ListService,
-    private ticketService: TicketService
+    private ticketService: TicketService,
+    private ticketUpdateService: TicketUpdateService
   ) {}
 
   boardNameSlug: string | null = null;
@@ -82,9 +86,63 @@ export class BoardComponent implements OnInit {
         this.loadColorMap();
       }
     });
+
+    this.ticketUpdateSub = this.ticketUpdateService.ticketUpdated$.subscribe(
+      (updatedTicket) => {
+        this.handleTicketUpdate(updatedTicket);
+      }
+    );
   }
 
-  
+  ngOnDestroy(): void {
+    if (this.routeSub) {
+      this.routeSub.unsubscribe();
+    }
+    if (this.ticketUpdateSub) {
+      this.ticketUpdateSub.unsubscribe();
+    }
+  }
+
+  private handleTicketUpdate(updatedTicket: TicketInput): void {
+    if (this.boardDetails && this.boardDetails.lists) {
+      // Find the list containing the ticket
+      const listContainingTicket = this.boardDetails.lists.find((list) =>
+        list.tickets.some((ticket) => ticket.id === updatedTicket.id)
+      );
+
+      // Remove the ticket from its current list if necessary
+      if (listContainingTicket) {
+        listContainingTicket.tickets = listContainingTicket.tickets.filter(
+          (ticket) => ticket.id !== updatedTicket.id
+        );
+      }
+
+      if (updatedTicket.deleted) {
+        // Ticket was deleted, no need to add it back
+        return;
+      }
+
+      // Find the new list and add or update the ticket
+      const targetList = this.boardDetails.lists.find(
+        (list) => list.id === updatedTicket.listId
+      );
+
+      if (targetList) {
+        // Check if the ticket already exists in the target list
+        const existingTicketIndex = targetList.tickets.findIndex(
+          (ticket) => ticket.id === updatedTicket.id
+        );
+
+        if (existingTicketIndex !== -1) {
+          // Update the existing ticket
+          targetList.tickets[existingTicketIndex] = updatedTicket;
+        } else {
+          // Add the ticket to the target list
+          targetList.tickets.push(updatedTicket);
+        }
+      }
+    }
+  }
 
   private fetchBoardDetails(boardId: string): void {
     this.boardService.getBoardById(boardId).subscribe({
