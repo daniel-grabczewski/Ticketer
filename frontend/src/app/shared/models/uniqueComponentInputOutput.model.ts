@@ -10,6 +10,9 @@ export interface TicketInput {
   description: string;
   colorId: number | null;
   position: number;
+  listId?: string;
+  listName?: string;
+  deleted?: boolean; 
 }
 
 export interface TicketOutput {
