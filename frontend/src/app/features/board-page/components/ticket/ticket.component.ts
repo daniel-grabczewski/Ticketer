@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -16,11 +16,17 @@ export class TicketComponent implements OnInit {
   @Input() colorId: number | null = null;
   @Input() colorMap: { [key: number]: string } = {};
 
+  @Output() ticketClicked = new EventEmitter<string>();
+
   colorHex: string = ''; // Stores the hex color based on colorMap and colorId
 
   ngOnInit(): void {
     if (this.colorId !== null && this.colorMap[this.colorId]) {
       this.colorHex = this.colorMap[this.colorId];
     }
+  }
+
+  onClick(): void {
+    this.ticketClicked.emit(this.id);
   }
 }

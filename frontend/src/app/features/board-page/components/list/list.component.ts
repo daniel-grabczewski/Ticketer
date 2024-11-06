@@ -17,7 +17,6 @@ import {
   SubmenuTransfer,
 } from '../../../../shared/models/menu.model';
 import {
-  SubmenuTypes,
   TextInputSubmenuOutput,
   ConfirmationSubmenuOutput,
   CreateBoardItemSubmenuOutput,
@@ -25,6 +24,7 @@ import {
 import { generateListActionsMenuConfig } from '../../../../shared/menuConfigs/listMenuConfig';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateBoardItemSubmenuComponent } from '../../../../shared/components/create-board-item-submenu/create-board-item-submenu.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -47,6 +47,8 @@ export class ListComponent implements OnInit {
   @Input() tickets: TicketInput[] = [];
   @Input() colorMap: { [key: number]: string } = {};
   @Input() connectedDropLists: string[] = [];
+  @Input() boardId: string = '';
+  @Input() boardNameSlug: string | null = null;
 
   @Output()
   ticketPositionChanged = new EventEmitter<{
@@ -78,7 +80,10 @@ export class ListComponent implements OnInit {
   // New state variable for the submenu
   showCreateTicketSubmenu: boolean = false;
 
-  constructor(private ticketService: TicketService) {}
+  constructor(private ticketService: TicketService, private router: Router) {}
+
+  // Reintroducing the isDragging flag
+  private isDragging: boolean = false;
 
   ngOnInit(): void {
     // Set a unique cdkDropListId
@@ -89,6 +94,24 @@ export class ListComponent implements OnInit {
   // Method to generate UUID for new tickets
   generateUUID(): string {
     return uuidv4();
+  }
+
+  onTicketClicked(ticketId: string): void {
+    if (!this.isDragging) {
+      const boardId = this.boardId;
+      const boardNameSlug = this.boardNameSlug || '';
+      if (boardNameSlug) {
+        this.router.navigate([
+          '/board',
+          boardId,
+          boardNameSlug,
+          'ticket',
+          ticketId,
+        ]);
+      } else {
+        this.router.navigate(['/board', boardId, 'ticket', ticketId]);
+      }
+    }
   }
 
   // Handler for reordering tickets within the list or moving between lists
@@ -187,6 +210,16 @@ export class ListComponent implements OnInit {
         newPosition: ticket.position,
       });
     }
+  }
+
+  onDragStarted(): void {
+    this.isDragging = true;
+  }
+
+  onDragEnded(): void {
+    setTimeout(() => {
+      this.isDragging = false;
+    }, 0);
   }
 
   // Placeholder for renaming the list title

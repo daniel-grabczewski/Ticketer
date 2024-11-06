@@ -38,7 +38,14 @@
     </div>
 
     <ng-container *ngFor="let ticket of tickets; let i = index">
-      <div cdkDrag [cdkDragData]="ticket" class="ticket-wrapper">
+      <div
+        cdkDrag
+        [cdkDragData]="ticket"
+        class="ticket-wrapper"
+        (cdkDragStarted)="onDragStarted()"
+        (cdkDragEnded)="onDragEnded()"
+        (click)="onTicketClicked(ticket.id)"
+      >
         <app-ticket
           [id]="ticket.id"
           [name]="ticket.name"
@@ -47,14 +54,11 @@
           [position]="ticket.position"
           [colorMap]="colorMap"
         ></app-ticket>
-
         <!-- Custom Placeholder -->
         <div *cdkDragPlaceholder class="ticket-placeholder"></div>
       </div>
     </ng-container>
-  </div>
-
-  <!-- Add Ticket Section -->
+      <!-- Add Ticket Section -->
   <div class="add-ticket-section">
     <ng-container *ngIf="!showCreateTicketSubmenu">
       <button class="add-ticket" (click)="onAddTicketButtonClick()">
@@ -69,5 +73,6 @@
         (close)="onCreateTicketSubmenuClose()"
       ></app-create-board-item-submenu>
     </ng-container>
+  </div>
   </div>
 </div>
