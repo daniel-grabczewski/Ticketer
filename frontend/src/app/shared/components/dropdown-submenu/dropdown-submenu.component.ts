@@ -18,7 +18,7 @@ export class DropdownSubmenuComponent implements DropdownSubmenuInput {
   @Input() title: string = ''
   @Input() dropdownInputLabel: string = '' // Corrected name to match model
   @Input() dropdownItems: Array<{ id: string; name: string }> = []
-  @Input() dropdownPlaceholderText: string = ''
+  @Input() dropdownPlaceholder: string = ''
   @Input() buttonText: string = ''
 
   // Outputs for DropdownSubmenuOutput

@@ -13,7 +13,7 @@
       [(ngModel)]="selectedOption"
       [ngModelOptions]="{ standalone: true }"
     >
-      <option value="" disabled selected hidden>{{ dropdownPlaceholderText }}</option>
+      <option value="" disabled selected hidden>{{ dropdownPlaceholder }}</option>
       <option
         *ngFor="let option of dropdownItems"
         [ngValue]="option"
