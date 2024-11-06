@@ -52,6 +52,8 @@
             [tickets]="list.tickets"
             [colorMap]="colorMap"
             [connectedDropLists]="listIds"
+            [boardNameSlug] = "boardNameSlug"
+            [boardId]="boardDetails.id"
             (ticketPositionChanged)="onTicketPositionChanged($event)"
             (listRenamed)="onListRenamed($event)"
             (listDuplicated)="onListDuplicated($event)"
@@ -79,4 +81,5 @@
       </div>
     </div>
   </div>
+  <router-outlet></router-outlet>
 </div>

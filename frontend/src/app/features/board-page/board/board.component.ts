@@ -1,10 +1,11 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { BoardService } from '../../../core/services/board.service';
 import { ListService } from '../../../core/services/list.service';
 import { TicketService } from '../../../core/services/ticket.service';
 import { GetBoardFullDetailsResponse } from '../../../shared/models/board.model';
+import { RouterModule } from '@angular/router';
 import {
   CdkDragDrop,
   DragDropModule,
@@ -45,6 +46,7 @@ import { Subscription } from 'rxjs';
     ListComponent,
     CreateBoardItemSubmenuComponent,
     MenuComponent,
+    RouterModule
   ],
 })
 export class BoardComponent implements OnInit {
@@ -69,15 +71,20 @@ export class BoardComponent implements OnInit {
     private ticketService: TicketService
   ) {}
 
+  boardNameSlug: string | null = null;
+
   ngOnInit(): void {
-    this.routeSub = this.route.paramMap.subscribe((params) => {
+    this.routeSub = this.route.paramMap.subscribe((params: ParamMap) => {
       const boardId = params.get('boardId');
+      this.boardNameSlug = params.get('boardNameSlug');
       if (boardId) {
         this.fetchBoardDetails(boardId);
         this.loadColorMap();
       }
     });
   }
+
+  
 
   private fetchBoardDetails(boardId: string): void {
     this.boardService.getBoardById(boardId).subscribe({
