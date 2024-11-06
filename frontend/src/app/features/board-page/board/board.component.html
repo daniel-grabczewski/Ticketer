@@ -1,43 +1,81 @@
-<div class="board-container">
-  <div cdkDropListGroup *ngIf="boardDetails">
-    <div
-      cdkDropList
-      class="list-container"
-      (cdkDropListDropped)="onListDrop($event)"
-      [cdkDropListData]="boardDetails.lists"
-      cdkDropListOrientation="horizontal"
+<div class="board-page-container" [ngStyle]="getBackgroundStyle()">
+  <!-- Board Header -->
+  <div class="board-header">
+    <!-- Board Name -->
+    <div class="board-name">
+      <ng-container *ngIf="!isRenamingBoard">
+        <h1 (click)="enableBoardRenaming($event)">{{ boardDetails?.name }}</h1>
+      </ng-container>
+      <ng-container *ngIf="isRenamingBoard">
+        <input
+          id="board-name-input"
+          type="text"
+          [(ngModel)]="newBoardName"
+          (blur)="saveBoardName()"
+          (click)="$event.stopPropagation()"
+        />
+      </ng-container>
+    </div>
+    <!-- Menu Button -->
+    <button
+      id="board-menu-button"
+      class="menu-button"
+      (click)="toggleMenu($event)"
     >
-      <div *ngFor="let list of boardDetails.lists; let i = index" cdkDrag>
-        <app-list
-          [id]="list.id"
-          [name]="list.name"
-          [position]="list.position"
-          [tickets]="list.tickets"
-          [colorMap]="colorMap"
-          [connectedDropLists]="listIds"
-          (ticketPositionChanged)="onTicketPositionChanged($event)"
-          (listRenamed)="onListRenamed($event)"
-          (listDuplicated)="onListDuplicated($event)"
-          (listDeleted)="onListDeleted($event)"
-          (ticketCreated)="onTicketCreated($event)"
-        ></app-list>
-      </div>
+      ⋮ menu
+    </button>
+    <!-- Menu Component -->
+    <div class="menu-wrapper" *ngIf="showMenu" id="board-menu">
+      <app-menu
+        [menuConfig]="menuConfig"
+        (menuAction)="handleMenuAction($event)"
+        (close)="closeMenu()"
+      ></app-menu>
+    </div>
+  </div>
 
-      <!-- Add List Section -->
-      <div class="add-list-section">
-        <ng-container *ngIf="!showCreateListSubmenu">
-          <button class="add-list-button" (click)="onAddListButtonClick()">
-            + Add another list
-          </button>
-        </ng-container>
-        <ng-container *ngIf="showCreateListSubmenu">
-          <app-create-board-item-submenu
-            [placeholder]="'Enter list name...'"
-            [buttonText]="'Add list'"
-            (menuAction)="onCreateListSubmenuAction($event)"
-            (close)="onCreateListSubmenuClose()"
-          ></app-create-board-item-submenu>
-        </ng-container>
+  <!-- Board Content -->
+  <div class="board-container">
+    <div cdkDropListGroup *ngIf="boardDetails">
+      <div
+        cdkDropList
+        class="list-container"
+        (cdkDropListDropped)="onListDrop($event)"
+        [cdkDropListData]="boardDetails.lists"
+        cdkDropListOrientation="horizontal"
+      >
+        <div *ngFor="let list of boardDetails.lists; let i = index" cdkDrag>
+          <app-list
+            [id]="list.id"
+            [name]="list.name"
+            [position]="list.position"
+            [tickets]="list.tickets"
+            [colorMap]="colorMap"
+            [connectedDropLists]="listIds"
+            (ticketPositionChanged)="onTicketPositionChanged($event)"
+            (listRenamed)="onListRenamed($event)"
+            (listDuplicated)="onListDuplicated($event)"
+            (listDeleted)="onListDeleted($event)"
+            (ticketCreated)="onTicketCreated($event)"
+          ></app-list>
+        </div>
+
+        <!-- Add List Section -->
+        <div class="add-list-section">
+          <ng-container *ngIf="!showCreateListSubmenu">
+            <button class="add-list-button" (click)="onAddListButtonClick()">
+              + Add another list
+            </button>
+          </ng-container>
+          <ng-container *ngIf="showCreateListSubmenu">
+            <app-create-board-item-submenu
+              [placeholder]="'Enter list name...'"
+              [buttonText]="'Add list'"
+              (menuAction)="onCreateListSubmenuAction($event)"
+              (close)="onCreateListSubmenuClose()"
+            ></app-create-board-item-submenu>
+          </ng-container>
+        </div>
       </div>
     </div>
   </div>
