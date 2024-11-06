@@ -85,7 +85,7 @@ export class BoardService {
 
   /**
    * Deletes a board.
-   * @param request The request object containing the ID of the board to delete.
+   * @param request The board ID in the URL of the board to be deleted
    * @returns An Observable of void (adjust the type based on backend response if needed).
    */
   deleteBoard(boardId: string): Observable<void> {
