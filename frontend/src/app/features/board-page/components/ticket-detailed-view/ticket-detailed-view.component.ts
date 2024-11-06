@@ -1,6 +1,7 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { TicketService } from '../../../../core/services/ticket.service';
 import { ListService } from '../../../../core/services/list.service';
 import { ColorService } from '../../../../core/services/color.service';
@@ -36,7 +37,7 @@ import {
     ConfirmationSubmenuComponent,
   ],
 })
-export class TicketDetailedViewComponent implements OnInit {
+export class TicketDetailedViewComponent implements OnInit, OnDestroy {
   ticketId!: string;
   boardId!: string;
   boardNameSlug: string | null = null;
@@ -59,6 +60,8 @@ export class TicketDetailedViewComponent implements OnInit {
   showConfirmationSubmenu: boolean = false;
   confirmationSubmenuConfig!: ConfirmationSubmenuInput;
 
+  private routeSub!: Subscription;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -68,13 +71,23 @@ export class TicketDetailedViewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params: ParamMap) => {
+    // Subscribe to route parameter changes
+    console.log('Ticket-detailed-view loaded');
+    this.routeSub = this.route.paramMap.subscribe((params: ParamMap) => {
       this.ticketId = params.get('ticketId')!;
       // Get boardId and boardNameSlug from parent route
       this.boardId = this.route.parent?.snapshot.paramMap.get('boardId')!;
-      this.boardNameSlug = 'test-slug';
+      this.boardNameSlug =
+        this.route.parent?.snapshot.paramMap.get('boardNameSlug') || null;
       this.fetchTicketDetails();
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.routeSub) {
+      console.log('Destroyed');
+      this.routeSub.unsubscribe();
+    }
   }
 
   fetchTicketDetails(): void {
@@ -113,11 +126,13 @@ export class TicketDetailedViewComponent implements OnInit {
 
   // Close the ticket detailed view
   closeTicketView(): void {
-    // Navigate back to the board route
+    // Navigate back to the board route using absolute navigation
     if (this.boardId) {
       if (this.boardNameSlug) {
+        console.log('board slug exists');
         this.router.navigate(['/board', this.boardId, this.boardNameSlug]);
       } else {
+        console.log('board slug doesnt exist');
         this.router.navigate(['/board', this.boardId]);
       }
     } else {

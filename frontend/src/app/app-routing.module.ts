@@ -3,8 +3,6 @@ import { DashboardComponent } from './features/dashboard-page/dashboard/dashboar
 import { ProjectComponent } from './project/project.component';
 import { authGuardFn } from '@auth0/auth0-angular';
 import { MenuComponent } from './shared/components/menu/menu.component';
-import { BoardComponent } from './features/board-page/board/board.component';
-import { TicketDetailedViewComponent } from './features/board-page/components/ticket-detailed-view/ticket-detailed-view.component';
 
 export const routes: Routes = [
   { path: '', component: DashboardComponent }, // Public route
@@ -25,21 +23,33 @@ export const routes: Routes = [
   },
   {
     path: 'board/:boardId/:boardNameSlug',
-    component: BoardComponent,
+    loadComponent: () =>
+      import('./features/board-page/board/board.component').then(
+        (m) => m.BoardComponent
+      ),
     children: [
       {
         path: 'ticket/:ticketId',
-        component: TicketDetailedViewComponent,
+        loadComponent: () =>
+          import(
+            './features/board-page/components/ticket-detailed-view/ticket-detailed-view.component'
+          ).then((m) => m.TicketDetailedViewComponent),
       },
     ],
   },
   {
     path: 'board/:boardId',
-    component: BoardComponent,
+    loadComponent: () =>
+      import('./features/board-page/board/board.component').then(
+        (m) => m.BoardComponent
+      ),
     children: [
       {
         path: 'ticket/:ticketId',
-        component: TicketDetailedViewComponent,
+        loadComponent: () =>
+          import(
+            './features/board-page/components/ticket-detailed-view/ticket-detailed-view.component'
+          ).then((m) => m.TicketDetailedViewComponent),
       },
     ],
   },

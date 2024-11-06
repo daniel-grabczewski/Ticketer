@@ -96,11 +96,16 @@ export class ListComponent implements OnInit {
     return uuidv4();
   }
 
-  onTicketClicked(ticketId: string): void {
+  onTicketClicked(ticketId: string, event: MouseEvent): void {
+    event.stopPropagation(); // Prevent the event from propagating
     if (!this.isDragging) {
+      console.log('clicked!');
       const boardId = this.boardId;
       const boardNameSlug = this.boardNameSlug || '';
       if (boardNameSlug) {
+        console.log(
+          `boardNameSlug exists in onTicketClicked. Navigating..., boardId : ${boardId}, boardNameSlug : ${boardNameSlug}, ticketId : ${ticketId}`
+        );
         this.router.navigate([
           '/board',
           boardId,
