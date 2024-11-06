@@ -26,22 +26,22 @@ export const routes: Routes = [
   {
     path: 'board/:boardId/:boardNameSlug',
     component: BoardComponent,
-    pathMatch: 'full', // Ensures exact matching
+    children: [
+      {
+        path: 'ticket/:ticketId',
+        component: TicketDetailedViewComponent,
+      },
+    ],
   },
   {
-    path: 'board/:boardId', // Add a separate path without the slug
+    path: 'board/:boardId',
     component: BoardComponent,
-    pathMatch: 'full',
-  },
-  {
-    path: 'board/:boardId/:boardNameSlug/ticket/:ticketId',
-    component: TicketDetailedViewComponent,
-    pathMatch: 'full',
-  },
-  {
-    path: 'board/:boardId/ticket/:ticketId', // Add a separate path without the slug
-    component: TicketDetailedViewComponent,
-    pathMatch: 'full',
+    children: [
+      {
+        path: 'ticket/:ticketId',
+        component: TicketDetailedViewComponent,
+      },
+    ],
   },
   { path: '**', redirectTo: '' }, // Redirect unknown paths to home
 ];
