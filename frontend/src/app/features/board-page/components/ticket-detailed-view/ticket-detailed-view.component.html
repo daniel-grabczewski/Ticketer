@@ -1,0 +1,131 @@
+<div class="overlay" (click)="closeTicketView()">
+  <div
+    id="ticket-detailed-view"
+    class="ticket-detailed-view"
+    (click)="onTicketViewClick($event)"
+  >
+    <!-- Header Stripe with Color and Close Button -->
+    <div class="header-stripe" [style.backgroundColor]="colorHex">
+      <button class="close-button" (click)="closeTicketView()">×</button>
+    </div>
+
+    <!-- Error Loading Ticket -->
+    <div *ngIf="errorLoadingTicket" class="error-message">
+      <p>Error loading ticket.</p>
+      <button (click)="retryFetchTicket()">Retry</button>
+    </div>
+
+    <!-- Check if ticketDetails is available -->
+    <div *ngIf="!errorLoadingTicket && ticketDetails" class="content-container">
+      <!-- Left Section -->
+      <div class="left-section">
+        <!-- Ticket Name -->
+        <div class="ticket-name-section">
+          <ng-container *ngIf="!isEditingName">
+            <h2 (click)="enableNameEditing($event)">{{ ticketDetails.name }}</h2>
+          </ng-container>
+          <ng-container *ngIf="isEditingName">
+            <input
+              type="text"
+              [(ngModel)]="newName"
+              (blur)="saveTicketName()"
+              (keydown.enter)="saveTicketName()"
+              (keydown.escape)="cancelNameEditing()"
+              (click)="$event.stopPropagation()"
+            />
+          </ng-container>
+          <!-- Subheading -->
+          <p class="subheading">In list {{ ticketDetails.listName }}</p>
+        </div>
+
+        <!-- Description -->
+        <div class="description-section">
+          <h3>Description</h3>
+          <ng-container *ngIf="!isEditingDescription">
+            <p (click)="enableDescriptionEditing($event)">
+              {{ ticketDetails.description || 'Click to add a description...' }}
+            </p>
+          </ng-container>
+          <ng-container *ngIf="isEditingDescription">
+            <textarea
+              [(ngModel)]="newDescription"
+              (click)="$event.stopPropagation()"
+            ></textarea>
+            <div class="description-buttons">
+              <button class="save-button" (click)="saveTicketDescription()">
+                Save
+              </button>
+              <button class="cancel-button" (click)="cancelDescriptionEditing()">
+                Cancel
+              </button>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Right Section -->
+      <div class="right-section">
+        <h3>Actions</h3>
+        <button class="action-button" (click)="openMoveToListSubmenu()">
+          Move to different list
+        </button>
+        <button class="action-button" (click)="openChangeCoverColorSubmenu()">
+          Change cover color
+        </button>
+        <button
+          class="action-button delete-button"
+          (click)="openDeleteConfirmationSubmenu()"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+
+    <!-- Dropdown Submenu -->
+    <ng-container *ngIf="showDropdownSubmenu && dropdownSubmenuConfig">
+      <div class="submenu-overlay" (click)="closeDropdownSubmenu()">
+        <div class="submenu-container" (click)="$event.stopPropagation()">
+          <app-dropdown-submenu
+            [title]="dropdownSubmenuConfig.title"
+            [dropdownInputLabel]="dropdownSubmenuConfig.dropdownInputLabel"
+            [dropdownItems]="dropdownSubmenuConfig.dropdownItems"
+            [dropdownPlaceholder]="dropdownSubmenuConfig.dropdownPlaceholder"
+            [buttonText]="dropdownSubmenuConfig.buttonText"
+            (menuAction)="handleMoveToListAction($event)"
+            (close)="closeDropdownSubmenu()"
+          ></app-dropdown-submenu>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Color Selection Submenu -->
+    <ng-container *ngIf="showColorSelectionSubmenu && colorSelectionSubmenuConfig">
+      <div class="submenu-overlay" (click)="closeColorSelectionSubmenu()">
+        <div class="submenu-container" (click)="$event.stopPropagation()">
+          <app-color-selection-submenu
+            [title]="colorSelectionSubmenuConfig.title"
+            [colorId]="colorSelectionSubmenuConfig.colorId"
+            [buttonText]="colorSelectionSubmenuConfig.buttonText"
+            (menuAction)="handleChangeCoverColorAction($event)"
+            (close)="closeColorSelectionSubmenu()"
+          ></app-color-selection-submenu>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Confirmation Submenu -->
+    <ng-container *ngIf="showConfirmationSubmenu && confirmationSubmenuConfig">
+      <div class="submenu-overlay" (click)="closeConfirmationSubmenu()">
+        <div class="submenu-container" (click)="$event.stopPropagation()">
+          <app-confirmation-submenu
+            [title]="confirmationSubmenuConfig.title"
+            [confirmationMessage]="confirmationSubmenuConfig.confirmationMessage"
+            [buttonText]="confirmationSubmenuConfig.buttonText"
+            (menuAction)="handleDeleteConfirmationAction($event)"
+            (close)="closeConfirmationSubmenu()"
+          ></app-confirmation-submenu>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
