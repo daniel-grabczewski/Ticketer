@@ -1,0 +1,61 @@
+@import '../../src/app/assets/styles/main.scss';
+
+p, button {
+  margin : 0px;
+}
+
+.nav-button {
+  background : transparent;
+  border : none;
+  color : $secondary-darker;
+  cursor : pointer;
+  font-size : 1.1rem;
+  transition: color 0.2s ease;
+}
+
+.nav-button:hover {
+  color : $primary;
+}
+
+.navbar {
+  background : $background;
+  display : flex;
+  justify-content: space-between;
+  align-items: center;
+  padding : 1.3rem 4rem 1.3rem 4rem;
+}
+
+.logo-container {
+  display : flex;
+  align-items: center;
+}
+
+.logo {
+  height : 1.5rem;
+}
+
+.left-navbar-container {
+  display : flex;
+  justify-content : space-between;
+  align-items: center;
+  gap : 2.4rem;
+}
+
+.actions-container {
+  display : flex;
+  justify-content : space-between;
+  align-items: center;
+  margin-top : 0.6rem;
+  gap : 1rem;
+}
+
+.right-navbar-container {
+  color : $neutral-lighter;
+  display : flex;
+  justify-content : space-between;
+  align-items: center;
+  margin-top : 0.6rem;
+  font-size : 0.9rem;
+}
+
+

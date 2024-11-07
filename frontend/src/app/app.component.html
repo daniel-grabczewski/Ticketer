@@ -1,26 +1,41 @@
-<router-outlet></router-outlet>
-
-<div class="container">
-
-  <!-- Authenticated user -->
-  <div *ngIf="(auth.isAuthenticated$ | async) && !isGuest">
-    <p>You are logged in!</p>
-    <button mat-button (click)="logout()">Logout</button>
+<div class="navbar">
+<div class="left-navbar-container">
+  <div class="logo-container">
+    <img class = "logo"  src="images/logo-light.svg" alt="Logo">
   </div>
-
-  <!-- Guest user -->
-  <div *ngIf="isGuest">
-    <p>You are continuing as a guest.</p>
-    <!-- No logout button for guests -->
-    <button mat-button (click)="login()">Login</button>
+  <div class="actions-container">
+    <div>
+      <button class = "nav-button" (click)="goToDashboard()" >dashboard</button>
   </div>
+  <!-- Logout button for registered users -->
+    <div *ngIf="(auth.isAuthenticated$ | async) && !isGuest">
+      <button class = "nav-button" (click)="logout()">sign out</button>
+    </div>
+    <div *ngIf="isGuest">
+      <!-- Login button for non-registered users (guests) -->
+      <button class = "nav-button" (click)="login()">sign in</button>
+    </div>
 
   <!-- Not authenticated and not guest -->
   <div *ngIf="!(auth.isAuthenticated$ | async) && !isGuest">
-    <p>You are not logged in.</p>
-    <button mat-button (click)="login()">Login</button>
-    <button mat-button (click)="continueAsGuest()">Continue as Guest</button>
+    <button class = "nav-button" (click)="login()">sign in</button>
+  </div>
+
+  <div *ngIf="!(auth.isAuthenticated$ | async) && !isGuest">
+    <button class = "nav-button" (click)="continueAsGuest()">continue as guest</button>
   </div>
 </div>
+</div>
+
+<div class="right-navbar-container">
+  <p *ngIf="isGuest">guest</p>
+  <p *ngIf="(auth.isAuthenticated$ | async) && !isGuest">signed in as user</p>
+</div>
+
+
+
+</div>
+
+<router-outlet></router-outlet>
 
 <!-- Router outlet for your routed components -->

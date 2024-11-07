@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -31,8 +31,11 @@ export class AppComponent {
     public auth: Auth0Service,
     private dialog: MatDialog,
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
+
+    
     // Subscribe to authentication status
     this.auth.isAuthenticated$.subscribe(async (isAuthenticated) => {
       if (isAuthenticated) {
@@ -89,8 +92,13 @@ export class AppComponent {
       } else {
         // Check if GuestId cookie exists
         this.isGuest = this.checkGuestCookie();
+        console.log(this.isGuest)
       }
     });
+  }
+
+  goToDashboard() {
+    this.router.navigate(['/dashboard']);
   }
 
   // Method to trigger login
