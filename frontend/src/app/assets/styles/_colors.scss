@@ -20,8 +20,26 @@ $neutral-darker: #4D566E;
 
 $placeholder: #AAAAAA;
 
-  // Convert background-lighter to a CSS variable so it can be referred to in other CSS variables (_gradients.scss)
 :root {
-  --background-lighter: #2F3955; 
-  --neutral-darker : #4D566E;
+  --primary: #4A8FE7;
+  --primary-darker: #356BB6;
+
+  --secondary: #FFFFFF;
+  --secondary-darker: #E0E0E0;
+
+  --background: #1B2131;
+  --background-lighter: #2F3955;
+
+  --success: #00E061;
+  --success-lighter: #4FFF96;
+  --success-darker: #00B349;
+
+  --error: #EC3E1D;
+  --error-lighter: #FF6A4A;
+  --error-darker: #B22C14;
+
+  --neutral-lighter: #828A9A;
+  --neutral-darker: #4D566E;
+
+  --placeholder: #AAAAAA;
 }
