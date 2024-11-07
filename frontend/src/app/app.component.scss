@@ -38,15 +38,15 @@ p, button {
   display : flex;
   justify-content : space-between;
   align-items: center;
-  gap : 2.4rem;
+  gap : 0rem;
 }
 
 .actions-container {
   display : flex;
   justify-content : space-between;
   align-items: center;
-  margin-top : 0.6rem;
-  gap : 1rem;
+  margin-top : 0.3rem;
+  gap : 1.3rem;
 }
 
 .user-status-section {
@@ -55,7 +55,7 @@ p, button {
   justify-content : space-between;
   align-items: center;
   margin-top : 0.6rem;
-  font-size : 0.9rem;
+  font-size : 0.95rem;
 }
 
 /* Default state for mobile navbar */
@@ -120,7 +120,7 @@ p, button {
   }
 
   .nav-button:hover {
-    color: $primary-darker;
+    color: $background-lighter;
   }
 
   .user-status-section {
@@ -135,7 +135,7 @@ p, button {
     align-self: self-end;
     margin : 0;
     padding : 0;
-    margin-top : -1rem;
+    margin-top : -0.7rem;
     margin-bottom : -1.3rem;
   }
   
