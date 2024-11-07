@@ -3,8 +3,9 @@
 @import './colors';
 
 
-html, body { height: 100%; }
-body {
-  font-family: 'Lato', sans-serif;
+html, body { height: 100%;  }
+* {
+  font-family: "Lato", sans-serif !important; 
   margin: 0;
+  padding : 0;
 }
