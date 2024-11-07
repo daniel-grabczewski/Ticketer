@@ -1,6 +1,11 @@
-<button class="icon-button">
-  <svg [attr.width]="scale * 16" [attr.height]="scale * 16" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="2.29152" height="26.7344" rx="1.14576" transform="matrix(0.707107 -0.707107 -0.707107 -0.707107 27.5469 29.1663)" [attr.fill]="color" class="svg-rect"/>
-    <rect width="2.29152" height="26.7344" rx="1.14576" transform="matrix(0.707107 0.707107 0.707107 -0.707107 8.64185 27.5463)" [attr.fill]="color" class="svg-rect"/>
+<button class="icon-button" [style.--color]="color" [style.--hover-color]="hoverColor">
+  <svg
+    [attr.width]="scale * 16"
+    [attr.height]="scale * 16"
+    viewBox="0 0 64 64"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M8 8 L56 56" class="svg-line" [attr.stroke-width]="getStrokeWidth()" stroke-linecap="round" />
+    <path d="M56 8 L8 56" class="svg-line" [attr.stroke-width]="getStrokeWidth()" stroke-linecap="round" />
   </svg>
 </button>
