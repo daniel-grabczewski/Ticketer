@@ -1,0 +1,29 @@
+<button class="icon-button" [style.--color]="color" [style.--hover-color]="hoverColor">
+  <svg
+    [attr.width]="scale * 32"
+    [attr.height]="scale * 32"
+    viewBox="0 0 64 64"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <!-- Vertical Line -->
+    <line
+      x1="32"
+      y1="8"
+      x2="32"
+      y2="56"
+      class="svg-line"
+      [attr.stroke-width]="getStrokeWidth()"
+      stroke-linecap="round"
+    />
+    <!-- Horizontal Line -->
+    <line
+      x1="8"
+      y1="32"
+      x2="56"
+      y2="32"
+      class="svg-line"
+      [attr.stroke-width]="getStrokeWidth()"
+      stroke-linecap="round"
+    />
+  </svg>
+</button>

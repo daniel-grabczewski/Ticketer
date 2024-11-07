@@ -1,0 +1,23 @@
+@import '../../../assets/styles/main.scss';
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  line-height: 0;
+
+  svg {
+    display: block;
+  }
+
+  .svg-line {
+    stroke: var(--color, var(--secondary));
+    transition: stroke 0.4s;
+  }
+
+  &:hover .svg-line {
+    stroke: var(--hover-color, var(--primary));
+  }
+}
