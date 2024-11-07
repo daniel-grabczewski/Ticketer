@@ -1,9 +1,10 @@
-<div class="navbar">
+<div class="desktop-navbar">
 <div class="left-navbar-container">
   <div class="logo-container">
     <img class = "logo"  src="images/logo-light.svg" alt="Logo">
   </div>
   <div class="actions-container">
+    <app-x-button [scale]="2" color="#FFFFFF" hoverColor="#00FF00">X</app-x-button>
     <div>
       <button class = "nav-button" (click)="goToDashboard()" >dashboard</button>
   </div>
@@ -27,13 +28,58 @@
 </div>
 </div>
 
-<div class="right-navbar-container">
+<div class="user-status-section">
   <p *ngIf="isGuest">guest</p>
   <p *ngIf="(auth.isAuthenticated$ | async) && !isGuest">signed in as user</p>
 </div>
 
 
 
+</div>
+
+<!-- Mobile Navbar -->
+<div class="navbar mobile-navbar">
+  <button class="open-menu" (click)="toggleMobileMenu()">☰</button>
+  <div *ngIf="isMobileMenuOpen" class="mobile-menu show">
+    <app-x-button [scale]="2" color="#FFFFFF" hoverColor="#00FF00">X</app-x-button>
+    <button class="close-menu" (click)="toggleMobileMenu()">
+      <svg width="30" height="30" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="2.29152" height="26.7344" rx="1.14576" transform="matrix(0.707107 -0.707107 -0.707107 -0.707107 27.5469 29.1663)" class="svg-rect" />
+        <rect width="2.29152" height="26.7344" rx="1.14576" transform="matrix(0.707107 0.707107 0.707107 -0.707107 8.64185 27.5463)" class="svg-rect" />
+      </svg>
+    </button>
+    <!-- Mobile menu content -->
+     <div>
+      
+    <div>
+      <button class = "nav-button" (click)="goToDashboard()" >dashboard</button>
+  </div>
+  <!-- Logout button for registered users -->
+    <div *ngIf="(auth.isAuthenticated$ | async) && !isGuest">
+      <button class = "nav-button" (click)="logout()">sign out</button>
+    </div>
+    <div *ngIf="isGuest">
+      <!-- Login button for non-registered users (guests) -->
+      <button class = "nav-button" (click)="login()">sign in</button>
+    </div>
+
+  <!-- Not authenticated and not guest -->
+  <div *ngIf="!(auth.isAuthenticated$ | async) && !isGuest">
+    <button class = "nav-button" (click)="login()">sign in</button>
+  </div>
+
+  <div *ngIf="!(auth.isAuthenticated$ | async) && !isGuest">
+    <button class = "nav-button" (click)="continueAsGuest()">continue as guest</button>
+  </div>
+</div>
+<div>
+  <div class="user-status-section">
+    <p *ngIf="isGuest">guest</p>
+    <p *ngIf="(auth.isAuthenticated$ | async) && !isGuest">signed in as user</p>
+  </div>
+</div>
+  
+  </div>
 </div>
 
 <router-outlet></router-outlet>

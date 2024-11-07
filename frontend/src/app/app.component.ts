@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 // Import the new services
 import { UserService } from './core/services/user.service';
 import { AuthService } from './core/services/auth.service';
+import { XButtonComponent } from './shared/components/x-button/x-button.component';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,8 @@ import { AuthService } from './core/services/auth.service';
     RouterOutlet,
     MaterialSharedModule,
     CommonModule,
-    GuestDataDialogComponent, // Include the dialog component
+    GuestDataDialogComponent,
+    XButtonComponent, // Include the dialog component
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
@@ -26,6 +28,7 @@ import { AuthService } from './core/services/auth.service';
 export class AppComponent {
   title = 'frontend';
   isGuest: boolean = false;
+  isMobileMenuOpen: boolean = false;
 
   constructor(
     public auth: Auth0Service,
@@ -34,8 +37,6 @@ export class AppComponent {
     private authService: AuthService,
     private router: Router
   ) {
-
-    
     // Subscribe to authentication status
     this.auth.isAuthenticated$.subscribe(async (isAuthenticated) => {
       if (isAuthenticated) {
@@ -92,9 +93,13 @@ export class AppComponent {
       } else {
         // Check if GuestId cookie exists
         this.isGuest = this.checkGuestCookie();
-        console.log(this.isGuest)
+        console.log(this.isGuest);
       }
     });
+  }
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
   goToDashboard() {

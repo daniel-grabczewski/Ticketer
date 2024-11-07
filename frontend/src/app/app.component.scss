@@ -17,7 +17,7 @@ p, button {
   color : $primary;
 }
 
-.navbar {
+.desktop-navbar {
   background : $background;
   display : flex;
   justify-content: space-between;
@@ -49,7 +49,7 @@ p, button {
   gap : 1rem;
 }
 
-.right-navbar-container {
+.user-status-section {
   color : $neutral-lighter;
   display : flex;
   justify-content : space-between;
@@ -58,4 +58,93 @@ p, button {
   font-size : 0.9rem;
 }
 
+/* Default state for mobile navbar */
+.mobile-navbar {
+  display: none;
+}
 
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .desktop-navbar {
+    display: none;
+  }
+  .mobile-navbar {
+    background : $background;
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+    padding: 1rem;
+  }
+
+  .open-menu {
+    font-size: 2rem;
+    background: transparent;
+    border: none;
+    color: $primary;
+    cursor: pointer;
+  }
+
+  .mobile-menu {
+    background: $neutral-lighter;
+    border-radius : 0.7rem;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 9rem; /* Fixed width */
+    height: 9rem; /* Full height for a sidebar effect */
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 1000; /* Ensure it's above other content */
+  }
+
+  .mobile-menu.show {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .nav-button {
+    background: transparent;
+    border: none;
+    color: $secondary;
+    text-align: left;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem 0;
+  }
+
+  .nav-button:hover {
+    color: $primary-darker;
+  }
+
+  .user-status-section {
+    color : $secondary-darker;
+  }
+
+  .close-menu {
+    background: none;
+    border: none;
+    cursor: pointer;
+    width : min-content;
+    align-self: self-end;
+    margin : 0;
+    padding : 0;
+    margin-top : -1rem;
+    margin-bottom : -1.3rem;
+  }
+  
+  .close-menu svg .svg-rect {
+    fill: $neutral-darker;
+    transition: fill 0.3s; /* Adds a smooth transition effect */
+  }
+  
+  .close-menu:hover svg .svg-rect {
+    fill: $background-lighter; /* Change to the color you want on hover */
+  }
+}
