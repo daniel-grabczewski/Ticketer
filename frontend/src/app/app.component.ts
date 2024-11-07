@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserService } from './core/services/user.service';
 import { AuthService } from './core/services/auth.service';
 import { XButtonComponent } from './shared/components/x-button/x-button.component';
+import { HamburgerButtonComponent } from './shared/components/hamburger-button/hamburger-button.component';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +21,8 @@ import { XButtonComponent } from './shared/components/x-button/x-button.componen
     MaterialSharedModule,
     CommonModule,
     GuestDataDialogComponent,
-    XButtonComponent, // Include the dialog component
+    XButtonComponent,
+    HamburgerButtonComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
