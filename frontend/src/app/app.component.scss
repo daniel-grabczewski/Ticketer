@@ -20,9 +20,15 @@ p, button {
 .desktop-navbar {
   background : $background;
   display : flex;
+  justify-content : center;
+  padding : 1.3rem 3rem;
+}
+
+.desktop-navbar-container {
+  display : flex;
   justify-content: space-between;
   align-items: center;
-  padding : 1.3rem 4rem 1.3rem 4rem;
+  width : $page-max-width;
 }
 
 .logo-container {
@@ -38,7 +44,13 @@ p, button {
   display : flex;
   justify-content : space-between;
   align-items: center;
-  gap : 0rem;
+  gap : 3rem;
+}
+
+@media (max-width : 768px) {
+  .left-navbar-container {
+    gap : 1.5rem;
+  }
 }
 
 .actions-container {
@@ -54,7 +66,7 @@ p, button {
   display : flex;
   justify-content : space-between;
   align-items: center;
-  margin-top : 0.6rem;
+  margin-top : 0.28rem;
   font-size : 0.95rem;
 }
 
@@ -64,7 +76,7 @@ p, button {
 }
 
 /* Media query for smaller screens */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .desktop-navbar {
     display: none;
   }
@@ -73,7 +85,18 @@ p, button {
     display: flex;
     justify-content: flex-end;
     position: relative;
-    padding: 1rem;
+    padding: 1rem 2rem;
+  }
+
+  .logo {
+    margin-top : -0.15rem;
+  }
+
+  .mobile-navbar-container {
+    display : flex;
+    justify-content :space-between;
+    align-items: center;
+    width : 100%;
   }
 
   .open-menu {
@@ -88,7 +111,6 @@ p, button {
     background: $neutral-lighter;
     border-radius : 0.7rem;
     position: fixed;
-    top: 0;
     right: 0;
     width: 9rem; /* Fixed width */
     height: 9rem; /* Full height for a sidebar effect */
@@ -101,6 +123,7 @@ p, button {
     opacity: 0;
     transform: translateX(100%);
     transition: opacity 0.3s ease, transform 0.3s ease;
+    margin-top : 2.4rem;
     z-index: 1000; /* Ensure it's above other content */
   }
 

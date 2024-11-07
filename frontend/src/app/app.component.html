@@ -1,4 +1,5 @@
 <div class="desktop-navbar">
+  <div class="desktop-navbar-container">
 <div class="left-navbar-container">
   <div class="logo-container">
     <img class = "logo"  src="images/logo-light.svg" alt="Logo">
@@ -31,14 +32,19 @@
   <p *ngIf="isGuest">guest</p>
   <p *ngIf="(auth.isAuthenticated$ | async) && !isGuest">signed in as user</p>
 </div>
-
+</div>
 
 
 </div>
 
 <!-- Mobile Navbar -->
 <div class="navbar mobile-navbar">
+  <div class="mobile-navbar-container">
+    <div class="logo-container">
+      <img class = "logo"  src="images/logo-light.svg" alt="Logo">
+    </div>
   <app-hamburger-button [scale]="2" class="open-menu" (click)="toggleMobileMenu()"></app-hamburger-button>
+</div>
   <div *ngIf="isMobileMenuOpen" class="mobile-menu show">
     <app-x-button class="close-menu" (click)="toggleMobileMenu()" [scale]="1.2"></app-x-button>
     <!-- Mobile menu content -->
