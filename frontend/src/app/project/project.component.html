@@ -1,26 +1,31 @@
-<button mat-button [matMenuTriggerFor]="parentMenu">Open Menu</button>
+<!-- Overlay -->
+<div class="overlay" *ngIf="showOverlay" (click)="showOverlay = false"></div>
+
+<!-- Button to open the main menu -->
+ <div class = "open-button-container">
+<button class = "open-button" mat-button [matMenuTriggerFor]="parentMenu" (menuOpened)="handleMenuOpened()" (menuClosed)="handleMenuClosed()">
+  Open Menu
+</button>
+</div>
 
 <!-- Parent Menu -->
 <mat-menu #parentMenu="matMenu" class="custom-menu">
   <div class="menu-content" (click)="$event.stopPropagation()">
-    <button mat-icon-button class="close-button" (click)="$event.stopPropagation(); parentMenu.closed.emit()">
+    <button mat-icon-button class="close-button" (click)="$event.stopPropagation(); parentMenu.closed.emit(); showOverlay = false">
       X
     </button>
     <div class="custom-content">
-      <!-- Content in the first menu -->
       <p>First menu content</p>
-
-      <!-- Button to open the nested menu -->
       <button mat-button [matMenuTriggerFor]="childMenu">Open Nested Menu</button>
     </div>
   </div>
 </mat-menu>
 
-<!-- Child (Nested) Menu -->
+<!-- Nested (Child) Menu -->
 <mat-menu #childMenu="matMenu" class="custom-menu">
   <div class="menu-content" (click)="$event.stopPropagation()">
     <p>Nested menu content</p>
-    <button mat-icon-button class="close-button" (click)="$event.stopPropagation(); childMenu.closed.emit()">
+    <button mat-icon-button class="close-button" (click)="$event.stopPropagation(); childMenu.closed.emit(); showOverlay = false">
       X
     </button>
   </div>

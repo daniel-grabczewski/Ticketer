@@ -11,6 +11,16 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./project.component.scss']
 })
 export class ProjectComponent {
+  showOverlay = false;
+
+  handleMenuOpened() {
+    this.showOverlay = true;
+  }
+
+  handleMenuClosed() {
+    this.showOverlay = false;
+  }
+
   handleAction() {
     console.log('Action button clicked');
   }
