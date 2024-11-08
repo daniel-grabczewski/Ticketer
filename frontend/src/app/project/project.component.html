@@ -1,70 +1,27 @@
-<div class="project-page">
-  <div class = "tickets-container">
-<div class="ticket-form">
-  <h2>Create a New Ticket</h2>
-  <form (ngSubmit)="submitTicket()">
-    <div class="form-container">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Title</mat-label>
-        <input matInput id="title" [(ngModel)]="title" name="title" required />
-      </mat-form-field>
-    
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Description</mat-label>
-        <textarea
-          matInput
-          id="description"
-          [(ngModel)]="description"
-          name="description"
-          required
-        ></textarea>
-      </mat-form-field>
+<button mat-button [matMenuTriggerFor]="parentMenu">Open Menu</button>
+
+<!-- Parent Menu -->
+<mat-menu #parentMenu="matMenu" class="custom-menu">
+  <div class="menu-content" (click)="$event.stopPropagation()">
+    <button mat-icon-button class="close-button" (click)="$event.stopPropagation(); parentMenu.closed.emit()">
+      X
+    </button>
+    <div class="custom-content">
+      <!-- Content in the first menu -->
+      <p>First menu content</p>
+
+      <!-- Button to open the nested menu -->
+      <button mat-button [matMenuTriggerFor]="childMenu">Open Nested Menu</button>
     </div>
+  </div>
+</mat-menu>
 
-    <div class="form-actions">
-      <button mat-raised-button color="primary" type="submit">Submit Ticket</button>
-    </div>
-  </form>
-</div>
-
-<div class="ticket-form ticket-list">
-  <h2>Your Tickets</h2>
-  <mat-card *ngFor="let ticket of tickets" class="ticket-card">
-    <div *ngIf="!ticket.isEditing">
-      <mat-card-header>
-        <mat-card-title>{{ ticket.title }}</mat-card-title>
-        <mat-card-subtitle>
-          <small>Updated at: {{ ticket.updatedAt | date: 'short' }}</small>
-        </mat-card-subtitle>
-      </mat-card-header>
-
-      <mat-card-content>
-        <p>{{ ticket.description }}</p>
-      </mat-card-content>
-
-      <mat-card-actions>
-        <button mat-button (click)="toggleEditMode(ticket)">Edit</button>
-        <button mat-button color="warn" (click)="deleteTicket(ticket.id)">Delete</button>
-      </mat-card-actions>
-    </div>
-
-    <div *ngIf="ticket.isEditing">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Edit Title</mat-label>
-        <input matInput [(ngModel)]="ticket.title" name="editTitle" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Edit Description</mat-label>
-        <textarea matInput [(ngModel)]="ticket.description" name="editDescription"></textarea>
-      </mat-form-field>
-
-      <mat-card-actions>
-        <button mat-raised-button color="primary" (click)="updateTicket(ticket)">Save</button>
-        <button mat-button (click)="toggleEditMode(ticket)">Cancel</button>
-      </mat-card-actions>
-    </div>
-  </mat-card>
-</div>
-</div>
-</div>
+<!-- Child (Nested) Menu -->
+<mat-menu #childMenu="matMenu" class="custom-menu">
+  <div class="menu-content" (click)="$event.stopPropagation()">
+    <p>Nested menu content</p>
+    <button mat-icon-button class="close-button" (click)="$event.stopPropagation(); childMenu.closed.emit()">
+      X
+    </button>
+  </div>
+</mat-menu>
