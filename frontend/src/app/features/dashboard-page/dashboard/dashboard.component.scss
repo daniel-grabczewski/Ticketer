@@ -30,6 +30,9 @@
     @media (max-width : 500px) {
       font-size : 3.8rem;
     }
+    @media (max-width : 380px) {
+      font-size : 3.2rem;
+    }
   }
 
   .board-grid {
@@ -37,17 +40,24 @@
     grid-template-columns: repeat(3, minmax(20rem, 1fr)); /* Default to 3 columns */
     gap: 1rem;
     width: 100%;
+    max-height : 34rem;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: $background-lighter $background;
+
   
     /* Media query for screens smaller than 900px */
     @media (max-width: 1140px) {
       gap: 1rem;
       grid-template-columns: repeat(2, minmax(20rem, 1fr)); /* Change to 2 columns */
+      max-height : 44rem;
     }
   
     /* Media query for screens smaller than 600px */
     @media (max-width: 790px) {
       gap: 1rem;
       grid-template-columns: 1fr; /* Change to 1 column */
+      max-height : 52rem;
     }
   }
 
