@@ -6,18 +6,50 @@
   cursor: pointer;
   padding: 0;
   margin: 0;
-  line-height: 0;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+
+  /* Define default and hover colors using CSS variables */
+  --color: var(--color, var(--secondary));
+  --hover-color: var(--hover-color, var(--primary));
+
+  color: var(--color);
+
+  .content-wrapper {
+    display: inline-flex;
+    align-items: center;
+  }
 
   svg {
     display: block;
   }
 
   .svg-line {
-    stroke: var(--color, var(--secondary));
+    stroke: var(--color);
     transition: stroke 0.4s;
   }
 
-  &:hover .svg-line {
-    stroke: var(--hover-color, var(--primary));
+  .label-text {
+    margin-left: 0.25rem; /* Adjust spacing as needed */
+    font-size: 1.2rem; /* Adjust as needed */
+    color: inherit;
+    transition: color 0.4s;
+  }
+
+  &:hover {
+    color: var(--hover-color);
+
+    .svg-line {
+      stroke: var(--hover-color, var(--primary));
+    }
+
+    .label-text {
+      color: var(--hover-color, var(--primary));
+    }
+  }
+
+  &:focus {
+    outline: none;
   }
 }
