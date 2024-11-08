@@ -3,7 +3,8 @@
 
 .board-thumbnail {
   position: relative;
-  width: 20rem;
+  max-width: 100%;
+  min-width : 18rem;
   height: 7rem;
   border-radius: 0.5rem;
   padding: 1rem 1.5rem;
@@ -16,6 +17,13 @@
   cursor: pointer;
   transition: transform 0.2s ease; 
   overflow: hidden; /* Prevent the overlay from extending outside the thumbnail */
+
+  @media (max-width : 380px) {
+    max-width : 18rem;
+    min-width : 10rem;
+    padding: 0.7rem 1rem;
+  }
+
   .hover-overlay {
     position: absolute;
     top: 0;
@@ -36,6 +44,8 @@
     position: relative; /* Ensure content stays above the overlay */
     z-index: 2; /* Higher than the overlay */
   }
+
+
 }
 
 
@@ -50,6 +60,10 @@
   font-size: 1.8rem;
   font-weight : 400;
   max-width : 75%;
+
+  @media (max-width : 380px) {
+    font-size : 1.8rem;
+  }
 }
 
 .menu-button {
@@ -65,6 +79,10 @@
   transition: color 0.4s;
   &:hover {
     color : $placeholder;
+  }
+
+  @media (max-width : 380px) {
+    margin-right : -0.2rem;
   }
 }
 
