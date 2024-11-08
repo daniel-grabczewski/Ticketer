@@ -1,34 +1,62 @@
 @import '../../../assets/styles/main.scss';
 
 .dashboard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px;
-  background : $background;
-  height : 100%; 
+  display : flex;
+  justify-content : center;
+
+}  
+
+  .dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top : 5rem;
+    margin : 0 3rem;
+    max-width : 1200px;
+    gap : 2rem;
+
+    @media (max-width : 500px) {
+      margin : 0 1.5rem;
+    }
+
+  }
+
+  .title {
+    align-self:flex-start;
+    color : $secondary;
+    font-size : 4rem;
+    font-weight : 400;
+
+    @media (max-width : 500px) {
+      font-size : 3.8rem;
+    }
+  }
 
   .board-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(3, minmax(20rem, 1fr)); /* Default to 3 columns */
+    gap: 1rem;
     width: 100%;
-  }
-
-  .open-submenu-button {
-    margin-top: 32px;
-    padding: 12px 24px;
-    font-size: 16px;
-    background-color: $primary;
-    color: $secondary;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: $primary-darker;
+  
+    /* Media query for screens smaller than 900px */
+    @media (max-width: 1140px) {
+      gap: 1rem;
+      grid-template-columns: repeat(2, minmax(20rem, 1fr)); /* Change to 2 columns */
+    }
+  
+    /* Media query for screens smaller than 600px */
+    @media (max-width: 790px) {
+      gap: 1rem;
+      grid-template-columns: 1fr; /* Change to 1 column */
     }
   }
+
+
+  .create-new-board-button {
+    align-self:flex-start;
+  }
+
+
 
   app-generate-board-submenu {
     position: absolute;
@@ -36,4 +64,4 @@
     left: 16px;
     z-index: 1000;
   }
-}
+

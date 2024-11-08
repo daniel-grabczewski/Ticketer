@@ -10,6 +10,7 @@ import {
 import { GenerateBoardSubmenuComponent } from '../../../shared/components/generate-board-submenu/generate-board-submenu.component';
 import { BoardThumbnailComponent } from '../components/board-thumbnail/board-thumbnail.component';
 import { GenerateBoardSubmenuOutput } from '../../../shared/models/submenuInputOutput.model';
+import { PlusButtonComponent } from '../../../shared/components/plus-button/plus-button.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +21,7 @@ import { GenerateBoardSubmenuOutput } from '../../../shared/models/submenuInputO
     CommonModule,
     GenerateBoardSubmenuComponent,
     BoardThumbnailComponent,
+    PlusButtonComponent
   ],
 })
 export class DashboardComponent implements OnInit {
