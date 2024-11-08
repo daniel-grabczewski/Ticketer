@@ -1,11 +1,12 @@
 @import '../../../../assets/styles/main.scss';
 
+
 .board-thumbnail {
   position: relative;
-  width: 300px;
-  height: 150px;
-  border-radius: 8px;
-  padding: 16px;
+  width: 20rem;
+  height: 7rem;
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
   color: $secondary; // White font color
   display: flex;
   flex-direction: column;
@@ -13,12 +14,30 @@
   background-size: cover;
   background-position: center;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease; 
+  overflow: hidden; /* Prevent the overlay from extending outside the thumbnail */
+  .hover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.15); /* Slightly dark transparent overlay */
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1; /* Ensure it stays behind the content but above the background */
+  }
 
-  &:hover {
-    transform: translateY(-5px);
+  &:hover .hover-overlay {
+    opacity: 1; /* Show the overlay on hover */
+  }
+
+  .board-content {
+    position: relative; /* Ensure content stays above the overlay */
+    z-index: 2; /* Higher than the overlay */
   }
 }
+
 
 .board-content {
   display: flex;
@@ -28,15 +47,25 @@
 
 .board-name {
   margin: 0;
-  font-size: 24px;
+  font-size: 1.8rem;
+  font-weight : 400;
+  max-width : 75%;
 }
 
 .menu-button {
-  background: none;
+  padding-right : 0.3rem;
+  padding-left : 0.3rem;
+  background : none;
+  margin-right : -0.5rem;
   border: none;
-  color: #ffffff;
-  font-size: 24px;
+  color: $secondary-darker;
+  font-size: 2rem;
   cursor: pointer;
+  align-self: flex-start;
+  transition: color 0.4s;
+  &:hover {
+    color : $placeholder;
+  }
 }
 
 .menu-wrapper {
