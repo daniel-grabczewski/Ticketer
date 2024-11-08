@@ -16,7 +16,7 @@
   background-position: center;
   cursor: pointer;
   transition: transform 0.2s ease; 
-  overflow: hidden; /* Prevent the overlay from extending outside the thumbnail */
+   /* Prevent the overlay from extending outside the thumbnail */
 
   @media (max-width : 380px) {
     max-width : 18rem;
@@ -25,6 +25,7 @@
   }
 
   .hover-overlay {
+    border-radius: 0.5rem;
     position: absolute;
     top: 0;
     left: 0;
