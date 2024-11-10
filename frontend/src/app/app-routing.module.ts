@@ -3,6 +3,7 @@ import { DashboardComponent } from './features/dashboard-page/dashboard/dashboar
 import { ProjectComponent } from './project/project.component';
 import { authGuardFn } from '@auth0/auth0-angular';
 import { MenuComponent } from './shared/components/menu/menu.component';
+import { TestingComponent } from './shared/components/testing/testing.component';
 
 export const routes: Routes = [
   { path: '', component: DashboardComponent }, // Public route
@@ -17,8 +18,8 @@ export const routes: Routes = [
     // Guard removed to allow guest access
   },
   {
-    path: 'test',
-    component: MenuComponent,
+    path: 'testing',
+    component: TestingComponent,
     // Guard removed to allow guest access
   },
   {
