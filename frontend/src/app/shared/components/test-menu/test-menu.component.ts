@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { TestingOverlayService } from '../../../core/services/testing-overlay.service';
 
 @Component({
   selector: 'app-test-menu',
@@ -7,11 +8,21 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./test-menu.component.scss']
 })
 export class TestMenuComponent {
-  // Output to emit an event for closing the menu
   @Output() closeMenu = new EventEmitter<void>();
 
-  // Method to emit the close event
+  constructor(private testingOverlayService: TestingOverlayService) {}
+
   onCloseClicked() {
     this.closeMenu.emit();
+  }
+
+  // Updated method to handle the submenu button click safely
+  onSubmenuButtonClick(event: Event) {
+    const target = event.target as HTMLElement;
+    if (target) {
+      this.testingOverlayService.openSubmenuOverlay(target);
+    } else {
+      console.error('Error: Event target is not an HTMLElement.');
+    }
   }
 }
