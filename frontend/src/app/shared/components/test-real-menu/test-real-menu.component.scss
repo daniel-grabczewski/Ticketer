@@ -1,0 +1,60 @@
+@import '../../../assets/styles/main.scss';
+
+.menu-container {
+  position: relative;
+  background-color: $neutral-lighter;
+  z-index: 1000; /* Ensure menu is above other elements */
+}
+
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px; 
+}
+
+.menu-title {
+  margin: 0;
+  font-size: 16px;
+}
+
+.quit-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-button-container {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.menu-button {
+  padding: 8px 16px;
+  background-color: $primary;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+
+  &.confirmation-button {
+    background-color: $error;
+    color: white;
+  }
+}
+
+.submenu-container {
+  position: absolute;
+  top: 0;
+  left: 100%; /* Position to the right of the button */
+  z-index: 1001; /* Ensure submenu is above the menu */
+  margin-left: 8px;
+}

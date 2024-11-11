@@ -1,3 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TestingComponent } from './testing.component';
+import { MenuComponent } from './test-real-menu.component';
+

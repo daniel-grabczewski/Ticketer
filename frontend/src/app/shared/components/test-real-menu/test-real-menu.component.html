@@ -1,0 +1,23 @@
+<div class="menu-container" (click)="$event.stopPropagation()">
+  <!-- Header with title and quit button -->
+  <div class="menu-header">
+    <h3 class="menu-title">{{ menuConfig.title }}</h3>
+    <button class="quit-button" (click)="closeMenu()">×</button>
+  </div>
+
+  <div class="menu-buttons">
+    <div
+      class="menu-button-container"
+      *ngFor="let submenuItem of rearrangedSubmenus; let index = index"
+    >
+      <!-- Menu Button -->
+      <button
+      class="menu-button"
+      [ngClass]="{ 'confirmation-button': submenuItem.submenu.type === 'confirmation-submenu' }"
+      (click)="handleSubmenuClick(index, $event)"
+    >
+      {{ submenuItem.buttonText }}
+    </button>
+    </div>
+  </div>
+</div>
