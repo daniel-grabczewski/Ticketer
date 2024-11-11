@@ -1,12 +1,3 @@
 <div class="testing-component">
-  <button (click)="openTestRealMenu()">Open Real Menu</button>
-
-  <!-- TestRealMenuComponent -->
-  <div class="menu-wrapper" *ngIf="showRealMenu">
-    <app-test-real-menu
-      [menuConfig]="testMenuConfig"
-      (menuAction)="handleMenuAction($event)"
-      (close)="closeMenu()"
-    ></app-test-real-menu>
-  </div>
+  <button (click)="openTestRealMenu($event)">Open Real Menu</button>
 </div>

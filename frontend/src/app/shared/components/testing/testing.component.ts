@@ -1,19 +1,16 @@
-import { Component, ElementRef } from '@angular/core'
-import { TestingOverlayService } from '../../../core/services/testing-overlay.service'
-import { MenuConfig, SubmenuOutputTransfer } from '../../models/menu.model'
-import { TestRealMenuComponent } from '../test-real-menu/test-real-menu.component'
-import { CommonModule } from '@angular/common'
+import { Component, ElementRef } from '@angular/core';
+import { TestingOverlayService } from '../../../core/services/testing-overlay.service';
+import { MenuConfig, SubmenuOutputTransfer } from '../../models/menu.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-testing',
   templateUrl: './testing.component.html',
   styleUrls: ['./testing.component.scss'],
   standalone: true,
-  imports : [CommonModule, TestRealMenuComponent]
+  imports: [CommonModule],
 })
 export class TestingComponent {
-  showRealMenu: boolean = false
-
   // Example MenuConfig for the TestRealMenuComponent
   testMenuConfig: MenuConfig = {
     title: 'Test Real Menu',
@@ -43,23 +40,25 @@ export class TestingComponent {
         },
       },
     ],
-  }
+  };
 
   constructor(
     private testingOverlayService: TestingOverlayService,
     private elementRef: ElementRef
   ) {}
 
-  openTestRealMenu() {
-    this.showRealMenu = true
+  openTestRealMenu(event: Event) {
+    const target = event.target as HTMLElement;
+    if (target) {
+      this.testingOverlayService.openOverlay(target, this.testMenuConfig);
+      console.log('Opened TestRealMenuComponent via overlay service');
+    } else {
+      console.error('Error: Event target is not an HTMLElement.');
+    }
   }
 
   handleMenuAction(output: SubmenuOutputTransfer) {
-    console.log('Received submenu action from TestRealMenu:', output)
+    console.log('Received submenu action from TestRealMenu:', output);
     // Handle the output received from the TestRealMenuComponent as needed
-  }
-
-  closeMenu() {
-    this.showRealMenu = false
   }
 }
