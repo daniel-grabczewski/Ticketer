@@ -19,3 +19,16 @@ export interface SubmenuTransfer {
   purpose: string; // e.g., 'rename', 'duplicate' (used to differentiate the purposes multiple same type submenus in the same menu)
   payload: SubmenuInput | SubmenuOutput;
 }
+
+
+export interface SubmenuInputTransfer {
+  type: SubmenuTypes; // e.g., 'text-input-submenu', 'confirmation-submenu'
+  purpose: string; // e.g., 'rename', 'duplicate' (used to differentiate the purposes multiple same type submenus in the same menu)
+  payload: SubmenuInput ;
+}
+
+export interface SubmenuOutputTransfer {
+  type: SubmenuTypes; // e.g., 'text-input-submenu', 'confirmation-submenu'
+  purpose: string; // e.g., 'rename', 'duplicate' (used to differentiate the purposes multiple same type submenus in the same menu)
+  payload: SubmenuOutput ;
+}
