@@ -140,19 +140,20 @@ export class TestingOverlayService {
       .subscribe(() => this.closeSubmenuOverlay());
 
     // Listen for events emitted by the submenu instance
-    if (
-      this.isInstanceWithEventEmitter(componentRef.instance, 'closeSubmenu')
-    ) {
-      componentRef.instance['closeSubmenu'].subscribe(() =>
+    if (this.isInstanceWithEventEmitter(componentRef.instance, 'close')) {
+      componentRef.instance['close'].subscribe(() =>
         this.closeSubmenuOverlay()
       );
     }
 
     if (this.isInstanceWithEventEmitter(componentRef.instance, 'menuAction')) {
-      componentRef.instance['menuAction'].subscribe((output: SubmenuInput) => {
-        console.log('Submenu action emitted:', output);
-        // Optionally handle or propagate the action event here
-      });
+      componentRef.instance['menuAction'].subscribe(
+        (output: SubmenuOutputTransfer) => {
+          console.log('Submenu action emitted:', output);
+          // Close submenu after action is emitted
+          this.closeSubmenuOverlay();
+        }
+      );
     }
   }
 
