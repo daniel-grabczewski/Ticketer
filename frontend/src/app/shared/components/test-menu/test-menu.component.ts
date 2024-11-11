@@ -15,7 +15,7 @@ export class TestMenuComponent {
   onCloseClicked() {
     this.closeMenu.emit();
   }
-
+/*
   // Updated method to handle the submenu button click safely
   onSubmenuButtonClick(event: Event) {
     const target = event.target as HTMLElement;
@@ -25,4 +25,5 @@ export class TestMenuComponent {
       console.error('Error: Event target is not an HTMLElement.');
     }
   }
+    */
 }
