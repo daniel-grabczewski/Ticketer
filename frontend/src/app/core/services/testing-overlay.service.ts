@@ -117,8 +117,24 @@ export class TestingOverlayService {
       .position()
       .flexibleConnectedTo(origin)
       .withPositions([
-        { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' },
-      ]);
+        // Primary position: below the button
+        {
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top',
+        },
+        // Fallback position: above the button
+        {
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'bottom',
+        },
+      ])
+      .withPush(true)
+      .withViewportMargin(8)
+      .withFlexibleDimensions(false);
 
     this.submenuOverlayRef = this.overlay.create({
       hasBackdrop: true,
