@@ -11,6 +11,7 @@ import { AuthService } from './core/services/auth.service';
 import { XButtonComponent } from './shared/components/x-button/x-button.component';
 import { HamburgerButtonComponent } from './shared/components/hamburger-button/hamburger-button.component';
 import { takeUntil } from 'rxjs/operators';
+import { ColorService } from './core/services/color.service';
 
 @Component({
   selector: 'app-root',
@@ -37,9 +38,11 @@ export class AppComponent implements OnDestroy {
     private dialog: MatDialog,
     private userService: UserService,
     public authService: AuthService,
+    public colorService : ColorService,
     private router: Router
   ) {
     // Subscribe to cached and real-time authentication status from AuthService
+
     this.authService.isAuthenticated$
       .pipe(takeUntil(this.destroy$))
       .subscribe(async (isAuthenticated) => {
@@ -99,6 +102,17 @@ export class AppComponent implements OnDestroy {
           console.log('Guest status:', this.isGuest);
         }
       });
+  }
+
+  ngOnInit() : void {
+    this.colorService.getAllColors().subscribe({
+      next: (colors) => {
+        console.log('Colors loaded and cached:', colors);
+      },
+      error: (error) => {
+        console.error('Failed to load and cache colors:', error);
+      }
+    });
   }
 
   toggleMobileMenu() {
