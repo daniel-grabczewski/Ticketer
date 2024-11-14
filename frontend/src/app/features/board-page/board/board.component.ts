@@ -1,11 +1,15 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  ParamMap,
+  Router,
+  RouterModule,
+} from '@angular/router';
 import { BoardService } from '../../../core/services/board.service';
 import { ListService } from '../../../core/services/list.service';
 import { TicketService } from '../../../core/services/ticket.service';
 import { GetBoardFullDetailsResponse } from '../../../shared/models/board.model';
-import { RouterModule } from '@angular/router';
 import {
   CdkDragDrop,
   DragDropModule,
@@ -22,15 +26,18 @@ import { CreateTicketRequest } from '../../../shared/models/ticket.model';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateBoardItemSubmenuComponent } from '../../../shared/components/create-board-item-submenu/create-board-item-submenu.component';
 import { CreateBoardItemSubmenuOutput } from '../../../shared/models/submenuInputOutput.model';
-import { MenuComponent } from '../../../shared/components/menu/menu.component';
-import { MenuConfig, SubmenuTransfer } from '../../../shared/models/menu.model';
-import { generateBoardActionsMenuConfig } from '../../../shared/menuConfigs/boardMenuConfig';
+import { OverlayService } from '../../../core/services/overlay.service';
+import {
+  MenuConfig,
+  SubmenuOutputTransfer,
+} from '../../../shared/models/menu.model';
 import {
   TextInputSubmenuOutput,
   ConfirmationSubmenuOutput,
   BackgroundSelectionSubmenuOutput,
   GenerateBoardSubmenuOutput,
 } from '../../../shared/models/submenuInputOutput.model';
+import { generateBoardActionsMenuConfig } from '../../../shared/menuConfigs/boardMenuConfig';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { TicketUpdateService } from '../../../core/services/ticket-update.service';
@@ -47,18 +54,16 @@ import { TicketInput } from '../../../shared/models/uniqueComponentInputOutput.m
     DragDropModule,
     ListComponent,
     CreateBoardItemSubmenuComponent,
-    MenuComponent,
     RouterModule,
   ],
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit, OnDestroy {
   boardDetails: GetBoardFullDetailsResponse | null = null;
   colorMap: { [key: number]: string } = {};
   listIds: string[] = []; // List of all cdkDropListIds
 
   showCreateListSubmenu: boolean = false;
 
-  showMenu: boolean = false;
   menuConfig!: MenuConfig;
 
   isRenamingBoard: boolean = false;
@@ -66,16 +71,17 @@ export class BoardComponent implements OnInit {
   private routeSub!: Subscription;
   private ticketUpdateSub!: Subscription;
 
+  boardNameSlug: string | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private boardService: BoardService,
     private listService: ListService,
     private ticketService: TicketService,
-    private ticketUpdateService: TicketUpdateService
+    private ticketUpdateService: TicketUpdateService,
+    private overlayService: OverlayService
   ) {}
-
-  boardNameSlug: string | null = null;
 
   ngOnInit(): void {
     this.routeSub = this.route.paramMap.subscribe((params: ParamMap) => {
@@ -366,33 +372,47 @@ export class BoardComponent implements OnInit {
     this.showCreateListSubmenu = false;
   }
 
-  // Methods for the Board Menu
-  toggleMenu(event: MouseEvent): void {
-    event.stopPropagation(); // Prevent event from propagating to document click listener
-    this.showMenu = !this.showMenu;
+  /**
+   * Replaces toggleMenu logic to open an overlay using OverlayService for the menu.
+   * The menu is configured using `menuConfig` and opened via an overlay.
+   */
+  openMenuOverlay(event: Event) {
+    const originElement = event.target as HTMLElement;
+    if (this.menuConfig && originElement) {
+      this.overlayService.openOverlay(
+        originElement,
+        this.menuConfig,
+        (output) => {
+          this.handleMenuAction(output);
+        }
+      );
+    }
   }
 
-  handleMenuAction(submenuTransfer: SubmenuTransfer): void {
-    console.log('Handling submenu action:', submenuTransfer);
-    switch (submenuTransfer.purpose) {
+  /**
+   * Processes the action from submenu output using the new overlay system.
+   * Previously handled by menuAction from <app-menu>.
+   */
+  handleMenuAction(output: SubmenuOutputTransfer) {
+    console.log('Handling submenu action in BoardComponent:', output);
+    const { purpose, payload } = output;
+    switch (purpose) {
       case 'editBackground':
-        const backgroundPayload =
-          submenuTransfer.payload as BackgroundSelectionSubmenuOutput;
+        const backgroundPayload = payload as BackgroundSelectionSubmenuOutput;
         this.updateBoard({
           colorId: backgroundPayload.colorId,
           name: this.boardDetails!.name,
         });
         break;
       case 'renameBoard':
-        const renamePayload = submenuTransfer.payload as TextInputSubmenuOutput;
+        const renamePayload = payload as TextInputSubmenuOutput;
         this.updateBoard({
           name: renamePayload.text.trim(),
           colorId: this.boardDetails!.colorId,
         });
         break;
       case 'duplicateBoard':
-        const duplicatePayload =
-          submenuTransfer.payload as GenerateBoardSubmenuOutput;
+        const duplicatePayload = payload as GenerateBoardSubmenuOutput;
         const newBoardId = uuidv4();
         const duplicateRequest = {
           originalBoardId: this.boardDetails!.id,
@@ -415,8 +435,7 @@ export class BoardComponent implements OnInit {
         });
         break;
       case 'deleteBoard':
-        const deletePayload =
-          submenuTransfer.payload as ConfirmationSubmenuOutput;
+        const deletePayload = payload as ConfirmationSubmenuOutput;
         if (deletePayload.confirmationStatus) {
           this.boardService.deleteBoard(this.boardDetails!.id).subscribe({
             next: () => {
@@ -431,13 +450,8 @@ export class BoardComponent implements OnInit {
         }
         break;
       default:
-        console.warn('Unknown submenu action:', submenuTransfer);
+        console.warn('Unknown submenu action:', output);
     }
-    this.closeMenu();
-  }
-
-  closeMenu(): void {
-    this.showMenu = false;
   }
 
   private updateBoard(updatedData: { name: string; colorId: number | null }) {
@@ -490,17 +504,7 @@ export class BoardComponent implements OnInit {
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
     const menuButton = document.getElementById('board-menu-button');
-    const menu = document.getElementById('board-menu');
     const boardNameInput = document.getElementById('board-name-input');
-
-    if (
-      this.showMenu &&
-      menu &&
-      !menu.contains(target) &&
-      target !== menuButton
-    ) {
-      this.closeMenu();
-    }
 
     if (
       this.isRenamingBoard &&

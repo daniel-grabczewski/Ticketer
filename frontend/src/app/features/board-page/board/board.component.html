@@ -20,18 +20,10 @@
     <button
       id="board-menu-button"
       class="menu-button"
-      (click)="toggleMenu($event)"
+      (click)="openMenuOverlay($event)"
     >
       ⋮ menu
     </button>
-    <!-- Menu Component -->
-    <div class="menu-wrapper" *ngIf="showMenu" id="board-menu">
-      <app-menu
-        [menuConfig]="menuConfig"
-        (menuAction)="handleMenuAction($event)"
-        (close)="closeMenu()"
-      ></app-menu>
-    </div>
   </div>
 
   <!-- Board Content -->
@@ -52,7 +44,7 @@
             [tickets]="list.tickets"
             [colorMap]="colorMap"
             [connectedDropLists]="listIds"
-            [boardNameSlug] = "boardNameSlug"
+            [boardNameSlug]="boardNameSlug"
             [boardId]="boardDetails.id"
             (ticketPositionChanged)="onTicketPositionChanged($event)"
             (listRenamed)="onListRenamed($event)"
