@@ -9,7 +9,7 @@
       <button class = "nav-button" (click)="goToDashboard()" >dashboard</button>
   </div>
   <!-- Logout button for registered users -->
-    <div *ngIf="(auth.isAuthenticated$ | async) && !isGuest">
+    <div *ngIf="(authService.isAuthenticated$ | async) && !isGuest">
       <button class = "nav-button" (click)="logout()">sign out</button>
     </div>
     <div *ngIf="isGuest">
@@ -18,11 +18,11 @@
     </div>
 
   <!-- Not authenticated and not guest -->
-  <div *ngIf="!(auth.isAuthenticated$ | async) && !isGuest">
+  <div *ngIf="!(authService.isAuthenticated$ | async) && !isGuest">
     <button class = "nav-button" (click)="login()">sign in</button>
   </div>
 
-  <div *ngIf="!(auth.isAuthenticated$ | async) && !isGuest">
+  <div *ngIf="!(authService.isAuthenticated$ | async) && !isGuest">
     <button class = "nav-button" (click)="continueAsGuest()">continue as guest</button>
   </div>
 </div>
@@ -30,7 +30,7 @@
 
 <div class="user-status-section">
   <p *ngIf="isGuest">guest</p>
-  <p *ngIf="(auth.isAuthenticated$ | async) && !isGuest">signed in as user</p>
+  <p *ngIf="(authService.isAuthenticated$ | async) && !isGuest">signed in as user</p>
 </div>
 </div>
 
@@ -54,7 +54,7 @@
       <button class = "nav-button" (click)="goToDashboard()" >dashboard</button>
   </div>
   <!-- Logout button for registered users -->
-    <div *ngIf="(auth.isAuthenticated$ | async) && !isGuest">
+    <div *ngIf="(authService.isAuthenticated$ | async) && !isGuest">
       <button class = "nav-button" (click)="logout()">sign out</button>
     </div>
     <div *ngIf="isGuest">
@@ -63,18 +63,18 @@
     </div>
 
   <!-- Not authenticated and not guest -->
-  <div *ngIf="!(auth.isAuthenticated$ | async) && !isGuest">
+  <div *ngIf="!(authService.isAuthenticated$ | async) && !isGuest">
     <button class = "nav-button" (click)="login()">sign in</button>
   </div>
 
-  <div *ngIf="!(auth.isAuthenticated$ | async) && !isGuest">
+  <div *ngIf="!(authService.isAuthenticated$ | async) && !isGuest">
     <button class = "nav-button" (click)="continueAsGuest()">continue as guest</button>
   </div>
 </div>
 <div>
   <div class="user-status-section">
     <p *ngIf="isGuest">guest</p>
-    <p *ngIf="(auth.isAuthenticated$ | async) && !isGuest">signed in as user</p>
+    <p *ngIf="(authService.isAuthenticated$ | async) && !isGuest">signed in as user</p>
   </div>
 </div>
   

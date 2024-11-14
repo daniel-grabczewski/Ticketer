@@ -1,17 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { GuestDataDialogComponent } from './shared/components/guest-data-dialog/guest-data-dialog.component';
 import { MaterialSharedModule } from './shared/material/material.shared';
 import { MatDialog } from '@angular/material/dialog';
-
-// Import the new services
 import { UserService } from './core/services/user.service';
 import { AuthService } from './core/services/auth.service';
 import { XButtonComponent } from './shared/components/x-button/x-button.component';
 import { HamburgerButtonComponent } from './shared/components/hamburger-button/hamburger-button.component';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -27,77 +26,79 @@ import { HamburgerButtonComponent } from './shared/components/hamburger-button/h
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   title = 'frontend';
   isGuest: boolean = false;
   isMobileMenuOpen: boolean = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
-    public auth: Auth0Service,
+    public auth0: Auth0Service,
     private dialog: MatDialog,
     private userService: UserService,
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router
   ) {
-    // Subscribe to authentication status
-    this.auth.isAuthenticated$.subscribe(async (isAuthenticated) => {
-      if (isAuthenticated) {
-        this.isGuest = false;
+    // Subscribe to cached and real-time authentication status from AuthService
+    this.authService.isAuthenticated$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(async (isAuthenticated) => {
+        if (isAuthenticated) {
+          this.isGuest = false;
 
-        try {
-          // Check if user is registered
-          const isRegisteredResponse = await firstValueFrom(
-            this.userService.isRegistered()
-          );
-          const isRegistered = isRegisteredResponse.isRegistered;
-
-          // Check if GuestId cookie exists
-          const guestCookieExists = this.checkGuestCookie();
-
-          console.log('IsRegistered response:', isRegisteredResponse);
-          console.log('Guest cookie exists:', guestCookieExists);
-
-          if (guestCookieExists) {
-            // Check if there is guest data associated with the GuestId
-            console.log('Calling hasGuestData endpoint...');
-            const hasGuestDataResponse = await firstValueFrom(
-              this.authService.hasGuestData()
+          try {
+            // Trigger a check or get the current registration status from UserService
+            const isRegistered = await firstValueFrom(
+              this.userService.isRegistered()
             );
-            console.log('HasGuestData response:', hasGuestDataResponse);
-            const hasGuestData = hasGuestDataResponse.hasGuestData;
 
-            if (!isRegistered && hasGuestData) {
-              // Show dialog to transfer guest data
-              console.log('Opening dialog...');
-              this.openGuestDataDialog();
-            } else if (isRegistered && hasGuestData) {
-              // User is registered, delete guest data without prompting
-              console.log('Deleting guest data...');
-              await this.deleteGuestDataForRegisteredUser();
+            // Check if GuestId cookie exists
+            const guestCookieExists = this.checkGuestCookie();
+
+            console.log('isRegistered status:', isRegistered);
+            console.log('Guest cookie exists:', guestCookieExists);
+
+            if (guestCookieExists) {
+              // Check if there is guest data associated with the GuestId
+              console.log('Calling hasGuestData endpoint...');
+              const hasGuestDataResponse = await firstValueFrom(
+                this.authService.hasGuestData()
+              );
+              console.log('HasGuestData response:', hasGuestDataResponse);
+              const hasGuestData = hasGuestDataResponse.hasGuestData;
+
+              if (!isRegistered && hasGuestData) {
+                // Show dialog to transfer guest data
+                console.log('Opening dialog...');
+                this.openGuestDataDialog();
+              } else if (isRegistered && hasGuestData) {
+                // User is registered, delete guest data without prompting
+                console.log('Deleting guest data...');
+                await this.deleteGuestDataForRegisteredUser();
+              } else {
+                // No guest data to handle
+                if (!isRegistered) {
+                  // Register the user
+                  console.log('Registering user with guest cookie');
+                  await this.registerUser();
+                }
+              }
             } else {
-              // No guest data to handle
+              // No GuestId cookie, but if user is not registered, register them
               if (!isRegistered) {
-                // Register the user
-                console.log('Registering user with guest cookie');
+                console.log('Registering user without cookie');
                 await this.registerUser();
               }
             }
-          } else {
-            // No GuestId cookie, but if user is not registered, register them
-            if (!isRegistered) {
-              console.log('Registering user without cookie');
-              await this.registerUser();
-            }
+          } catch (error) {
+            console.error('Error during authentication handling:', error);
           }
-        } catch (error) {
-          console.error('Error during authentication handling:', error);
+        } else {
+          // Check if GuestId cookie exists for guest users
+          this.isGuest = this.checkGuestCookie();
+          console.log('Guest status:', this.isGuest);
         }
-      } else {
-        // Check if GuestId cookie exists
-        this.isGuest = this.checkGuestCookie();
-        console.log(this.isGuest);
-      }
-    });
+      });
   }
 
   toggleMobileMenu() {
@@ -110,7 +111,7 @@ export class AppComponent {
 
   // Method to trigger login
   login() {
-    this.auth.loginWithRedirect();
+    this.auth0.loginWithRedirect();
   }
 
   // Method to trigger logout
@@ -121,7 +122,7 @@ export class AppComponent {
       this.isGuest = false;
     }
 
-    this.auth.logout({ logoutParams: { returnTo: window.location.origin } });
+    this.auth0.logout({ logoutParams: { returnTo: window.location.origin } });
   }
 
   // Method to continue as guest
@@ -211,5 +212,10 @@ export class AppComponent {
     } catch (error) {
       console.error('Failed to delete guest data for registered user:', error);
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
