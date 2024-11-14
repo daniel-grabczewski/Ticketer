@@ -21,10 +21,10 @@ export function generateBoardMenuConfig(
         },
       },
       {
-        buttonText: 'Rename',
+        buttonText: 'Rename Board',
         submenu: {
           type: 'text-input-submenu',
-          purpose: 'rename',
+          purpose: 'renameBoard',
           payload: {
             title: 'Rename Board',
             textInputLabel: 'Name',
@@ -37,7 +37,7 @@ export function generateBoardMenuConfig(
         buttonText: 'Duplicate Board',
         submenu: {
           type: 'generate-board-submenu',
-          purpose: 'duplicate',
+          purpose: 'duplicateBoard',
           payload: {
             title: 'Duplicate Board',
             colorId: colorId,
@@ -52,7 +52,7 @@ export function generateBoardMenuConfig(
         buttonText: 'Delete Board',
         submenu: {
           type: 'confirmation-submenu',
-          purpose: 'delete',
+          purpose: 'deleteBoard',
           payload: {
             title: 'Confirmation',
             confirmationMessage: `Are you sure you want to delete "${boardName}"?`,
