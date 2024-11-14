@@ -50,6 +50,8 @@
             <textarea
               [(ngModel)]="newDescription"
               (click)="$event.stopPropagation()"
+              (blur)="saveTicketDescription()"
+              (keydown.escape)="cancelDescriptionEditing()"
             ></textarea>
             <div class="description-buttons">
               <button class="save-button" (click)="saveTicketDescription()">

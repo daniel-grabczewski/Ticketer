@@ -47,6 +47,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
   isEditingDescription: boolean = false;
   newName: string = '';
   newDescription: string = '';
+  disableCloseOnOutsideClick: boolean = false;
 
   private routeSub!: Subscription;
 
@@ -134,6 +135,10 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
   // Handle click outside the ticket detailed view to close it
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
+    if (this.disableCloseOnOutsideClick) {
+      return;
+    }
+
     const target = event.target as HTMLElement;
     const ticketViewElement = document.getElementById('ticket-detailed-view');
 
@@ -195,7 +200,6 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
     this.ticketService.updateTicket(updateRequest).subscribe({
       next: () => {
         this.ticketDetails.description = this.newDescription;
-        this.isEditingDescription = false;
         this.ticketUpdateService.emitTicketUpdate(this.ticketDetails);
       },
       error: (error) => {
@@ -212,6 +216,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
   // Open Move to Different List using OverlayService
   openMoveToListSubmenu(event: Event): void {
     event.stopPropagation();
+    this.disableCloseOnOutsideClick = true;
     // Fetch all lists
     if (this.boardId) {
       this.listService.getAllLists(this.boardId).subscribe({
@@ -278,6 +283,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
   // Open Change Cover Color using OverlayService
   openChangeCoverColorSubmenu(event: Event): void {
     event.stopPropagation();
+    this.disableCloseOnOutsideClick = true;
     const submenuData: SubmenuInputTransfer = {
       type: 'color-selection-submenu',
       purpose: 'changeCoverColor',
@@ -330,6 +336,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
   // Open Delete Confirmation using OverlayService
   openDeleteConfirmationSubmenu(event: Event): void {
     event.stopPropagation();
+    this.disableCloseOnOutsideClick = true;
     const submenuData: SubmenuInputTransfer = {
       type: 'confirmation-submenu',
       purpose: 'deleteTicket',
