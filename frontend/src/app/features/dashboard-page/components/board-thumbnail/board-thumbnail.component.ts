@@ -7,29 +7,27 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router'; // Import Angular Router
-import { MenuComponent } from '../../../../shared/components/menu/menu.component';
+import { Router } from '@angular/router';
 import {
   MenuConfig,
-  SubmenuTransfer,
+  SubmenuOutputTransfer,
 } from '../../../../shared/models/menu.model';
 import {
-  SubmenuTypes,
-  SubmenuOutput,
-  TextInputSubmenuOutput,
-  ConfirmationSubmenuOutput,
-  ColorSelectionSubmenuOutput,
   GenerateBoardSubmenuOutput,
+  ColorSelectionSubmenuOutput,
+  ConfirmationSubmenuOutput,
+  TextInputSubmenuOutput,
 } from '../../../../shared/models/submenuInputOutput.model';
 import { GetAllBoardsDetailsResponse } from '../../../../shared/models/board.model';
 import { generateBoardMenuConfig } from '../../../../shared/menuConfigs/boardThumbnailMenuConfig';
+import { OverlayService } from '../../../../core/services/overlay.service';
 
 @Component({
   selector: 'app-board-thumbnail',
   templateUrl: './board-thumbnail.component.html',
   styleUrls: ['./board-thumbnail.component.scss'],
   standalone: true,
-  imports: [CommonModule, MenuComponent],
+  imports: [CommonModule],
 })
 export class BoardThumbnailComponent implements OnChanges {
   @Input() id: string = '';
@@ -50,7 +48,7 @@ export class BoardThumbnailComponent implements OnChanges {
 
   menuConfig!: MenuConfig;
 
-  constructor(private router: Router) {} // Inject Router for navigation
+  constructor(private router: Router, private overlayService: OverlayService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['name'] || changes['colorId']) {
@@ -60,45 +58,39 @@ export class BoardThumbnailComponent implements OnChanges {
 
   // Navigate to the board page when the thumbnail is clicked
   navigateToBoard() {
-    const slug = this.name.replace(/\s+/g, '-').toLowerCase(); // Simple slug generation
+    const slug = this.name.replace(/\s+/g, '-').toLowerCase();
     this.router.navigate([`/board`, this.id, slug]);
   }
 
-  handleMenuAction(submenuTransfer: SubmenuTransfer) {
-    console.log('Handling submenu action:', submenuTransfer);
-    switch (submenuTransfer.purpose) {
+  handleMenuAction(output: SubmenuOutputTransfer) {
+    console.log('Handling submenu action in BoardThumbnailComponent:', output);
+    const { purpose, payload } = output;
+    switch (purpose) {
       case 'editBackground':
         this.boardUpdated.emit({
-          id: this.id,
-          colorId: (submenuTransfer.payload as ColorSelectionSubmenuOutput)
-            .colorId,
+          colorId: (payload as ColorSelectionSubmenuOutput).colorId,
         });
         break;
-      case 'rename':
+      case 'renameBoard':
         this.boardUpdated.emit({
-          id: this.id,
-          name: (submenuTransfer.payload as TextInputSubmenuOutput).text,
+          name: (payload as TextInputSubmenuOutput).text,
         });
         break;
-      case 'duplicate':
-        const duplicatePayload =
-          submenuTransfer.payload as GenerateBoardSubmenuOutput;
+      case 'duplicateBoard':
+        const duplicatePayload = payload as GenerateBoardSubmenuOutput;
         this.boardDuplicated.emit({
           newName: duplicatePayload.name.trim(),
           colorId: duplicatePayload.colorId,
           originalBoardId: this.id,
         });
         break;
-      case 'delete':
-        if (
-          (submenuTransfer.payload as ConfirmationSubmenuOutput)
-            .confirmationStatus
-        ) {
+      case 'deleteBoard':
+        if ((payload as ConfirmationSubmenuOutput).confirmationStatus) {
           this.boardDeleted.emit(this.id);
         }
         break;
       default:
-        console.warn('Unknown submenu action:', submenuTransfer);
+        console.warn('Unknown submenu action:', output);
     }
   }
 
@@ -106,6 +98,19 @@ export class BoardThumbnailComponent implements OnChanges {
     return this.colorId
       ? { 'background-image': `var(--gradient-${this.colorId})` }
       : { 'background-color': 'var(--neutral-darker)' };
+  }
+
+  openMenuOverlay(event: Event) {
+    const target = event.target as HTMLElement;
+    if (this.menuConfig) {
+      this.overlayService.openOverlay(target, this.menuConfig, (output) => {
+        console.log(
+          'Menu action received in BoardThumbnailComponent callback:',
+          output
+        );
+        this.handleMenuAction(output);
+      });
+    }
   }
 
   closeMenu() {

@@ -17,6 +17,7 @@ import { CreateBoardItemSubmenuComponent } from '../../shared/components/create-
 import {
   SubmenuTypes,
   SubmenuInput,
+  SubmenuOutput,
 } from '../../shared/models/submenuInputOutput.model';
 
 @Injectable({
@@ -42,8 +43,18 @@ export class OverlayService {
   // Injection token for passing the menuConfig to the overlay component
   private static MENU_CONFIG = new InjectionToken<MenuConfig>('MENU_CONFIG');
 
-  // Method to open the TestRealMenuComponent as an overlay
-  openOverlay(origin: HTMLElement, menuConfig: MenuConfig) {
+  /**
+   * Opens the TestRealMenuComponent as an overlay.
+   *
+   * @param origin The HTML element that triggers the menu.
+   * @param menuConfig The configuration for the menu to be displayed.
+   * @param menuActionCallback An optional callback function that handles menu actions.
+   */
+  openOverlay(
+    origin: HTMLElement,
+    menuConfig: MenuConfig,
+    menuActionCallback?: (output: SubmenuOutputTransfer) => void
+  ) {
     if (this.overlayRef) {
       this.closeOverlay();
     }
@@ -58,7 +69,12 @@ export class OverlayService {
           overlayX: 'start',
           overlayY: 'top',
         },
-        { originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top' },
+        {
+          originX: 'end',
+          originY: 'bottom',
+          overlayX: 'end',
+          overlayY: 'top',
+        },
       ])
       .withPush(true)
       .withViewportMargin(8)
@@ -92,17 +108,29 @@ export class OverlayService {
     // Listen for the close event emitted by the TestRealMenuComponent
     componentRef.instance.close.subscribe(() => this.closeOverlay());
 
-    // Listen for menuAction event and propagate it up if needed
+    // Listen for menuAction event and invoke callback if provided
     componentRef.instance.menuAction.subscribe(
       (output: SubmenuOutputTransfer) => {
         console.log('Submenu action received from TestRealMenu:', output);
-        // Optionally handle or propagate the event further
+        if (menuActionCallback) {
+          menuActionCallback(output);
+        }
       }
     );
   }
 
-  // Method to open a submenu overlay based on the type string
-  openSubmenuOverlay(origin: HTMLElement, submenuData: SubmenuInputTransfer) {
+  /**
+   * Opens a submenu overlay based on the provided submenu data.
+   *
+   * @param origin The HTML element that triggers the submenu.
+   * @param submenuData The configuration for the submenu to be displayed.
+   * @param submenuActionCallback An optional callback function that handles submenu actions.
+   */
+  openSubmenuOverlay(
+    origin: HTMLElement,
+    submenuData: SubmenuInputTransfer,
+    submenuActionCallback?: (output: SubmenuOutputTransfer) => void
+  ) {
     if (this.submenuOverlayRef) {
       this.closeSubmenuOverlay();
     }
@@ -163,13 +191,22 @@ export class OverlayService {
     }
 
     if (this.isInstanceWithEventEmitter(componentRef.instance, 'menuAction')) {
-      componentRef.instance['menuAction'].subscribe(
-        (output: SubmenuOutputTransfer) => {
-          console.log('Submenu action emitted:', output);
-          // Close submenu after action is emitted
-          this.closeSubmenuOverlay();
+      componentRef.instance['menuAction'].subscribe((output: SubmenuOutput) => {
+        console.log('Submenu action emitted:', output);
+        // Wrap the output in a SubmenuOutputTransfer object
+        const submenuOutputTransfer: SubmenuOutputTransfer = {
+          type: submenuData.type,
+          purpose: submenuData.purpose,
+          payload: output,
+        };
+
+        if (submenuActionCallback) {
+          submenuActionCallback(submenuOutputTransfer);
         }
-      );
+        // Close submenu and menu after action is emitted
+        this.closeSubmenuOverlay();
+        this.closeOverlay();
+      });
     }
   }
 

@@ -1,37 +1,24 @@
 <div class="dashboard">
-  <div class = "dashboard-container">
-    <h1 class= "title">Your boards</h1>
-  <div class="board-grid">
-    <app-board-thumbnail
-      *ngFor="let board of boards"
-      [id]="board.id"
-      [name]="board.name"
-      [colorId]="board.colorId"
-      [showMenu]="openMenuBoardId === board.id" 
-      (toggleMenu)="toggleBoardMenu(board.id)" 
-      (boardUpdated)="onBoardUpdated(board.id, $event)"
-      (boardDeleted)="onBoardDeleted(board.id)"
-      (boardDuplicated)="onBoardDuplicated($event)"
-    ></app-board-thumbnail>
-</div>
-  <app-plus-button
-  (click)="openSubmenu()"
-  [scale]="1"
-  label="Create new board"
-  class = "create-new-board-button"
-></app-plus-button>
-
-  
-  
-  <app-generate-board-submenu
-    *ngIf="showSubmenu"
-    [title]="submenuTitle"
-    [textInputLabel]="textInputLabel"
-    [colorSelectionHeader]="colorSelectionHeader"
-    [buttonText]="buttonText"
-    [colorId]="defaultColorId"
-    (menuAction)="handleMenuAction($event)"
-    (close)="showSubmenu = false"
-  ></app-generate-board-submenu>
-</div>
+  <div class="dashboard-container">
+    <h1 class="title">Your boards</h1>
+    <div class="board-grid">
+      <app-board-thumbnail
+        *ngFor="let board of boards"
+        [id]="board.id"
+        [name]="board.name"
+        [colorId]="board.colorId"
+        [showMenu]="openMenuBoardId === board.id"
+        (toggleMenu)="toggleBoardMenu(board.id)"
+        (boardUpdated)="onBoardUpdated(board.id, $event)"
+        (boardDeleted)="onBoardDeleted(board.id)"
+        (boardDuplicated)="onBoardDuplicated($event)"
+      ></app-board-thumbnail>
+    </div>
+    <app-plus-button
+      (click)="openSubmenu($event)"
+      [scale]="1"
+      label="Create new board"
+      class="create-new-board-button"
+    ></app-plus-button>
+  </div>
 </div>

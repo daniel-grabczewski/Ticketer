@@ -109,27 +109,28 @@ export class TestRealMenuComponent implements OnInit {
     }
     event.stopPropagation();
   }
-
   openSubmenu(index: number, originElement: HTMLElement) {
     const submenuItem = this.rearrangedSubmenus[index];
     const submenuInput: SubmenuInputTransfer = submenuItem.submenu;
-    this.overlayService.openSubmenuOverlay(originElement, submenuInput);
+    // Provide a callback to handle submenu outputs
+    this.overlayService.openSubmenuOverlay(
+      originElement,
+      submenuInput,
+      (output) => {
+        // This callback gets invoked when submenu actions occur
+        this.handleSubmenuAction(output);
+      }
+    );
     console.log('Requested to open submenu:', submenuInput);
   }
 
-  handleSubmenuAction(submenuOutput: SubmenuOutput) {
-    const activeSubmenuItem = this.rearrangedSubmenus.find(
-      (item) => item.submenu.payload === submenuOutput
+  handleSubmenuAction(submenuOutputTransfer: SubmenuOutputTransfer) {
+    console.log(
+      'Handling submenu action in TestRealMenuComponent:',
+      submenuOutputTransfer
     );
-    if (activeSubmenuItem) {
-      const submenuTransfer: SubmenuOutputTransfer = {
-        type: activeSubmenuItem.submenu.type,
-        purpose: activeSubmenuItem.submenu.purpose,
-        payload: submenuOutput,
-      };
-      this.menuAction.emit(submenuTransfer);
-      console.log('Emitted submenu action:', submenuTransfer);
-    }
+    // Emit the submenu action up to the parent component that opened this menu
+    this.menuAction.emit(submenuOutputTransfer);
   }
 
   closeMenu() {

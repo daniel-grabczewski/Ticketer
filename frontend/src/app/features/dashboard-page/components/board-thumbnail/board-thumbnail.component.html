@@ -1,18 +1,7 @@
 <div class="board-thumbnail" [ngStyle]="getBackgroundStyle()" (click)="navigateToBoard()">
-  <div class="hover-overlay"></div> <!-- New overlay div -->
+  <div class="hover-overlay"></div>
   <div class="board-content">
     <h3 class="board-name">{{ name }}</h3>
-    <button class="menu-button" (click)="toggleMenu.emit(); $event.stopPropagation()">⋮</button>
+    <button class="menu-button" (click)="openMenuOverlay($event); $event.stopPropagation()">⋮</button>
   </div>
-
-
-
-  <!-- Menu Component -->
-  <div class="menu-wrapper" *ngIf="showMenu">
-    <app-menu
-      [menuConfig]="menuConfig"
-      (menuAction)="handleMenuAction($event)"
-      (close)="closeMenu()"
-    ></app-menu>
-    </div>
-  </div>
+</div>

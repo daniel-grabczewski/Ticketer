@@ -7,22 +7,19 @@ import {
   GetAllBoardsDetailsResponse,
   UpdateBoardRequest,
 } from '../../../shared/models/board.model';
-import { GenerateBoardSubmenuComponent } from '../../../shared/components/generate-board-submenu/generate-board-submenu.component';
 import { BoardThumbnailComponent } from '../components/board-thumbnail/board-thumbnail.component';
+import { SubmenuOutputTransfer } from '../../../shared/models/menu.model';
 import { GenerateBoardSubmenuOutput } from '../../../shared/models/submenuInputOutput.model';
+import { SubmenuInputTransfer } from '../../../shared/models/menu.model';
 import { PlusButtonComponent } from '../../../shared/components/plus-button/plus-button.component';
+import { OverlayService } from '../../../core/services/overlay.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    GenerateBoardSubmenuComponent,
-    BoardThumbnailComponent,
-    PlusButtonComponent
-  ],
+  imports: [CommonModule, BoardThumbnailComponent, PlusButtonComponent],
 })
 export class DashboardComponent implements OnInit {
   submenuTitle = 'Generate Board';
@@ -31,11 +28,13 @@ export class DashboardComponent implements OnInit {
   buttonText = 'Create';
   defaultColorId: number | null = null;
 
-  showSubmenu: boolean = false;
   boards: GetAllBoardsDetailsResponse[] = [];
   openMenuBoardId: string | null = null; // Track the ID of the open menu
 
-  constructor(private boardService: BoardService) {}
+  constructor(
+    private boardService: BoardService,
+    private overlayService: OverlayService
+  ) {}
 
   ngOnInit(): void {
     this.fetchAllBoards();
@@ -56,45 +55,71 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  openSubmenu() {
-    this.showSubmenu = true;
-  }
-
-  handleMenuAction(event: GenerateBoardSubmenuOutput) {
-    const { name, colorId } = event;
-    const newBoardId = uuidv4();
-
-    const request: CreateBoardRequest = {
-      id: newBoardId,
-      name,
-      colorId,
+  openSubmenu(event: Event) {
+    const target = event.target as HTMLElement;
+    const submenuData: SubmenuInputTransfer = {
+      type: 'generate-board-submenu',
+      purpose: 'createBoard',
+      payload: {
+        title: this.submenuTitle,
+        colorId: this.defaultColorId,
+        textInputLabel: this.textInputLabel,
+        placeholder: 'Enter board name...',
+        colorSelectionHeader: this.colorSelectionHeader,
+        buttonText: this.buttonText,
+      },
     };
 
-    this.boardService.createBoard(request).subscribe({
-      next: () => {
-        this.boards.push({
-          id: newBoardId,
-          name,
-          colorId,
-          listCount: 0,
-          ticketCount: 0,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        });
-        console.log('Created new board:', { id: newBoardId, name, colorId });
-      },
-      error: (error) => {
-        console.error('Error creating board:', error);
-      },
+    // Using the updated overlay service with callback
+    this.overlayService.openSubmenuOverlay(target, submenuData, (output) => {
+      if (output && output.type === 'generate-board-submenu') {
+        this.handleMenuAction(output);
+      }
     });
+  }
 
-    this.showSubmenu = false;
+  handleMenuAction(output: SubmenuOutputTransfer) {
+    console.log('Received submenu action in DashboardComponent:', output);
+
+    if (output.type === 'text-input-submenu' && output.payload) {
+      console.log('you used the text-input!');
+    }
+
+    if (output.type === 'generate-board-submenu' && output.payload) {
+      const { name, colorId } = output.payload as GenerateBoardSubmenuOutput;
+      const newBoardId = uuidv4();
+      const request: CreateBoardRequest = {
+        id: newBoardId,
+        name,
+        colorId,
+      };
+
+      this.boardService.createBoard(request).subscribe({
+        next: () => {
+          this.boards.push({
+            id: newBoardId,
+            name,
+            colorId,
+            listCount: 0,
+            ticketCount: 0,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          });
+          console.log('Created new board:', { id: newBoardId, name, colorId });
+        },
+        error: (error) => {
+          console.error('Error creating board:', error);
+        },
+      });
+      // The overlay closes automatically after the action
+    }
   }
 
   onBoardUpdated(
     boardId: string,
     updatedData: Partial<GetAllBoardsDetailsResponse>
   ) {
+    console.log('In onBoardUpdated');
     const existingBoard = this.boards.find((board) => board.id === boardId);
     if (!existingBoard) {
       console.error('Board not found:', boardId);
