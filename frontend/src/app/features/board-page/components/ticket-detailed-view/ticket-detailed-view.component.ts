@@ -11,33 +11,29 @@ import {
   UpdateTicketPositionRequest,
 } from '../../../../shared/models/ticket.model';
 import { GetAllListsDetailsResponse } from '../../../../shared/models/list.model';
-import { DropdownSubmenuComponent } from '../../../../shared/components/dropdown-submenu/dropdown-submenu.component';
-import { ColorSelectionSubmenuComponent } from '../../../../shared/components/color-selection-submenu/color-selection-submenu.component';
-import { ConfirmationSubmenuComponent } from '../../../../shared/components/confirmation-submenu/confirmation-submenu.component';
 import { FormsModule } from '@angular/forms';
 import {
-  DropdownSubmenuInput,
   DropdownSubmenuOutput,
-  ColorSelectionSubmenuInput,
   ColorSelectionSubmenuOutput,
-  ConfirmationSubmenuInput,
   ConfirmationSubmenuOutput,
+  DropdownSubmenuInput,
+  ColorSelectionSubmenuInput,
+  ConfirmationSubmenuInput,
 } from '../../../../shared/models/submenuInputOutput.model';
 import { TicketUpdateService } from '../../../../core/services/ticket-update.service';
 import { TicketInput } from '../../../../shared/models/uniqueComponentInputOutput.model';
+import { OverlayService } from '../../../../core/services/overlay.service';
+import {
+  SubmenuInputTransfer,
+  SubmenuOutputTransfer,
+} from '../../../../shared/models/menu.model';
 
 @Component({
   selector: 'app-ticket-detailed-view',
   templateUrl: './ticket-detailed-view.component.html',
   styleUrls: ['./ticket-detailed-view.component.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    DropdownSubmenuComponent,
-    ColorSelectionSubmenuComponent,
-    ConfirmationSubmenuComponent,
-  ],
+  imports: [CommonModule, FormsModule],
 })
 export class TicketDetailedViewComponent implements OnInit, OnDestroy {
   ticketId!: string;
@@ -52,16 +48,6 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
   newName: string = '';
   newDescription: string = '';
 
-  // Submenu states
-  showDropdownSubmenu: boolean = false;
-  dropdownSubmenuConfig!: DropdownSubmenuInput;
-
-  showColorSelectionSubmenu: boolean = false;
-  colorSelectionSubmenuConfig!: ColorSelectionSubmenuInput;
-
-  showConfirmationSubmenu: boolean = false;
-  confirmationSubmenuConfig!: ConfirmationSubmenuInput;
-
   private routeSub!: Subscription;
 
   constructor(
@@ -70,7 +56,8 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
     private ticketService: TicketService,
     private listService: ListService,
     private colorService: ColorService,
-    private ticketUpdateService: TicketUpdateService
+    private ticketUpdateService: TicketUpdateService,
+    private overlayService: OverlayService
   ) {}
 
   ngOnInit(): void {
@@ -150,13 +137,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
     const target = event.target as HTMLElement;
     const ticketViewElement = document.getElementById('ticket-detailed-view');
 
-    if (
-      ticketViewElement &&
-      !ticketViewElement.contains(target) &&
-      !this.showDropdownSubmenu &&
-      !this.showColorSelectionSubmenu &&
-      !this.showConfirmationSubmenu
-    ) {
+    if (ticketViewElement && !ticketViewElement.contains(target)) {
       this.closeTicketView();
     }
   }
@@ -228,25 +209,39 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
     this.newDescription = this.ticketDetails.description;
   }
 
-  // Open Move to Different List Submenu
-  openMoveToListSubmenu(): void {
-    this.showDropdownSubmenu = true;
+  // Open Move to Different List using OverlayService
+  openMoveToListSubmenu(event: Event): void {
+    event.stopPropagation();
     // Fetch all lists
     if (this.boardId) {
       this.listService.getAllLists(this.boardId).subscribe({
         next: (listsData: GetAllListsDetailsResponse[]) => {
           console.log(listsData);
           this.lists = listsData;
-          this.dropdownSubmenuConfig = {
-            title: 'Move to different list',
-            dropdownInputLabel: 'Select destination list',
-            dropdownItems: this.lists.map((list) => ({
-              id: list.id,
-              name: list.name,
-            })),
-            dropdownPlaceholder: 'Select a list...',
-            buttonText: 'Move',
+          const submenuData: SubmenuInputTransfer = {
+            type: 'dropdown-submenu',
+            purpose: 'moveToList',
+            payload: {
+              title: 'Move to different list',
+              dropdownInputLabel: 'Select destination list',
+              dropdownItems: this.lists.map((list) => ({
+                id: list.id,
+                name: list.name,
+              })),
+              dropdownPlaceholder: 'Select a list...',
+              buttonText: 'Move',
+            } as DropdownSubmenuInput,
           };
+          const originElement = event.target as HTMLElement;
+          if (originElement) {
+            this.overlayService.openSubmenuOverlay(
+              originElement,
+              submenuData,
+              (output) => {
+                this.handleMoveToListAction(output);
+              }
+            );
+          }
         },
         error: (error) => {
           console.error('Failed to fetch lists:', error);
@@ -257,98 +252,127 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleMoveToListAction(output: DropdownSubmenuOutput): void {
-    const request: UpdateTicketPositionRequest = {
-      id: this.ticketDetails.id,
-      listId: output.id,
-      // newPosition is omitted to default to 1
-    };
-    this.ticketService.updateTicketPosition(request).subscribe({
-      next: () => {
-        this.ticketDetails.listId = output.id;
-        this.ticketDetails.listName = output.name;
-        this.showDropdownSubmenu = false;
-        this.ticketUpdateService.emitTicketUpdate(this.ticketDetails);
-      },
-      error: (error) => {
-        console.error('Failed to move ticket:', error);
-      },
-    });
-  }
-
-  closeDropdownSubmenu(): void {
-    this.showDropdownSubmenu = false;
-  }
-
-  // Open Change Cover Color Submenu
-  openChangeCoverColorSubmenu(): void {
-    this.showColorSelectionSubmenu = true;
-    this.colorSelectionSubmenuConfig = {
-      title: 'Choose Cover',
-      colorId: this.ticketDetails.colorId,
-      buttonText: 'Done',
-    };
-  }
-
-  handleChangeCoverColorAction(output: ColorSelectionSubmenuOutput): void {
-    const updateRequest: UpdateTicketRequest = {
-      id: this.ticketDetails.id,
-      name: this.ticketDetails.name,
-      description: this.ticketDetails.description,
-      colorId: output.colorId,
-    };
-    this.ticketService.updateTicket(updateRequest).subscribe({
-      next: () => {
-        this.ticketDetails.colorId = output.colorId;
-        if (output.colorId) {
-          this.colorHex = this.getColorHex(output.colorId);
-        } else {
-          this.colorHex = '#CCCCCC';
-        }
-        this.showColorSelectionSubmenu = false;
-        this.ticketUpdateService.emitTicketUpdate(this.ticketDetails);
-      },
-      error: (error) => {
-        console.error('Failed to update ticket color:', error);
-      },
-    });
-  }
-
-  closeColorSelectionSubmenu(): void {
-    this.showColorSelectionSubmenu = false;
-  }
-
-  // Open Delete Confirmation Submenu
-  openDeleteConfirmationSubmenu(): void {
-    this.showConfirmationSubmenu = true;
-    this.confirmationSubmenuConfig = {
-      title: 'Confirmation',
-      confirmationMessage: `Are you sure you want to delete "${this.ticketDetails.name}"?`,
-      buttonText: 'Delete',
-    };
-  }
-
-  handleDeleteConfirmationAction(output: ConfirmationSubmenuOutput): void {
-    if (output.confirmationStatus) {
-      this.ticketService.deleteTicket(this.ticketDetails.id).subscribe({
+  handleMoveToListAction(output: SubmenuOutputTransfer): void {
+    console.log('Move to list submenu action output:', output);
+    if (output.type === 'dropdown-submenu' && output.payload) {
+      const { id, name } = output.payload as DropdownSubmenuOutput;
+      const request: UpdateTicketPositionRequest = {
+        id: this.ticketDetails.id,
+        listId: id,
+        // newPosition is omitted to default to 1
+      };
+      this.ticketService.updateTicketPosition(request).subscribe({
         next: () => {
-          // Close the ticket view and possibly refresh the board
-          this.ticketUpdateService.emitTicketUpdate({
-            ...this.ticketDetails,
-            deleted: true,
-          } as TicketInput);
-          this.closeTicketView();
+          this.ticketDetails.listId = id;
+          this.ticketDetails.listName = name;
+          this.ticketUpdateService.emitTicketUpdate(this.ticketDetails);
+          console.log(`Ticket moved to list ${name}`);
         },
         error: (error) => {
-          console.error('Failed to delete ticket:', error);
+          console.error('Failed to move ticket:', error);
         },
       });
     }
-    this.showConfirmationSubmenu = false;
   }
 
-  closeConfirmationSubmenu(): void {
-    this.showConfirmationSubmenu = false;
+  // Open Change Cover Color using OverlayService
+  openChangeCoverColorSubmenu(event: Event): void {
+    event.stopPropagation();
+    const submenuData: SubmenuInputTransfer = {
+      type: 'color-selection-submenu',
+      purpose: 'changeCoverColor',
+      payload: {
+        title: 'Choose Cover',
+        colorId: this.ticketDetails.colorId,
+        buttonText: 'Done',
+      } as ColorSelectionSubmenuInput,
+    };
+    const originElement = event.target as HTMLElement;
+    if (originElement) {
+      this.overlayService.openSubmenuOverlay(
+        originElement,
+        submenuData,
+        (output) => {
+          this.handleChangeCoverColorAction(output);
+        }
+      );
+    }
+  }
+
+  handleChangeCoverColorAction(output: SubmenuOutputTransfer): void {
+    console.log('Change cover color submenu action output:', output);
+    if (output.type === 'color-selection-submenu' && output.payload) {
+      const { colorId } = output.payload as ColorSelectionSubmenuOutput;
+      const updateRequest: UpdateTicketRequest = {
+        id: this.ticketDetails.id,
+        name: this.ticketDetails.name,
+        description: this.ticketDetails.description,
+        colorId: colorId,
+      };
+      this.ticketService.updateTicket(updateRequest).subscribe({
+        next: () => {
+          this.ticketDetails.colorId = colorId;
+          if (colorId) {
+            this.colorHex = this.getColorHex(colorId);
+          } else {
+            this.colorHex = '#CCCCCC';
+          }
+          this.ticketUpdateService.emitTicketUpdate(this.ticketDetails);
+          console.log(`Ticket cover color changed to ${colorId}`);
+        },
+        error: (error) => {
+          console.error('Failed to update ticket color:', error);
+        },
+      });
+    }
+  }
+
+  // Open Delete Confirmation using OverlayService
+  openDeleteConfirmationSubmenu(event: Event): void {
+    event.stopPropagation();
+    const submenuData: SubmenuInputTransfer = {
+      type: 'confirmation-submenu',
+      purpose: 'deleteTicket',
+      payload: {
+        title: 'Confirmation',
+        confirmationMessage: `Are you sure you want to delete "${this.ticketDetails.name}"?`,
+        buttonText: 'Delete',
+      } as ConfirmationSubmenuInput,
+    };
+    const originElement = event.target as HTMLElement;
+    if (originElement) {
+      this.overlayService.openSubmenuOverlay(
+        originElement,
+        submenuData,
+        (output) => {
+          this.handleDeleteConfirmationAction(output);
+        }
+      );
+    }
+  }
+
+  handleDeleteConfirmationAction(output: SubmenuOutputTransfer): void {
+    console.log('Delete confirmation submenu action output:', output);
+    if (output.type === 'confirmation-submenu' && output.payload) {
+      const { confirmationStatus } =
+        output.payload as ConfirmationSubmenuOutput;
+      if (confirmationStatus) {
+        this.ticketService.deleteTicket(this.ticketDetails.id).subscribe({
+          next: () => {
+            // Close the ticket view and possibly refresh the board
+            this.ticketUpdateService.emitTicketUpdate({
+              ...this.ticketDetails,
+              deleted: true,
+            } as TicketInput);
+            this.closeTicketView();
+            console.log(`Ticket ${this.ticketDetails.name} deleted`);
+          },
+          error: (error) => {
+            console.error('Failed to delete ticket:', error);
+          },
+        });
+      }
+    }
   }
 
   // Handle retry loading ticket

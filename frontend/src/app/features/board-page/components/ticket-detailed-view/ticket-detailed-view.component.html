@@ -66,66 +66,19 @@
       <!-- Right Section -->
       <div class="right-section">
         <h3>Actions</h3>
-        <button class="action-button" (click)="openMoveToListSubmenu()">
+        <button class="action-button" (click)="openMoveToListSubmenu($event)">
           Move to different list
         </button>
-        <button class="action-button" (click)="openChangeCoverColorSubmenu()">
+        <button class="action-button" (click)="openChangeCoverColorSubmenu($event)">
           Change cover color
         </button>
         <button
           class="action-button delete-button"
-          (click)="openDeleteConfirmationSubmenu()"
+          (click)="openDeleteConfirmationSubmenu($event)"
         >
           Delete
         </button>
       </div>
     </div>
-
-    <!-- Dropdown Submenu -->
-    <ng-container *ngIf="showDropdownSubmenu && dropdownSubmenuConfig">
-      <div class="submenu-overlay" (click)="closeDropdownSubmenu()">
-        <div class="submenu-container" (click)="$event.stopPropagation()">
-          <app-dropdown-submenu
-            [title]="dropdownSubmenuConfig.title"
-            [dropdownInputLabel]="dropdownSubmenuConfig.dropdownInputLabel"
-            [dropdownItems]="dropdownSubmenuConfig.dropdownItems"
-            [dropdownPlaceholder]="dropdownSubmenuConfig.dropdownPlaceholder"
-            [buttonText]="dropdownSubmenuConfig.buttonText"
-            (menuAction)="handleMoveToListAction($event)"
-            (close)="closeDropdownSubmenu()"
-          ></app-dropdown-submenu>
-        </div>
-      </div>
-    </ng-container>
-
-    <!-- Color Selection Submenu -->
-    <ng-container *ngIf="showColorSelectionSubmenu && colorSelectionSubmenuConfig">
-      <div class="submenu-overlay" (click)="closeColorSelectionSubmenu()">
-        <div class="submenu-container" (click)="$event.stopPropagation()">
-          <app-color-selection-submenu
-            [title]="colorSelectionSubmenuConfig.title"
-            [colorId]="colorSelectionSubmenuConfig.colorId"
-            [buttonText]="colorSelectionSubmenuConfig.buttonText"
-            (menuAction)="handleChangeCoverColorAction($event)"
-            (close)="closeColorSelectionSubmenu()"
-          ></app-color-selection-submenu>
-        </div>
-      </div>
-    </ng-container>
-
-    <!-- Confirmation Submenu -->
-    <ng-container *ngIf="showConfirmationSubmenu && confirmationSubmenuConfig">
-      <div class="submenu-overlay" (click)="closeConfirmationSubmenu()">
-        <div class="submenu-container" (click)="$event.stopPropagation()">
-          <app-confirmation-submenu
-            [title]="confirmationSubmenuConfig.title"
-            [confirmationMessage]="confirmationSubmenuConfig.confirmationMessage"
-            [buttonText]="confirmationSubmenuConfig.buttonText"
-            (menuAction)="handleDeleteConfirmationAction($event)"
-            (close)="closeConfirmationSubmenu()"
-          ></app-confirmation-submenu>
-        </div>
-      </div>
-    </ng-container>
   </div>
 </div>
