@@ -13,7 +13,7 @@ import {
   SubmenuOutputTransfer,
 } from '../../models/menu.model';
 import { SubmenuTypes } from '../../models/submenuInputOutput.model';
-import { TestingOverlayService } from '../../../core/services/testing-overlay.service';
+import { OverlayService } from '../../../core/services/overlay.service';
 import {
   TextInputSubmenuInput,
   ConfirmationSubmenuInput,
@@ -56,7 +56,7 @@ export class TestRealMenuComponent implements OnInit {
 
   constructor(
     private elementRef: ElementRef,
-    private testingOverlayService: TestingOverlayService
+    private overlayService: OverlayService
   ) {}
 
   ngOnInit() {
@@ -113,7 +113,7 @@ export class TestRealMenuComponent implements OnInit {
   openSubmenu(index: number, originElement: HTMLElement) {
     const submenuItem = this.rearrangedSubmenus[index];
     const submenuInput: SubmenuInputTransfer = submenuItem.submenu;
-    this.testingOverlayService.openSubmenuOverlay(originElement, submenuInput);
+    this.overlayService.openSubmenuOverlay(originElement, submenuInput);
     console.log('Requested to open submenu:', submenuInput);
   }
 
@@ -133,7 +133,7 @@ export class TestRealMenuComponent implements OnInit {
   }
 
   closeMenu() {
-    this.testingOverlayService.closeAllOverlays();
+    this.overlayService.closeAllOverlays();
     this.close.emit();
     console.log('Menu closed');
   }

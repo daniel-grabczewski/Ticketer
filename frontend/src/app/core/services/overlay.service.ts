@@ -22,7 +22,7 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class TestingOverlayService {
+export class OverlayService {
   private overlayRef: OverlayRef | null = null;
   private submenuOverlayRef: OverlayRef | null = null;
 
@@ -73,7 +73,7 @@ export class TestingOverlayService {
     // Create an injector with menuConfig as the provided data
     const injector = Injector.create({
       providers: [
-        { provide: TestingOverlayService.MENU_CONFIG, useValue: menuConfig },
+        { provide: OverlayService.MENU_CONFIG, useValue: menuConfig },
       ],
       parent: this.injector,
     });

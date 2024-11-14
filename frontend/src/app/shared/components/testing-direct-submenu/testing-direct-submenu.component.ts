@@ -1,6 +1,6 @@
-import { Component, ElementRef } from '@angular/core'
-import { TestingOverlayService } from '../../../core/services/testing-overlay.service'
-import { CommonModule } from '@angular/common'
+import { Component, ElementRef } from '@angular/core';
+import { OverlayService } from '../../../core/services/overlay.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-testing-direct-submenu',
@@ -11,14 +11,14 @@ import { CommonModule } from '@angular/common'
 })
 export class TestingDirectSubmenuComponent {
   constructor(
-    private testingOverlayService: TestingOverlayService,
+    private overlayService: OverlayService,
     private elementRef: ElementRef
   ) {}
 
   openTextInputSubmenu(event: Event) {
-    const target = event.target as HTMLElement
+    const target = event.target as HTMLElement;
     if (target) {
-      this.testingOverlayService.openSubmenuOverlay(target, {
+      this.overlayService.openSubmenuOverlay(target, {
         type: 'text-input-submenu',
         purpose: 'direct-example-purpose',
         payload: {
@@ -26,10 +26,10 @@ export class TestingDirectSubmenuComponent {
           textInputLabel: 'Enter Text',
           buttonText: 'Submit',
         },
-      })
-      console.log('Opened Text Input Submenu directly')
+      });
+      console.log('Opened Text Input Submenu directly');
     } else {
-      console.error('Error: Event target is not an HTMLElement.')
+      console.error('Error: Event target is not an HTMLElement.');
     }
   }
 }

@@ -1,5 +1,5 @@
 import { Component, ElementRef } from '@angular/core';
-import { TestingOverlayService } from '../../../core/services/testing-overlay.service';
+import { OverlayService } from '../../../core/services/overlay.service';
 import { MenuConfig, SubmenuOutputTransfer } from '../../models/menu.model';
 import { CommonModule } from '@angular/common';
 
@@ -102,14 +102,14 @@ export class TestingComponent {
   };
 
   constructor(
-    private testingOverlayService: TestingOverlayService,
+    private overlayService: OverlayService,
     private elementRef: ElementRef
   ) {}
 
   openTestRealMenu(event: Event) {
     const target = event.target as HTMLElement;
     if (target) {
-      this.testingOverlayService.openOverlay(target, this.testMenuConfig);
+      this.overlayService.openOverlay(target, this.testMenuConfig);
       console.log('Opened TestRealMenuComponent via overlay service');
     } else {
       console.error('Error: Event target is not an HTMLElement.');
