@@ -8,19 +8,10 @@
     />
     <button
       class="menu-button"
-      (click)="toggleMenu(); $event.stopPropagation()"
+      (click)="openMenuOverlay($event); $event.stopPropagation()"
     >
       ⋮
     </button>
-  </div>
-
-  <!-- Menu Component -->
-  <div class="menu-wrapper" *ngIf="showMenu">
-    <app-menu
-      [menuConfig]="menuConfig"
-      (menuAction)="handleMenuAction($event)"
-      (close)="closeMenu()"
-    ></app-menu>
   </div>
 
   <!-- Tickets Drag-and-Drop Container -->
@@ -58,21 +49,22 @@
         <div *cdkDragPlaceholder class="ticket-placeholder"></div>
       </div>
     </ng-container>
-      <!-- Add Ticket Section -->
-  <div class="add-ticket-section">
-    <ng-container *ngIf="!showCreateTicketSubmenu">
-      <button class="add-ticket" (click)="onAddTicketButtonClick()">
-        + Add a ticket
-      </button>
-    </ng-container>
-    <ng-container *ngIf="showCreateTicketSubmenu">
-      <app-create-board-item-submenu
-        [placeholder]="'Enter ticket name...'"
-        [buttonText]="'Add ticket'"
-        (menuAction)="onCreateTicketSubmenuAction($event)"
-        (close)="onCreateTicketSubmenuClose()"
-      ></app-create-board-item-submenu>
-    </ng-container>
-  </div>
+
+    <!-- Add Ticket Section -->
+    <div class="add-ticket-section">
+      <ng-container *ngIf="!showCreateTicketSubmenu">
+        <button class="add-ticket" (click)="onAddTicketButtonClick()">
+          + Add a ticket
+        </button>
+      </ng-container>
+      <ng-container *ngIf="showCreateTicketSubmenu">
+        <app-create-board-item-submenu
+          [placeholder]="'Enter ticket name...'"
+          [buttonText]="'Add ticket'"
+          (menuAction)="onCreateTicketSubmenuAction($event)"
+          (close)="onCreateTicketSubmenuClose()"
+        ></app-create-board-item-submenu>
+      </ng-container>
+    </div>
   </div>
 </div>

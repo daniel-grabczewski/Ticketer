@@ -1,4 +1,12 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  SimpleChanges,
+  OnChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -11,10 +19,10 @@ import { TicketComponent } from '../ticket/ticket.component';
 import { TicketInput } from '../../../../shared/models/uniqueComponentInputOutput.model';
 import { TicketService } from '../../../../core/services/ticket.service';
 import { UpdateTicketPositionRequest } from '../../../../shared/models/ticket.model';
-import { MenuComponent } from '../../../../shared/components/menu/menu.component';
+import { OverlayService } from '../../../../core/services/overlay.service';
 import {
   MenuConfig,
-  SubmenuTransfer,
+  SubmenuOutputTransfer,
 } from '../../../../shared/models/menu.model';
 import {
   TextInputSubmenuOutput,
@@ -25,6 +33,7 @@ import { generateListActionsMenuConfig } from '../../../../shared/menuConfigs/li
 import { v4 as uuidv4 } from 'uuid';
 import { CreateBoardItemSubmenuComponent } from '../../../../shared/components/create-board-item-submenu/create-board-item-submenu.component';
 import { Router } from '@angular/router';
+import { SubmenuInputTransfer } from '../../../../shared/models/menu.model';
 
 @Component({
   selector: 'app-list',
@@ -36,11 +45,10 @@ import { Router } from '@angular/router';
     FormsModule,
     DragDropModule,
     TicketComponent,
-    MenuComponent,
     CreateBoardItemSubmenuComponent,
   ],
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnChanges {
   @Input() id: string = '';
   @Input() name: string = '';
   @Input() position: number = 0;
@@ -74,13 +82,17 @@ export class ListComponent implements OnInit {
 
   cdkDropListId!: string;
 
-  showMenu: boolean = false;
+  // state variable replaced with overlay logic for menu
   menuConfig!: MenuConfig;
 
   // New state variable for the submenu
   showCreateTicketSubmenu: boolean = false;
 
-  constructor(private ticketService: TicketService, private router: Router) {}
+  constructor(
+    private ticketService: TicketService,
+    private router: Router,
+    private overlayService: OverlayService
+  ) {}
 
   // Reintroducing the isDragging flag
   private isDragging: boolean = false;
@@ -89,6 +101,15 @@ export class ListComponent implements OnInit {
     // Set a unique cdkDropListId
     this.cdkDropListId = 'cdk-drop-list-' + this.id;
     this.menuConfig = generateListActionsMenuConfig(this.name);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['name'] &&
+      changes['name'].previousValue !== changes['name'].currentValue
+    ) {
+      this.menuConfig = generateListActionsMenuConfig(this.name);
+    }
   }
 
   // Method to generate UUID for new tickets
@@ -232,16 +253,22 @@ export class ListComponent implements OnInit {
     this.listRenamed.emit({ id: this.id, newName });
   }
 
-  toggleMenu(): void {
-    this.showMenu = !this.showMenu;
+  openMenuOverlay(event: Event) {
+    const target = event.target as HTMLElement;
+    if (this.menuConfig) {
+      this.overlayService.openOverlay(target, this.menuConfig, (output) => {
+        console.log('Menu action received in ListComponent callback:', output);
+        this.handleMenuAction(output);
+      });
+    }
   }
 
-  handleMenuAction(submenuTransfer: SubmenuTransfer): void {
-    console.log('Handling submenu action:', submenuTransfer);
-    switch (submenuTransfer.purpose) {
+  handleMenuAction(output: SubmenuOutputTransfer) {
+    console.log('Handling submenu action in ListComponent:', output);
+    const { purpose, payload } = output;
+    switch (purpose) {
       case 'addATicket':
-        const addTicketPayload =
-          submenuTransfer.payload as TextInputSubmenuOutput;
+        const addTicketPayload = payload as TextInputSubmenuOutput;
         const newTicketId = this.generateUUID();
         this.ticketCreated.emit({
           listId: this.id,
@@ -250,8 +277,7 @@ export class ListComponent implements OnInit {
         });
         break;
       case 'duplicateList':
-        const duplicatePayload =
-          submenuTransfer.payload as TextInputSubmenuOutput;
+        const duplicatePayload = payload as TextInputSubmenuOutput;
         const newListId = this.generateUUID();
         this.listDuplicated.emit({
           originalListId: this.id,
@@ -260,20 +286,14 @@ export class ListComponent implements OnInit {
         });
         break;
       case 'deleteList':
-        const confirmationPayload =
-          submenuTransfer.payload as ConfirmationSubmenuOutput;
+        const confirmationPayload = payload as ConfirmationSubmenuOutput;
         if (confirmationPayload.confirmationStatus) {
           this.listDeleted.emit(this.id);
         }
         break;
       default:
-        console.warn('Unknown submenu action:', submenuTransfer);
+        console.warn('Unknown submenu action:', output);
     }
-    this.closeMenu();
-  }
-
-  closeMenu(): void {
-    this.showMenu = false;
   }
 
   // Methods for the Create Ticket Submenu
