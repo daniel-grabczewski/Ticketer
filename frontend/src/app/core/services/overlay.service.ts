@@ -1,6 +1,7 @@
 import { Injectable, Injector, InjectionToken } from '@angular/core';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef, OverlayConfig } from '@angular/cdk/overlay';
 import { ComponentPortal, ComponentType } from '@angular/cdk/portal';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { TestRealMenuComponent } from '../../shared/components/test-real-menu/test-real-menu.component';
 import {
   MenuConfig,
@@ -27,7 +28,11 @@ export class OverlayService {
   private overlayRef: OverlayRef | null = null;
   private submenuOverlayRef: OverlayRef | null = null;
 
-  constructor(private overlay: Overlay, private injector: Injector) {}
+  constructor(
+    private overlay: Overlay,
+    private injector: Injector,
+    private breakpointObserver: BreakpointObserver
+  ) {}
 
   // Map to link type strings to component classes
   private componentMap: { [key in SubmenuTypes]: ComponentType<any> } = {
@@ -59,32 +64,52 @@ export class OverlayService {
       this.closeOverlay();
     }
 
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(origin)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-        },
-        {
-          originX: 'end',
-          originY: 'bottom',
-          overlayX: 'end',
-          overlayY: 'top',
-        },
-      ])
-      .withPush(true)
-      .withViewportMargin(8)
-      .withFlexibleDimensions(false);
+    const isMobile = this.breakpointObserver.isMatched('(max-width: 790px)');
 
-    this.overlayRef = this.overlay.create({
+    let positionStrategy;
+    let overlayConfig: OverlayConfig = {
       hasBackdrop: true,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
-      positionStrategy,
-    });
+      backdropClass: 'dark-backdrop',
+    };
+
+    if (isMobile) {
+      // Center the overlay on mobile devices
+      positionStrategy = this.overlay
+        .position()
+        .global()
+        .centerHorizontally()
+        .centerVertically();
+      overlayConfig.positionStrategy = positionStrategy;
+      overlayConfig.width = '90vw';
+      overlayConfig.maxWidth = '400px';
+    } else {
+      // Original position strategy for desktop devices
+      positionStrategy = this.overlay
+        .position()
+        .flexibleConnectedTo(origin)
+        .withPositions([
+          {
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top',
+          },
+          {
+            originX: 'end',
+            originY: 'bottom',
+            overlayX: 'end',
+            overlayY: 'top',
+          },
+        ])
+        .withPush(true)
+        .withViewportMargin(8)
+        .withFlexibleDimensions(false);
+
+      overlayConfig.positionStrategy = positionStrategy;
+      overlayConfig.backdropClass = 'dark-backdrop'; // Added dark backdrop for desktop
+    }
+
+    this.overlayRef = this.overlay.create(overlayConfig);
 
     // Create an injector with menuConfig as the provided data
     const injector = Injector.create({
@@ -129,7 +154,8 @@ export class OverlayService {
   openSubmenuOverlay(
     origin: HTMLElement,
     submenuData: SubmenuInputTransfer,
-    submenuActionCallback?: (output: SubmenuOutputTransfer) => void
+    submenuActionCallback?: (output: SubmenuOutputTransfer) => void,
+    openedFromMenu: boolean = false
   ) {
     if (this.submenuOverlayRef) {
       this.closeSubmenuOverlay();
@@ -141,34 +167,53 @@ export class OverlayService {
       return;
     }
 
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(origin)
-      .withPositions([
-        // Primary position: below the button
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-        },
-        // Fallback position: above the button
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-        },
-      ])
-      .withPush(true)
-      .withViewportMargin(8)
-      .withFlexibleDimensions(false);
+    const isMobile = this.breakpointObserver.isMatched('(max-width: 790px)');
 
-    this.submenuOverlayRef = this.overlay.create({
+    let positionStrategy;
+    let overlayConfig: OverlayConfig = {
       hasBackdrop: true,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
-      positionStrategy,
-    });
+      backdropClass: openedFromMenu ? 'transparent-backdrop' : 'dark-backdrop',
+    };
+
+    if (isMobile) {
+      // Center the overlay on mobile devices
+      positionStrategy = this.overlay
+        .position()
+        .global()
+        .centerHorizontally()
+        .centerVertically();
+      overlayConfig.positionStrategy = positionStrategy;
+      overlayConfig.width = '90vw';
+      overlayConfig.maxWidth = '400px';
+    } else {
+      // Original position strategy for desktop devices
+      positionStrategy = this.overlay
+        .position()
+        .flexibleConnectedTo(origin)
+        .withPositions([
+          // Primary position: below the button
+          {
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top',
+          },
+          // Fallback position: above the button
+          {
+            originX: 'start',
+            originY: 'top',
+            overlayX: 'start',
+            overlayY: 'bottom',
+          },
+        ])
+        .withPush(true)
+        .withViewportMargin(8)
+        .withFlexibleDimensions(false);
+
+      overlayConfig.positionStrategy = positionStrategy;
+    }
+
+    this.submenuOverlayRef = this.overlay.create(overlayConfig);
 
     const portal = new ComponentPortal(componentType);
     const componentRef = this.submenuOverlayRef.attach(portal);
@@ -179,15 +224,27 @@ export class OverlayService {
     }
 
     // Close submenu overlay when the backdrop is clicked
-    this.submenuOverlayRef
-      .backdropClick()
-      .subscribe(() => this.closeSubmenuOverlay());
+    this.submenuOverlayRef.backdropClick().subscribe(() => {
+      this.closeSubmenuOverlay();
+      if (openedFromMenu && isMobile) {
+        // Show the menu again when submenu is closed on mobile
+        if (this.overlayRef) {
+          this.overlayRef.overlayElement.style.display = 'block';
+        }
+      }
+    });
 
     // Listen for events emitted by the submenu instance
     if (this.isInstanceWithEventEmitter(componentRef.instance, 'close')) {
-      componentRef.instance['close'].subscribe(() =>
-        this.closeSubmenuOverlay()
-      );
+      componentRef.instance['close'].subscribe(() => {
+        this.closeSubmenuOverlay();
+        if (openedFromMenu && isMobile) {
+          // Show the menu again when submenu is closed on mobile
+          if (this.overlayRef) {
+            this.overlayRef.overlayElement.style.display = 'block';
+          }
+        }
+      });
     }
 
     if (this.isInstanceWithEventEmitter(componentRef.instance, 'menuAction')) {
@@ -207,6 +264,13 @@ export class OverlayService {
         this.closeSubmenuOverlay();
         this.closeOverlay();
       });
+    }
+
+    if (openedFromMenu && isMobile) {
+      // Hide the menu when submenu is opened on mobile
+      if (this.overlayRef) {
+        this.overlayRef.overlayElement.style.display = 'none';
+      }
     }
   }
 
