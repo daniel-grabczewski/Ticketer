@@ -10,3 +10,42 @@ html, body { height: 100%; background : $background; }
   margin: 0;
   padding : 0;
 }
+
+// Width variables
+$menu-width-desktop: 240px;
+$submenu-width-desktop: 240px;
+$menu-width-mobile: calc(100vw - 48px); // 24px margin on each side
+$menu-width-mobile-max: 400px;
+
+// Media query breakpoints
+$breakpoint-mobile: 790;
+$breakpoint-small-mobile: 320;
+
+// Media query mixins
+@mixin mobile {
+  @media (max-width: #{$breakpoint-mobile}px) {
+    @content;
+  }
+}
+
+@mixin small-mobile {
+  @media (max-width: #{$breakpoint-small-mobile}px) {
+    @content;
+  }
+}
+
+// Standardized variables for x-button
+$x-button-scale: 1;
+$x-button-color: $neutral-darker;
+$x-button-hover-color: $background-lighter;
+
+// Backdrop styles
+.dark-backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.transparent-backdrop {
+  background: transparent;
+}
+
+$box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.6);
