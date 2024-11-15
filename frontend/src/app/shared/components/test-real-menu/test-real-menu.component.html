@@ -3,7 +3,7 @@
     <!-- Header with title and quit button -->
     <div class="menu-header">
       <h3 class="menu-title">{{ menuConfig.title }}</h3>
-      <button class="quit-button" (click)="closeMenu()">×</button>
+      <app-x-button (click)="closeMenu()" [scale]="xScale"></app-x-button>
     </div>
 
     <div class="menu-buttons">

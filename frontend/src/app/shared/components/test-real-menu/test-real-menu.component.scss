@@ -2,14 +2,32 @@
 
 .menu-container {
   background-color: $neutral-lighter;
-  display : relative;
+  border-radius: 8px;
+  padding: 16px;
+  width: 240px; // Thinner width on desktop
+
+  @media (max-width: 790px) {
+    width: calc(100vw - 48px); // 24px margin on each side
+    max-width: 400px;
+  }
+}
+
+.menu-container-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 790px) {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .menu-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px; 
+  margin-bottom: 8px;
 }
 
 .menu-title {
@@ -22,6 +40,11 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
+  color: $primary;
+
+  &:hover {
+    color: $primary-darker;
+  }
 }
 
 .menu-buttons {
@@ -35,17 +58,31 @@
 }
 
 .menu-button {
-  padding: 8px 16px;
+  padding: 8px 12px;
   background-color: $primary;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   width: 100%;
-  text-align: left;
+  text-align: center;
+  font-size: 14px;
 
   &.confirmation-button {
     background-color: $error;
     color: white;
   }
+
+  &:hover {
+    background-color: $primary-darker;
+
+    &.confirmation-button {
+      background-color: $error-darker;
+    }
+  }
+}
+
+/* Added shadow to the menu */
+.menu-container {
+  box-shadow: $box-shadow;
 }

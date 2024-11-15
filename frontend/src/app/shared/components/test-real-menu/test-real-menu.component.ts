@@ -29,6 +29,9 @@ import { BackgroundSelectionSubmenuComponent } from '../background-selection-sub
 import { GenerateBoardSubmenuComponent } from '../generate-board-submenu/generate-board-submenu.component';
 import { ColorSelectionSubmenuComponent } from '../color-selection-submenu/color-selection-submenu.component';
 import { DropdownSubmenuComponent } from '../dropdown-submenu/dropdown-submenu.component';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { XButtonComponent } from '../x-button/x-button.component';
+import { X_SCALE_VALUE } from '@constants';
 
 @Component({
   selector: 'app-test-real-menu',
@@ -43,6 +46,7 @@ import { DropdownSubmenuComponent } from '../dropdown-submenu/dropdown-submenu.c
     GenerateBoardSubmenuComponent,
     ColorSelectionSubmenuComponent,
     DropdownSubmenuComponent,
+    XButtonComponent,
   ],
 })
 export class TestRealMenuComponent implements OnInit {
@@ -54,12 +58,17 @@ export class TestRealMenuComponent implements OnInit {
   rearrangedSubmenus: { buttonText: string; submenu: SubmenuInputTransfer }[] =
     [];
 
+  isMobile: boolean = false;
+  xScale = X_SCALE_VALUE;
+
   constructor(
     private elementRef: ElementRef,
-    private overlayService: OverlayService
+    private overlayService: OverlayService,
+    private breakpointObserver: BreakpointObserver
   ) {}
 
   ngOnInit() {
+    this.isMobile = this.breakpointObserver.isMatched('(max-width: 790px)');
     this.rearrangeSubmenus();
     console.log(
       'Initialized TestRealMenuComponent with config:',
@@ -109,6 +118,7 @@ export class TestRealMenuComponent implements OnInit {
     }
     event.stopPropagation();
   }
+
   openSubmenu(index: number, originElement: HTMLElement) {
     const submenuItem = this.rearrangedSubmenus[index];
     const submenuInput: SubmenuInputTransfer = submenuItem.submenu;
@@ -119,7 +129,8 @@ export class TestRealMenuComponent implements OnInit {
       (output) => {
         // This callback gets invoked when submenu actions occur
         this.handleSubmenuAction(output);
-      }
+      },
+      true // Indicate that the submenu is opened from a menu
     );
     console.log('Requested to open submenu:', submenuInput);
   }
