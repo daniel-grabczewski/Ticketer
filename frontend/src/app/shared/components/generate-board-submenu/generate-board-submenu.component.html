@@ -1,8 +1,8 @@
 <div class="submenu-container">
-  <!-- Header with title and quit button -->
+  <!-- Header with title and close button -->
   <div class="submenu-header">
     <h2>{{ title }}</h2>
-    <button class="quit-button" (click)="onQuitClicked()">x</button>
+    <app-x-button (click)="onCloseClicked()" [scale] = "xScale"></app-x-button>
   </div>
 
   <!-- Text input section -->

@@ -6,13 +6,20 @@ import {
   GenerateBoardSubmenuInput,
   GenerateBoardSubmenuOutput,
 } from '../../models/submenuInputOutput.model';
+import { XButtonComponent } from '../x-button/x-button.component';
+import { X_SCALE_VALUE } from '@constants';
 
 @Component({
   selector: 'app-generate-board-submenu',
   templateUrl: './generate-board-submenu.component.html',
   styleUrls: ['./generate-board-submenu.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, BackgroundSelectionPanelComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    BackgroundSelectionPanelComponent,
+    XButtonComponent,
+  ],
 })
 export class GenerateBoardSubmenuComponent
   implements GenerateBoardSubmenuInput
@@ -23,16 +30,18 @@ export class GenerateBoardSubmenuComponent
   @Input() colorSelectionHeader: string = '';
   @Input() buttonText: string = '';
   @Input() colorId: number | null = null;
-  @Input() initialText: string = ''; // Optional initial text for prefill
-  @Input() placeholder: string = 'Enter name'; // Placeholder with default text
+  @Input() initialText: string = '';
+  @Input() placeholder: string = 'Enter name';
 
   // Outputs
   @Output() menuAction = new EventEmitter<GenerateBoardSubmenuOutput>();
   @Output() close = new EventEmitter<void>();
 
+  xScale = X_SCALE_VALUE;
+
   // Component State
-  nameInput: string = ''
-  selectedColorId: number | null = null
+  nameInput: string = '';
+  selectedColorId: number | null = null;
 
   ngOnInit() {
     this.selectedColorId = this.colorId;
@@ -48,14 +57,14 @@ export class GenerateBoardSubmenuComponent
   onCreateClicked() {
     // Emit the menu action with the specified structure
     this.menuAction.emit({
-      name: this.nameInput,
+      name: this.nameInput.trim(),
       colorId: this.selectedColorId,
     });
     this.close.emit();
   }
 
-  // Handle quit button click
-  onQuitClicked() {
+  // Handle close button click
+  onCloseClicked() {
     this.close.emit();
   }
 }
