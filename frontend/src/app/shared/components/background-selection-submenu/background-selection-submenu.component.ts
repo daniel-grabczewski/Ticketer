@@ -5,13 +5,16 @@ import {
   BackgroundSelectionSubmenuInput,
   BackgroundSelectionSubmenuOutput,
 } from '../../models/submenuInputOutput.model';
+import { XButtonComponent } from '../x-button/x-button.component';
+import { X_SCALE_VALUE } from '@constants';
+
 
 @Component({
   selector: 'app-background-selection-submenu',
   templateUrl: './background-selection-submenu.component.html',
   styleUrls: ['./background-selection-submenu.component.scss'],
   standalone: true,
-  imports: [CommonModule, BackgroundSelectionPanelComponent],
+  imports: [CommonModule, BackgroundSelectionPanelComponent, XButtonComponent],
 })
 export class BackgroundSelectionSubmenuComponent
   implements BackgroundSelectionSubmenuInput
@@ -25,9 +28,15 @@ export class BackgroundSelectionSubmenuComponent
   // Outputs for BackgroundSelectionSubmenuOutput
   @Output() menuAction = new EventEmitter<BackgroundSelectionSubmenuOutput>();
   @Output() close = new EventEmitter<void>();
+  xScale = X_SCALE_VALUE
 
   // Component State
   selectedColorId: number | null = this.colorId;
+
+  ngOnInit() {
+    // Initialize selectedColorId
+    this.selectedColorId = this.colorId;
+  }
 
   // Handle color selection from the child component
   onColorSelected(colorId: number | null) {

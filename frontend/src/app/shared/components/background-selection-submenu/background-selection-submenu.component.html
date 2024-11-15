@@ -2,17 +2,17 @@
   <!-- Header with title and close button -->
   <div class="submenu-header">
     <h2>{{ title }}</h2>
-    <button class="close-button" (click)="onCloseClicked()">×</button>
+    <app-x-button (click)="onCloseClicked()" [scale]="xScale"></app-x-button>
   </div>
 
-  <!-- Hardcoded subtitle -->
+  <!-- Color selection header -->
   <div class="color-selection-title">
     <label>{{ colorSelectionHeader }}</label>
   </div>
 
   <!-- Color selection panel -->
   <app-background-selection-panel
-    [selectedColorId]="colorId"
+    [selectedColorId]="selectedColorId"
     (colorSelected)="onColorSelected($event)"
   ></app-background-selection-panel>
 
