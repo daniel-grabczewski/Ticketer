@@ -2,12 +2,12 @@
   <!-- Header with title and close button -->
   <div class="submenu-header">
     <h2>{{ title }}</h2>
-    <button class="close-button" (click)="onCloseClicked()">×</button>
+    <app-x-button (click)="onCloseClicked()" [scale] = "xScale"></app-x-button>
   </div>
 
   <!-- Color selection panel -->
   <app-color-selection-panel
-    [selectedColorId]="colorId"
+    [selectedColorId]="selectedColorId"
     (colorSelected)="onColorSelected($event)"
   ></app-color-selection-panel>
 
