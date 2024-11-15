@@ -5,13 +5,15 @@ import {
   CreateBoardItemSubmenuInput,
   CreateBoardItemSubmenuOutput,
 } from '../../models/submenuInputOutput.model';
+import { X_SCALE_VALUE } from '@constants';
+import { XButtonComponent } from '../x-button/x-button.component';
 
 @Component({
   selector: 'app-create-board-item-submenu',
   templateUrl: './create-board-item-submenu.component.html',
   styleUrls: ['./create-board-item-submenu.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, XButtonComponent],
 })
 export class CreateBoardItemSubmenuComponent {
   // Inputs based on CreateBoardItemSubmenuInput
@@ -22,6 +24,7 @@ export class CreateBoardItemSubmenuComponent {
   @Output() menuAction = new EventEmitter<CreateBoardItemSubmenuOutput>();
   @Output() close = new EventEmitter<void>();
 
+  xScale = X_SCALE_VALUE;
   // Component State
   textInputValue: string = '';
 

@@ -12,6 +12,6 @@
   <!-- Action button and close button on the same row -->
   <div class="action-button-group">
     <button (click)="onActionClicked()">{{ buttonText }}</button>
-    <button class="close-button" (click)="onCloseClicked()">×</button>
+    <app-x-button (click)="onCloseClicked()" [scale] = "xScale"></app-x-button>
   </div>
 </div>
