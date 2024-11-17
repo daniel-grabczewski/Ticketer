@@ -4,11 +4,12 @@
 
 $page-max-width : 1200px;
 
-html, body { height: 100%; background : $background; }
+html, body { height: 100vh; overflow-y: hidden; overflow-x: auto; background : $background; }
 * {
   font-family: "Lato", sans-serif !important; 
   margin: 0;
   padding : 0;
+  
 }
 
 // Width variables
