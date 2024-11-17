@@ -3,80 +3,74 @@
 .board-page-container {
   position: relative;
   width: 100%;
-  height: 100vh;
-  overflow: hidden;
+  height: 100%;
+  overflow: hidden; /* Prevent vertical scrolling */
   display: flex;
   flex-direction: row;
-  padding-left : 1rem;;
-  padding-right : 1rem;
-  padding-top : 3rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 3rem;
+  scrollbar-width: thin;
+  scrollbar-color: $background-lighter $background;
+  padding-top: 12.5rem;
 }
 
 .board-header {
   position: fixed;
-  justify-self: center;
-  flex-direction : column;
-  width : 90%;
-  padding: 1rem;
-  display: flex;
-  z-index: 1000;
+  top: 6rem; /* Ensures it stays at the top of the viewport */
+  left: 1rem; /* Adds a margin of 1rem from the left of the viewport */
+  right: 1rem; /* Adds a margin of 1rem from the right of the viewport */
+  padding: 1rem; /* Maintains the internal padding */
+  display: flex; /* Keeps flex properties intact */
+  flex-direction: column; /* Maintains the column layout */
+  z-index: 1000; /* Ensures it is above other elements */
 }
 
-  .board-header-inner-container {
-    display : flex;
-    justify-content: space-between;
-  }
+.board-header-inner-container {
+  display: flex;
+  justify-content: space-between;
+}
 
-
-
-  .board-name {
-    h1 {
-      color: $secondary;
-      cursor: pointer;
-      font-size : 2.8rem;
-    }
-
-    input[type='text'] {
-      font-size: 24px;
-      font-weight: bold;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: $secondary;
-    }
-  }
-
-  .menu-button {
-    background: none;
-    border: none;
-    font-size: 24px;
+.board-name {
+  h1 {
     color: $secondary;
     cursor: pointer;
+    font-size: 2.8rem;
   }
 
-  .menu-wrapper {
-    top: 50px;
-    left: 16px;
-    z-index: 1000;
+  input[type='text'] {
+    font-size: 24px;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: $secondary;
   }
+}
 
+.menu-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: $secondary;
+  cursor: pointer;
+}
 
-.board-container {
-  margin-top: 80px; // To avoid overlap with fixed header
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
-  padding: 16px;
+.menu-wrapper {
+  top: 50px;
+  left: 16px;
+  z-index: 1000;
 }
 
 .list-container {
   display: flex;
   flex-direction: row;
-  gap: 16px;
+  gap: 16px; /* Spacing between lists */
+  min-width: max-content; /* Prevents cutting off tickets by ensuring container width expands as needed */
 }
 
 .add-list-section {
-  width: 300px; // Same width as list
+  width: 300px; /* Same width as list */
   min-width: 300px;
   background-color: $neutral-lighter;
   border-radius: 8px;
@@ -93,4 +87,3 @@
   cursor: pointer;
   text-align: left;
 }
-
