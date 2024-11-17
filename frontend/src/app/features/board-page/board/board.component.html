@@ -1,4 +1,7 @@
-<div class="board-page-container" [ngStyle]="getBackgroundStyle()" cdkDropListGroup *ngIf="boardDetails">
+<div class="board-page-container" [ngStyle]="getBackgroundStyle()" cdkDropListGroup *ngIf="boardDetails" cdkDropList
+(cdkDropListDropped)="onListDrop($event)"
+[cdkDropListData]="boardDetails.lists"
+cdkDropListOrientation="horizontal">
   <!-- Board Header -->
   <div class="board-header">
     <div class="board-header-inner-container">
@@ -29,13 +32,6 @@
   </div>
 
   <!-- List -->
-    <div
-      cdkDropList
-      class="list-container"
-      (cdkDropListDropped)="onListDrop($event)"
-      [cdkDropListData]="boardDetails.lists"
-      cdkDropListOrientation="horizontal"
-    >
       <div *ngFor="let list of boardDetails.lists; let i = index" cdkDrag>
         <app-list
           [id]="list.id"
@@ -70,6 +66,5 @@
           ></app-create-board-item-submenu>
         </ng-container>
       </div>
-    </div>
   <router-outlet></router-outlet>
 </div>

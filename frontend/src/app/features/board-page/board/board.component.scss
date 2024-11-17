@@ -2,17 +2,18 @@
 
 .board-page-container {
   position: relative;
-  width: 100%;
+  /* Remove the fixed width to allow expansion */
+  width: min-content;
   height: 100%;
-  overflow: hidden; /* Prevent vertical scrolling */
   display: flex;
   flex-direction: row;
+  /* Ensure the container doesn't shrink and can expand */
+
+  flex-shrink: 0;
   padding-left: 1rem;
   padding-right: 1rem;
-  padding-top: 3rem;
-  scrollbar-width: thin;
-  scrollbar-color: $background-lighter $background;
-  padding-top: 12.5rem;
+  padding-top: 12.5rem; /* Ensure this accommodates the fixed header */
+  gap: 2rem;
 }
 
 .board-header {
@@ -39,7 +40,7 @@
   }
 
   input[type='text'] {
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: bold;
     border: none;
     outline: none;
@@ -51,7 +52,7 @@
 .menu-button {
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 1.5rem;
   color: $secondary;
   cursor: pointer;
 }
@@ -60,13 +61,6 @@
   top: 50px;
   left: 16px;
   z-index: 1000;
-}
-
-.list-container {
-  display: flex;
-  flex-direction: row;
-  gap: 16px; /* Spacing between lists */
-  min-width: max-content; /* Prevents cutting off tickets by ensuring container width expands as needed */
 }
 
 .add-list-section {
