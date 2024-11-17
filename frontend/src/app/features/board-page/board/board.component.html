@@ -1,4 +1,5 @@
-<div class="board-page-container" [ngStyle]="getBackgroundStyle()" cdkDropListGroup *ngIf="boardDetails" cdkDropList
+<div class="board-page-wrapper" [ngStyle]="getBackgroundStyle()">
+<div class="board-page-container" cdkDropListGroup *ngIf="boardDetails" cdkDropList
 (cdkDropListDropped)="onListDrop($event)"
 [cdkDropListData]="boardDetails.lists"
 cdkDropListOrientation="horizontal">
@@ -67,4 +68,5 @@ cdkDropListOrientation="horizontal">
         </ng-container>
       </div>
   <router-outlet></router-outlet>
+</div>
 </div>

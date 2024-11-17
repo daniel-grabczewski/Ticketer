@@ -1,19 +1,29 @@
 @import '../../../assets/styles/main.scss';
 
+.board-page-wrapper {
+  position: relative;
+  width: min-content;
+  height: 100%;
+  overflow: hidden; /* Hide any overflowing content */
+
+  /* Fix the background gradient */
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .board-page-container {
   position: relative;
-  /* Remove the fixed width to allow expansion */
-  width: min-content;
   height: 100%;
   display: flex;
   flex-direction: row;
-  /* Ensure the container doesn't shrink and can expand */
-
   flex-shrink: 0;
   padding-left: 1rem;
   padding-right: 1rem;
-  padding-top: 12.5rem; /* Ensure this accommodates the fixed header */
+  padding-top: 12.5rem;
   gap: 2rem;
+  background: none;
 }
 
 .board-header {
@@ -68,9 +78,9 @@
   min-width: 300px;
   background-color: $neutral-lighter;
   border-radius: 8px;
-  padding: 8px;
   display: flex;
   flex-direction: column;
+  margin-right : -2rem;
 }
 
 .add-list-button {
