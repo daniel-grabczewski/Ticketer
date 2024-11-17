@@ -59,6 +59,7 @@ export class AuthService {
    * @returns An Observable of any (adjust based on backend response if necessary).
    */
   generateGuestId(): Observable<any> {
+    this.updateAuthenticationStatus(true)
     const url = `${this.baseUrl}/generateGuestId`;
     return this.http
       .get<any>(url, { withCredentials: true })

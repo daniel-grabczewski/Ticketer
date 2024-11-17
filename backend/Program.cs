@@ -21,12 +21,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add CORS policy to allow your frontend (Angular) to access your API
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
+     options.AddPolicy("AllowAllOrigins", policy =>
     {
-        policy.WithOrigins("http://localhost:4200") // Angular frontend URL
+        policy.WithOrigins("http://localhost:4200", "https://daniel.ngrok.app") // Allow both localhost and ngrok
               .AllowAnyMethod()
               .AllowAnyHeader()
-              .AllowCredentials(); // Important for cookies
+              .AllowCredentials();
     });
 });
 
@@ -93,7 +93,7 @@ else
 
 app.UseRouting();
 
-app.UseCors("AllowFrontend");
+app.UseCors("AllowAllOrigins");
 
 app.UseAuthentication(); // Must come before UseAuthorization
 app.UseAuthorization();  // Must come after UseAuthentication
