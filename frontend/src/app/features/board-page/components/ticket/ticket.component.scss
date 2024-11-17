@@ -1,26 +1,30 @@
 @import '../../../../assets/styles/main.scss';
 
+$ticket-border-radius : 0.8rem;
+$ticket-name-vertical-padding : 0.5rem;
+
 .ticket-container {
   background-color: $neutral-darker;
-  padding: 8px;
-  border-radius: 4px;
+  border-radius: $ticket-border-radius;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   cursor: pointer; 
-  max-width: 280px;
+  max-width: 100%;
 }
 
 .color-strip {
-  height: 4px;
+  height: 2rem;
   width: 100%;
-  border-radius: 4px 4px 0 0;
+  border-radius : $ticket-border-radius $ticket-border-radius 0px 0px;
 }
 
 .ticket-name {
   color: $secondary;
-  font-size: 14px;
-  margin-top: 8px;
+  padding : 0.5rem 0.8rem;
+  padding-bottom : 1rem;
+  font-size: 1.5rem;
+  min-height : 3.6rem;
 }
 
 /* Add transition for animating tickets */
