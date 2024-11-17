@@ -6,25 +6,34 @@
   height: 100vh;
   overflow: hidden;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  padding-left : 1rem;;
+  padding-right : 1rem;
+  padding-top : 3rem;
 }
 
 .board-header {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 16px;
+  justify-self: center;
+  flex-direction : column;
+  width : 90%;
+  padding: 1rem;
   display: flex;
-  justify-content: start;
-  align-items: center;
   z-index: 1000;
+}
+
+  .board-header-inner-container {
+    display : flex;
+    justify-content: space-between;
+  }
+
+
 
   .board-name {
     h1 {
-      margin: 0;
       color: $secondary;
       cursor: pointer;
+      font-size : 2.8rem;
     }
 
     input[type='text'] {
@@ -46,12 +55,11 @@
   }
 
   .menu-wrapper {
-    position: absolute;
     top: 50px;
     left: 16px;
     z-index: 1000;
   }
-}
+
 
 .board-container {
   margin-top: 80px; // To avoid overlap with fixed header

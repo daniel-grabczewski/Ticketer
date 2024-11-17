@@ -1,6 +1,7 @@
 <div class="board-page-container" [ngStyle]="getBackgroundStyle()">
   <!-- Board Header -->
   <div class="board-header">
+    <div class = "board-header-inner-container">
     <!-- Board Name -->
     <div class="board-name">
       <ng-container *ngIf="!isRenamingBoard">
@@ -24,6 +25,7 @@
     >
       ⋮ menu
     </button>
+  </div>
   </div>
 
   <!-- Board Content -->
