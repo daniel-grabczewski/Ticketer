@@ -7,6 +7,7 @@ import {
   SimpleChanges,
   OnChanges,
   ChangeDetectorRef,
+  HostListener,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -84,11 +85,15 @@ export class ListComponent implements OnInit, OnChanges {
 
   cdkDropListId!: string;
 
-  // state variable replaced with overlay logic for menu
+  // State variable replaced with overlay logic for menu
   menuConfig!: MenuConfig;
 
   // New state variable for the submenu
   showCreateTicketSubmenu: boolean = false;
+
+  // Variables for renaming list
+  isRenamingList: boolean = false;
+  newListName: string = '';
 
   constructor(
     private ticketService: TicketService,
@@ -247,7 +252,7 @@ export class ListComponent implements OnInit, OnChanges {
     const ticketElement = element.querySelector('.ticket-container') as HTMLElement;
     if (ticketElement) {
       this.draggedTicketHeight = ticketElement.offsetHeight;
-      console.log(this.draggedTicketHeight)
+      console.log(this.draggedTicketHeight);
     } else {
       this.draggedTicketHeight = element.offsetHeight;
     }
@@ -261,6 +266,42 @@ export class ListComponent implements OnInit, OnChanges {
         this.draggedTicketHeight = 0; // Reset the height
       }, 0);
     }
+
+  // Methods for renaming the list title
+  enableListRenaming(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isRenamingList = true;
+    this.newListName = this.name;
+    // Wait for the input to be rendered, then focus and select text
+    setTimeout(() => {
+      const inputElement = document.getElementById(
+        `list-name-input-${this.id}`
+      ) as HTMLInputElement;
+      if (inputElement) {
+        inputElement.focus();
+        inputElement.select();
+      }
+    }, 0);
+  }
+
+  saveListName(): void {
+    if (this.newListName.trim() !== '') {
+      if (this.newListName.trim() !== this.name) {
+        this.onRenameList(this.newListName.trim());
+      }
+      this.name = this.newListName.trim();
+    } else {
+      // Revert to previous name
+      this.newListName = this.name;
+    }
+    this.isRenamingList = false;
+  }
+
+  onListNameKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.saveListName();
+    }
+  }
 
   // Placeholder for renaming the list title
   onRenameList(newName: string): void {
@@ -327,5 +368,19 @@ export class ListComponent implements OnInit, OnChanges {
 
   onCreateTicketSubmenuClose(): void {
     this.showCreateTicketSubmenu = false;
+  }
+
+  // Handle click outside to save the list name
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.isRenamingList) {
+      const target = event.target as HTMLElement;
+      const inputElement = document.getElementById(
+        `list-name-input-${this.id}`
+      );
+      if (inputElement && !inputElement.contains(target)) {
+        this.saveListName();
+      }
+    }
   }
 }

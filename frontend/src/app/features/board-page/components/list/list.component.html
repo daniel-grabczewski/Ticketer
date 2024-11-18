@@ -1,11 +1,22 @@
 <div class="list-container">
-  <!-- List Title and Menu Button -->
+  <!-- List Header -->
   <div class="list-header">
-    <input
-      class="list-title"
-      [(ngModel)]="name"
-      (blur)="onRenameList(name)"
-    />
+    <ng-container *ngIf="!isRenamingList">
+      <h3 class="list-title" (click)="enableListRenaming($event)">
+        {{ name }}
+      </h3>
+    </ng-container>
+    <ng-container *ngIf="isRenamingList">
+      <input
+        id="list-name-input-{{ id }}"
+        class="list-title-input"
+        type="text"
+        [(ngModel)]="newListName"
+        (blur)="saveListName()"
+        (keydown)="onListNameKeydown($event)"
+        (click)="$event.stopPropagation()"
+      />
+    </ng-container>
     <button
       class="menu-button"
       (click)="openMenuOverlay($event); $event.stopPropagation()"
@@ -46,7 +57,7 @@
           [colorMap]="colorMap"
         ></app-ticket>
         <!-- Custom Placeholder -->
-        <div *cdkDragPlaceholder class="ticket-placeholder" ></div>
+        <div *cdkDragPlaceholder class="ticket-placeholder"></div>
       </div>
     </ng-container>
 
