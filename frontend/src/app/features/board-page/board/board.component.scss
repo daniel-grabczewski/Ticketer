@@ -91,3 +91,10 @@
   cursor: pointer;
   text-align: left;
 }
+
+.list-placeholder {
+  background-color: $background-lighter;
+  border-radius: $list-border-radius;
+  height : 30rem;
+  width : $total-list-width;
+}

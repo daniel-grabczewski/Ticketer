@@ -2,12 +2,12 @@
 
 .list-container {
   background-color: $background;
-  border-radius: 1.5rem;
-  padding: 1.5rem 1.2rem;
+  border-radius: $list-border-radius;
+  padding: $list-vertical-padding $list-horizontal-padding;
   display: flex;
   flex-direction: column;
-  width: 300px;
-  max-width: 300px;
+  width: $list-width;
+  max-width: $list-width;
   max-height: 80vh; /* Set maximum height */
   position: relative; /* Added for positioning the menu */
 }

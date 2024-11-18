@@ -16,6 +16,14 @@ html, body { height: 100vh; overflow-y: hidden; overflow-x: auto; background : $
 $ticket-border-radius : 0.8rem;
 $ticket-name-vertical-padding : 0.5rem;
 
+// List / Placeholder consistency variables
+$list-border-radius : 1.5rem;
+$list-horizontal-padding : 1.2rem;
+$list-vertical-padding : 1.5rem;
+$list-width : 19rem;
+$total-list-width: $list-width + ($list-horizontal-padding * 2);
+
+
 // Width variables
 $menu-width-desktop: 240px;
 $submenu-width-desktop: 240px;
