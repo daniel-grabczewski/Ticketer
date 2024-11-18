@@ -33,7 +33,7 @@
         cdkDrag
         [cdkDragData]="ticket"
         class="ticket-wrapper"
-        (cdkDragStarted)="onDragStarted()"
+        (cdkDragStarted)="onDragStarted($event)"
         (cdkDragEnded)="onDragEnded()"
         (click)="onTicketClicked(ticket.id, $event)"
       >
@@ -46,7 +46,7 @@
           [colorMap]="colorMap"
         ></app-ticket>
         <!-- Custom Placeholder -->
-        <div *cdkDragPlaceholder class="ticket-placeholder"></div>
+        <div *cdkDragPlaceholder class="ticket-placeholder" ></div>
       </div>
     </ng-container>
 

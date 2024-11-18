@@ -75,11 +75,9 @@
 }
 
 .ticket-placeholder {
-  height: 60px; /* Match the height of the ticket */
-  background-color: $neutral-lighter;
-  border: 2px dashed $primary;
-  border-radius: 4px;
-  margin-bottom: 4px;
+  height: 113.6px; /* Match the height of the ticket */
+  background-color: $background-lighter;
+  border-radius: $ticket-border-radius;
 }
 
 /* Drag Animations */

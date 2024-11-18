@@ -6,6 +6,7 @@ import {
   OnInit,
   SimpleChanges,
   OnChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +15,7 @@ import {
   CdkDragDrop,
   moveItemInArray,
   transferArrayItem,
+  CdkDragStart,
 } from '@angular/cdk/drag-drop';
 import { TicketComponent } from '../ticket/ticket.component';
 import { TicketInput } from '../../../../shared/models/uniqueComponentInputOutput.model';
@@ -91,9 +93,10 @@ export class ListComponent implements OnInit, OnChanges {
   constructor(
     private ticketService: TicketService,
     private router: Router,
-    private overlayService: OverlayService
+    private overlayService: OverlayService,
+    private cdr: ChangeDetectorRef
   ) {}
-
+  draggedTicketHeight: number = 0;
   // Reintroducing the isDragging flag
   private isDragging: boolean = false;
 
@@ -238,15 +241,26 @@ export class ListComponent implements OnInit, OnChanges {
     }
   }
 
-  onDragStarted(): void {
+  onDragStarted(event: CdkDragStart): void {
     this.isDragging = true;
+    const element = event.source.element.nativeElement as HTMLElement;
+    const ticketElement = element.querySelector('.ticket-container') as HTMLElement;
+    if (ticketElement) {
+      this.draggedTicketHeight = ticketElement.offsetHeight;
+      console.log(this.draggedTicketHeight)
+    } else {
+      this.draggedTicketHeight = element.offsetHeight;
+    }
+    this.cdr.detectChanges(); // Notify Angular of the change
   }
-
-  onDragEnded(): void {
-    setTimeout(() => {
-      this.isDragging = false;
-    }, 0);
-  }
+  
+  
+    onDragEnded(): void {
+      setTimeout(() => {
+        this.isDragging = false;
+        this.draggedTicketHeight = 0; // Reset the height
+      }, 0);
+    }
 
   // Placeholder for renaming the list title
   onRenameList(newName: string): void {

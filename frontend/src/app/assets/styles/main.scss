@@ -12,6 +12,10 @@ html, body { height: 100vh; overflow-y: hidden; overflow-x: auto; background : $
   
 }
 
+// Ticket / Placeholder consistency variables:
+$ticket-border-radius : 0.8rem;
+$ticket-name-vertical-padding : 0.5rem;
+
 // Width variables
 $menu-width-desktop: 240px;
 $submenu-width-desktop: 240px;
