@@ -1,7 +1,7 @@
 <div class="ticket-container">
   <!-- Color Strip -->
-  <div class="color-strip" [style.backgroundColor]="colorHex"></div>
+  <div class="color-strip" [style.backgroundColor]="colorHex" *ngIf="colorHex"></div>
 
   <!-- Ticket Name -->
-  <div class="ticket-name">{{ name }}</div>
+  <div class="ticket-name" [ngStyle]="{'padding-top' : (colorHex === '') ? '1.5rem' : '0.5rem'}">{{ name }}</div>
 </div>
