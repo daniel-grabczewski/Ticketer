@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import './gradients';
 @import './colors';
+@import './buttons';
 
 $page-max-width : 1200px;
 
@@ -11,6 +12,9 @@ html, body { height: 100vh; overflow-y: hidden; overflow-x: auto; background : $
   padding : 0;
   
 }
+
+// Text input field consistency variables:
+$text-input-border-radius : 0.5rem;
 
 // Ticket / Placeholder consistency variables:
 $ticket-border-radius : 0.8rem;
