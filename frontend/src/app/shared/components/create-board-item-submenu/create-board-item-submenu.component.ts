@@ -27,6 +27,8 @@ export class CreateBoardItemSubmenuComponent {
   xScale = X_SCALE_VALUE;
   // Component State
   textInputValue: string = '';
+  xColor : string = 'var(--neutral-lighter)'
+  xHoverColor : string = 'var(--error)'
 
   // Handle action button click
   onActionClicked() {
