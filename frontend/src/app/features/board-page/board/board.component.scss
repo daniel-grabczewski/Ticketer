@@ -96,5 +96,7 @@
   background-color: $background-lighter;
   border-radius: $list-border-radius;
   height : 30rem;
-  width : $total-list-width;
+  min-width : $total-list-width;
+  max-width : $total-list-width;
+  border : none;
 }

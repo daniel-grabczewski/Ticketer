@@ -15,12 +15,13 @@ html, body { height: 100vh; overflow-y: hidden; overflow-x: auto; background : $
 // Ticket / Placeholder consistency variables:
 $ticket-border-radius : 0.8rem;
 $ticket-name-vertical-padding : 0.5rem;
+$ticket-color-strip-height : 2rem;
 
 // List / Placeholder consistency variables
 $list-border-radius : 1.5rem;
 $list-horizontal-padding : 1.2rem;
 $list-vertical-padding : 1.5rem;
-$list-width : 19rem;
+$list-width: 18.75rem;
 $total-list-width: $list-width + ($list-horizontal-padding * 2);
 
 

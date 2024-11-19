@@ -1,11 +1,5 @@
   @import '../../../../assets/styles/main.scss';
 
-  $list-border-radius: 1.5rem;
-  $list-vertical-padding: 1.5rem;
-  $list-horizontal-padding: 1.2rem;
-  $list-width: 300px;
-  $primary: #007bff; // Blue color for border
-
   .list-container {
     background-color: $background;
     border-radius: $list-border-radius;
@@ -99,7 +93,7 @@
   }
 
   .ticket-placeholder {
-    height: 113.6px; /* Match the height of the ticket */
+    height: 113.58px; /* Match the height of the ticket */
     background-color: $background-lighter;
     border-radius: $ticket-border-radius;
   }

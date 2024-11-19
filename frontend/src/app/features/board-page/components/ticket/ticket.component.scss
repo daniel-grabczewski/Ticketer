@@ -12,7 +12,7 @@
 }
 
 .color-strip {
-  height: 2rem;
+  height: $ticket-color-strip-height;
   width: 100%;
   border-radius : $ticket-border-radius $ticket-border-radius 0px 0px;
 }
