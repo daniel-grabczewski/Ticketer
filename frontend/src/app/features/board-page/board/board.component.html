@@ -55,10 +55,10 @@ cdkDropListOrientation="horizontal">
       </div>
 
       <!-- Add List Section -->
-      <div class="add-list-section">
-        <ng-container *ngIf="!showCreateListSubmenu">
+       <div class="add-list-section-wrapper" [ngStyle]="{'background' : (showCreateListSubmenu) ? 'var(--background)' : 'transparent'}">
+      <div *ngIf="!showCreateListSubmenu" class="add-list-section">
           <app-plus-button label="Add another list" [color]="plusButtonColor" [hoverColor]="plusButtonHoverColor" (click)="onAddListButtonClick()"></app-plus-button>
-        </ng-container>
+        </div>
         <ng-container *ngIf="showCreateListSubmenu">
           <app-create-board-item-submenu
             [placeholder]="'Enter list name...'"
@@ -67,7 +67,8 @@ cdkDropListOrientation="horizontal">
             (close)="onCreateListSubmenuClose()"
           ></app-create-board-item-submenu>
         </ng-container>
-      </div>
+      
+    </div>
   <router-outlet></router-outlet>
 </div>
 </div>

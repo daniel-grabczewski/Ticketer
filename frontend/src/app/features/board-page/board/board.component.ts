@@ -74,6 +74,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   private ticketUpdateSub!: Subscription;
   plusButtonHoverColor : string = 'var(--secondary)'
   plusButtonColor : string = 'var(--secondary-darker)'
+  backgroundColor : string = 'var(--background)'
 
   boardNameSlug: string | null = null;
 

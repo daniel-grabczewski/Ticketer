@@ -74,10 +74,18 @@ $gap-between-lists : 1.5rem;
   z-index: 1000;
 }
 
+.add-list-section-wrapper {
+  width: $total-list-width; /* Same width as list */
+  padding: 1rem $list-horizontal-padding;
+  height : min-content;
+  margin-right : -$gap-between-lists;
+  box-sizing : border-box;
+  border-radius: $list-border-radius;
+}
+
 .add-list-section {
   display: flex;
   justify-content: center;  /* Horizontally center if needed */
-  width: $total-list-width; /* Same width as list */
   padding-left : $list-horizontal-padding;
   box-sizing:border-box;
   background-color: rgba($color: #ffffff, $alpha: 0.22);
@@ -85,7 +93,9 @@ $gap-between-lists : 1.5rem;
   height : 4.8rem;
   display: flex;
   flex-direction: column;
-  margin-right : -$gap-between-lists;
+  margin-left : -$list-horizontal-padding;
+  margin-right : -$list-horizontal-padding;
+  margin-top : -1rem;
 }
 
 .add-list-button {
