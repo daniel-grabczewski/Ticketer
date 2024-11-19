@@ -1,6 +1,7 @@
 <div class="board-page-wrapper" [ngStyle]="getBackgroundStyle()">
 <div class="board-page-container" cdkDropListGroup *ngIf="boardDetails" cdkDropList
 (cdkDropListDropped)="onListDrop($event)"
+[cdkDropListDisabled]="listRenamingStatus"
 [cdkDropListData]="boardDetails.lists"
 cdkDropListOrientation="horizontal">
   <!-- Board Header -->
@@ -33,7 +34,7 @@ cdkDropListOrientation="horizontal">
   </div>
 
   <!-- List -->
-      <div *ngFor="let list of boardDetails.lists; let i = index" cdkDrag cdkDragPreviewClass="list-drag-preview" class = "board-list-container">
+      <div *ngFor="let list of boardDetails.lists; let i = index" cdkDrag cdkDragPreviewClass="list-drag-preview" class = "board-list-container" >
         <app-list
           [id]="list.id"
           [name]="list.name"
@@ -48,6 +49,7 @@ cdkDropListOrientation="horizontal">
           (listDuplicated)="onListDuplicated($event)"
           (listDeleted)="onListDeleted($event)"
           (ticketCreated)="onTicketCreated($event)"
+          (listRenaming)="onListRenaming($event)"
         ></app-list>
         <div *cdkDragPlaceholder class="list-placeholder"></div>
       </div>

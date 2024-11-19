@@ -65,8 +65,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   showCreateListSubmenu: boolean = false;
 
   menuConfig!: MenuConfig;
-
-  isRenamingBoard: boolean = false;
+  isRenamingBoard : boolean = false;
+  listRenamingStatus: boolean = false;
   newBoardName: string = '';
   private routeSub!: Subscription;
   private ticketUpdateSub!: Subscription;
@@ -80,7 +80,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     private listService: ListService,
     private ticketService: TicketService,
     private ticketUpdateService: TicketUpdateService,
-    private overlayService: OverlayService
+    private overlayService: OverlayService,
   ) {}
 
   ngOnInit(): void {
@@ -256,6 +256,10 @@ export class BoardComponent implements OnInit, OnDestroy {
         });
       }
     }
+  }
+
+  onListRenaming(isRenamingList : boolean) : void {  
+    this.listRenamingStatus = isRenamingList
   }
 
   // Handler for list duplicated

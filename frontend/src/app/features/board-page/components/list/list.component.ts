@@ -82,6 +82,7 @@ export class ListComponent implements OnInit, OnChanges {
     id: string;
     name: string;
   }>();
+  @Output() listRenaming = new EventEmitter<boolean>()
 
   cdkDropListId!: string;
 
@@ -271,6 +272,7 @@ export class ListComponent implements OnInit, OnChanges {
   enableListRenaming(event: MouseEvent): void {
     event.stopPropagation();
     this.isRenamingList = true;
+    this.listRenaming.emit(this.isRenamingList)
     this.newListName = this.name;
     // Wait for the input to be rendered, then focus and select text
     setTimeout(() => {
@@ -295,6 +297,7 @@ export class ListComponent implements OnInit, OnChanges {
       this.newListName = this.name;
     }
     this.isRenamingList = false;
+    this.listRenaming.emit(this.isRenamingList)
   }
 
   onListNameKeydown(event: KeyboardEvent): void {
