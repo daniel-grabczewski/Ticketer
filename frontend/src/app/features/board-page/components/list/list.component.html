@@ -2,9 +2,9 @@
   <!-- List Header -->
   <div class="list-header">
     <ng-container *ngIf="!isRenamingList">
-      <h3 class="list-title" (click)="enableListRenaming($event)">
+      <span class="list-title" (click)="enableListRenaming($event)">
         {{ name }}
-      </h3>
+      </span>
     </ng-container>
     <ng-container *ngIf="isRenamingList">
       <input

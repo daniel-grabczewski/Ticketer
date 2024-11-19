@@ -1,5 +1,7 @@
   @import '../../../../assets/styles/main.scss';
 
+  $list-title-padding-left : 0.2rem;
+
   .list-container {
     background-color: $background;
     border-radius: $list-border-radius;
@@ -12,6 +14,10 @@
     position: relative; /* Added for positioning the menu */
   }
 
+  .list-container:hover {
+    cursor : pointer;
+  }
+
   .list-header {
     display: flex;
     align-items: center;
@@ -20,7 +26,7 @@
   }
 
   .list-title {
-    width : 100%;
+    width : min-content;
     font-size: 1.8rem;
     font-weight: bold;
     color: $secondary;
@@ -28,7 +34,7 @@
     margin: 0;
     flex-grow: 0;
     flex-shrink: 0;
-    padding-left : 2px;
+    padding-left : $list-title-padding-left;
   }
 
   .list-title-input {
@@ -38,9 +44,10 @@
     font-size: 1.8rem;
     font-weight: bold;
     color: $secondary; /* Change text color to black */
-    border: none; /* Blue border */
+    border: none;
+    border-color : none;
     border-radius: 0.5rem;
-    padding-left : 2px;
+    padding-left : $list-title-padding-left;
     box-sizing: border-box;
     background-color: $neutral-darker; /* White background */
   }
@@ -104,6 +111,7 @@
     border-radius: 4px;
     box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
       0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+      cursor: pointer;
   }
 
   .cdk-drag-animating {
@@ -113,4 +121,8 @@
   .ticket-list.cdk-drop-list-dragging
     .ticket-container:not(.cdk-drag-placeholder) {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  .drag-preview {
+    cursor: pointer; /* Custom cursor for the drag preview */
   }
