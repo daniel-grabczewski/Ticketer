@@ -4,15 +4,13 @@ $gap-between-lists : 1.5rem;
 
 .board-page-wrapper {
   position: relative;
-  width: min-content;
   height: 100%;
-  overflow-y: hidden; /* Hide any overflowing content */
-
-  /* Fix the background gradient */
+  overflow-y: hidden; 
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  scrollbar-color: rgb(182, 182, 182) rgb(0, 0, 0, 0.5);
 }
 
 .board-page-container {
