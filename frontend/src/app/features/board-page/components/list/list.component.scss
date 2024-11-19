@@ -10,7 +10,7 @@
     flex-direction: column;
     width: $list-width;
     max-width: $list-width;
-    max-height: 80vh; /* Set maximum height */
+    max-height: 75vh; /* Set maximum height */
     position: relative; /* Added for positioning the menu */
   }
 
@@ -83,6 +83,8 @@
     gap: 1rem;
     overflow-y: auto; /* Enable vertical scrolling */
     flex-grow: 1; /* Allow the ticket list to grow and fill available space */
+    scrollbar-width: thin;
+    scrollbar-color: $background-lighter $background;
   }
 
   .add-ticket-section {
@@ -108,7 +110,7 @@
   }
 
   .ticket-placeholder {
-    height: 113.58px; /* Match the height of the ticket */
+    min-height: 113.58px; /* Match the height of the ticket */
     background-color: $background-lighter;
     border-radius: $ticket-border-radius;
   }
