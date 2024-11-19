@@ -33,7 +33,7 @@ cdkDropListOrientation="horizontal">
   </div>
 
   <!-- List -->
-      <div *ngFor="let list of boardDetails.lists; let i = index" cdkDrag>
+      <div *ngFor="let list of boardDetails.lists; let i = index" cdkDrag cdkDragPreviewClass="list-drag-preview" >
         <app-list
           [id]="list.id"
           [name]="list.name"

@@ -100,3 +100,8 @@
   max-width : $total-list-width;
   border : none;
 }
+
+.list-drag-preview {
+  pointer-events: auto !important; /* Re-enable pointer events */
+  cursor: pointer; /* Ensure pointer cursor */
+}
