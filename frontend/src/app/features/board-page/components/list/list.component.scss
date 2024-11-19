@@ -103,8 +103,8 @@
     text-align: center;
     color: $neutral-darker;
     background-color: $neutral-lighter;
-    border: 2px dashed $neutral-darker;
-    border-radius: 4px;
+    border-radius: $ticket-border-radius;
+    font-size: 1.2rem;
   }
 
   .ticket-placeholder {
