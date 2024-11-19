@@ -26,15 +26,18 @@
   }
 
   .list-title {
-    width : min-content;
+    width: 100%; /* Allow it to fill the available space in the container */
+    max-width: 100%; /* Prevent it from exceeding the container's width */
     font-size: 1.8rem;
     font-weight: bold;
     color: $secondary;
     cursor: pointer;
     margin: 0;
-    flex-grow: 0;
-    flex-shrink: 0;
-    padding-left : $list-title-padding-left;
+    padding-left: $list-title-padding-left;
+    overflow-wrap: break-word; /* Ensure long words or strings break within the container */
+    word-wrap: break-word; /* Legacy support */
+    word-break: break-word; /* Support for older browsers */
+    white-space: normal; /* Allow normal text wrapping */
   }
 
   .list-title-input {
@@ -58,8 +61,13 @@
     border: none;
     font-size: 24px;
     cursor: pointer;
-    color: white;
+    color: $neutral-lighter;
     flex-shrink: 0;
+    font-size : 2.5rem;
+    padding-left : 0.5rem;
+    padding-right : 0.5rem;
+    margin-right : -0.5rem;
+    margin-bottom : 0.2rem;
   }
 
   .menu-wrapper {
