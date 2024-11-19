@@ -42,6 +42,7 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { TicketUpdateService } from '../../../core/services/ticket-update.service';
 import { TicketInput } from '../../../shared/models/uniqueComponentInputOutput.model';
+import { PlusButtonComponent } from '../../../shared/components/plus-button/plus-button.component';
 
 @Component({
   selector: 'app-board',
@@ -55,6 +56,7 @@ import { TicketInput } from '../../../shared/models/uniqueComponentInputOutput.m
     ListComponent,
     CreateBoardItemSubmenuComponent,
     RouterModule,
+    PlusButtonComponent
   ],
 })
 export class BoardComponent implements OnInit, OnDestroy {
@@ -70,6 +72,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   newBoardName: string = '';
   private routeSub!: Subscription;
   private ticketUpdateSub!: Subscription;
+  plusButtonHoverColor : string = 'var(--secondary)'
+  plusButtonColor : string = 'var(--secondary-darker)'
 
   boardNameSlug: string | null = null;
 
