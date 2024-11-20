@@ -1,4 +1,7 @@
-<button class="icon-button" [style.--color]="color" [style.--hover-color]="hoverColor">
+<button class="icon-button" [style.--color]="color" [style.--hover-color]="hoverColor"
+[style.width]="isFullWidth ? '100%' : null"
+[style.height]="height !== '' ? height : null"
+>
   <div class="content-wrapper">
     <svg
       [attr.width]="scale * 24"
