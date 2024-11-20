@@ -88,7 +88,8 @@
   }
 
   .add-ticket-section {
-    margin-top: 1.3rem;
+    margin-top: 1rem;
+    margin-bottom : -0.5rem;
   }
 
   .plus-button-wrapper {
@@ -97,7 +98,7 @@
     transition: background-color 0.2s;
 
     &:hover {
-      background-color : rgba($color: #ffffff, $alpha: 0.3)
+      background-color : rgba($color: #ffffff, $alpha: 0.15)
     }
   }
 
