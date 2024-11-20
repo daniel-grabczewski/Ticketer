@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ActivatedRoute,
@@ -109,12 +109,65 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.stopScrolling();
     if (this.routeSub) {
       this.routeSub.unsubscribe();
     }
     if (this.ticketUpdateSub) {
       this.ticketUpdateSub.unsubscribe();
     }
+  }
+
+  @ViewChild('scrollableBoard', { static: true }) scrollableBoard!: ElementRef;
+
+  private scrollSpeed = 22; // Pixels per frame
+  private scrollFrame: any; // For canceling requestAnimationFrame
+
+  // Listener for mouse movement
+  @HostListener('document:mousemove', ['$event'])
+  handleMouseMove(event: MouseEvent): void {
+    console.log('Mouse move')
+    const threshold = 50; // Distance from the edge to trigger scrolling
+    const rect = this.scrollableBoard.nativeElement.getBoundingClientRect();
+
+    // Check if the cursor is within the threshold near the left edge
+    if (event.clientX - rect.left < threshold) {
+      this.startScrolling(-this.scrollSpeed); // Scroll left
+    }
+    // Check if the cursor is within the threshold near the right edge
+    else if (rect.right - event.clientX < threshold) {
+      this.startScrolling(this.scrollSpeed); // Scroll right
+    } else {
+      this.stopScrolling(); // Stop scrolling when the cursor is not near an edge
+    }
+  }
+
+  private startScrolling(speed: number): void {
+    if (this.scrollFrame) return; // Prevent multiple frames
+    this.scrollFrame = requestAnimationFrame(() => this.smoothScroll(speed));
+  }
+
+  private stopScrolling(): void {
+    if (this.scrollFrame) {
+      cancelAnimationFrame(this.scrollFrame);
+      this.scrollFrame = null;
+    }
+  }
+
+  private smoothScroll(speed: number): void {
+    const element = this.scrollableBoard.nativeElement;
+
+    // Adjust the scrollLeft value
+    element.scrollLeft += speed;
+
+    // Ensure scrolling stays within bounds
+    const maxScrollLeft = element.scrollWidth - element.clientWidth;
+    if (element.scrollLeft <= 0 || element.scrollLeft >= maxScrollLeft) {
+      this.stopScrolling();
+      return;
+    }
+
+    this.scrollFrame = requestAnimationFrame(() => this.smoothScroll(speed));
   }
 
   private handleTicketUpdate(updatedTicket: TicketInput): void {

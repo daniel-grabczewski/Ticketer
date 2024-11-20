@@ -1,4 +1,4 @@
-<div class="board-page-wrapper" [ngStyle]="getBackgroundStyle()">
+<div #scrollableBoard class="board-page-wrapper" [ngStyle]="getBackgroundStyle()">
 <div class="board-page-container" cdkDropListGroup *ngIf="boardDetails" cdkDropList
 (cdkDropListDropped)="onListDrop($event)"
 [cdkDropListDisabled]="listRenamingStatus"
@@ -34,7 +34,7 @@ cdkDropListOrientation="horizontal">
   </div>
 
   <!-- List -->
-      <div *ngFor="let list of boardDetails.lists; let i = index" cdkDrag cdkDragPreviewClass="list-drag-preview" class = "board-list-container" [cdkDragDisabled]="isListDraggingDisabled" >
+      <div *ngFor="let list of boardDetails.lists; let i = index" cdkDrag  cdkDragPreviewClass="list-drag-preview" class = "board-list-container" [cdkDragDisabled] ="isListDraggingDisabled" >
         <app-list
           [id]="list.id"
           [name]="list.name"
