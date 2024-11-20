@@ -41,15 +41,6 @@
   justify-content: flex-end;
 
   button {
-    padding: 8px 16px;
-    background-color: $error;
-    color: $secondary;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: $error-darker;
-    }
+    @include button($error, $error-darker)
   }
 }

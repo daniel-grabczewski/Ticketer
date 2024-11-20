@@ -18,8 +18,11 @@
 
   <!-- Action button -->
   <div class="action-button-group">
-    <button (click)="onActionClicked()">
-      {{ buttonText }}
-    </button>
+    <button 
+    (click)="onActionClicked()" 
+    [disabled]="textInputValue.trim().length === 0"
+    >
+    {{ buttonText }}
+  </button>
   </div>
 </div>

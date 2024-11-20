@@ -34,7 +34,7 @@
   gap : 0.45rem;
 
   button {
-    @include button($primary, $primary-darker);
+    @include button();
   }
 
   .x-button {
