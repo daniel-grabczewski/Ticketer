@@ -20,7 +20,7 @@
   height: 50px;
   border-radius: 0.7em;
   cursor: pointer;
-  transition: border 0.2s ease;
+  transition: border $button-transition-time ease;
   background-size: cover;
   background-position: center;
 

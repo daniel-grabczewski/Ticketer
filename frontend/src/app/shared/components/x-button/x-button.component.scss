@@ -14,7 +14,7 @@
 
   .svg-line {
     stroke: var(--color, var(--neutral-darker));
-    transition: stroke 0.4s;
+    transition: stroke $button-transition-time;
   }
 
   &:hover .svg-line {

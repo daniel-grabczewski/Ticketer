@@ -95,7 +95,7 @@
   .plus-button-wrapper {
     border-radius : 0.75rem;
     padding-left : 0.5rem;
-    transition: background-color 0.2s;
+    transition: background-color $button-transition-time ease;
 
     &:hover {
       background-color : rgba($color: #ffffff, $alpha: 0.15)

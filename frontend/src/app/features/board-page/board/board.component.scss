@@ -95,7 +95,7 @@ $gap-between-lists : 1.5rem;
   margin-left : -$list-horizontal-padding;
   margin-right : -$list-horizontal-padding;
   margin-top : -1rem;
-  transition: background-color 0.2s ease;
+  transition: background-color $button-transition-time ease;
   &:hover {
     cursor : pointer;
     background-color : rgba($color: #ffffff, $alpha: 0.3);;

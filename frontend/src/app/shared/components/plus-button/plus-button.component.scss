@@ -27,7 +27,7 @@
 
   .svg-line {
     stroke: var(--color);
-    transition: stroke 0.2s;
+    transition: stroke $button-transition-time;
   }
 
   .label-text {
@@ -35,7 +35,7 @@
     margin-left: 0.25rem; 
     font-size: 1.2rem; 
     color: inherit;
-    transition: color 0.2s;
+    transition: color $button-transition-time;
   }
 
   &:hover {
