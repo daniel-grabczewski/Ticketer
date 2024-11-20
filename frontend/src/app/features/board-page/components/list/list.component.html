@@ -74,6 +74,7 @@
         [buttonText]="'Add ticket'"
         (menuAction)="onCreateTicketSubmenuAction($event)"
         (close)="onCreateTicketSubmenuClose()"
+        (isHoldingCreateBoardItemSubmenu)="onIsHoldingCreateBoardItemSubmenu($event)"
       ></app-create-board-item-submenu>
     </ng-container>
   </div>

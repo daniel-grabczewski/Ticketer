@@ -50,7 +50,7 @@ import { PlusButtonComponent } from '../../../../shared/components/plus-button/p
     DragDropModule,
     TicketComponent,
     CreateBoardItemSubmenuComponent,
-    PlusButtonComponent
+    PlusButtonComponent,
   ],
 })
 export class ListComponent implements OnInit, OnChanges {
@@ -84,10 +84,11 @@ export class ListComponent implements OnInit, OnChanges {
     id: string;
     name: string;
   }>();
-  @Output() listRenaming = new EventEmitter<boolean>()
+  @Output() listRenaming = new EventEmitter<boolean>();
+  @Output() isHoldingCreateBoardItemSubmenu = new EventEmitter<boolean>();
 
-  plusButtonHoverColor : string = 'var(--secondary-darker)'
-  plusButtonColor : string = 'var(--neutral-lighter)'
+  plusButtonHoverColor: string = 'var(--secondary-darker)';
+  plusButtonColor: string = 'var(--neutral-lighter)';
 
   cdkDropListId!: string;
 
@@ -255,7 +256,9 @@ export class ListComponent implements OnInit, OnChanges {
   onDragStarted(event: CdkDragStart): void {
     this.isDragging = true;
     const element = event.source.element.nativeElement as HTMLElement;
-    const ticketElement = element.querySelector('.ticket-container') as HTMLElement;
+    const ticketElement = element.querySelector(
+      '.ticket-container'
+    ) as HTMLElement;
     if (ticketElement) {
       this.draggedTicketHeight = ticketElement.offsetHeight;
       console.log(this.draggedTicketHeight);
@@ -264,20 +267,19 @@ export class ListComponent implements OnInit, OnChanges {
     }
     this.cdr.detectChanges(); // Notify Angular of the change
   }
-  
-  
-    onDragEnded(): void {
-      setTimeout(() => {
-        this.isDragging = false;
-        this.draggedTicketHeight = 0; // Reset the height
-      }, 0);
-    }
+
+  onDragEnded(): void {
+    setTimeout(() => {
+      this.isDragging = false;
+      this.draggedTicketHeight = 0; // Reset the height
+    }, 0);
+  }
 
   // Methods for renaming the list title
   enableListRenaming(event: MouseEvent): void {
     event.stopPropagation();
     this.isRenamingList = true;
-    this.listRenaming.emit(this.isRenamingList)
+    this.listRenaming.emit(this.isRenamingList);
     this.newListName = this.name;
     // Wait for the input to be rendered, then focus and select text
     setTimeout(() => {
@@ -302,7 +304,7 @@ export class ListComponent implements OnInit, OnChanges {
       this.newListName = this.name;
     }
     this.isRenamingList = false;
-    this.listRenaming.emit(this.isRenamingList)
+    this.listRenaming.emit(this.isRenamingList);
   }
 
   onListNameKeydown(event: KeyboardEvent): void {
@@ -376,6 +378,10 @@ export class ListComponent implements OnInit, OnChanges {
 
   onCreateTicketSubmenuClose(): void {
     this.showCreateTicketSubmenu = false;
+  }
+
+  onIsHoldingCreateBoardItemSubmenu(isHolding: boolean): void {
+    this.isHoldingCreateBoardItemSubmenu.emit(isHolding);
   }
 
   // Handle click outside to save the list name

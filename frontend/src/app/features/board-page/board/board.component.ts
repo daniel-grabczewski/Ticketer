@@ -56,7 +56,7 @@ import { PlusButtonComponent } from '../../../shared/components/plus-button/plus
     ListComponent,
     CreateBoardItemSubmenuComponent,
     RouterModule,
-    PlusButtonComponent
+    PlusButtonComponent,
   ],
 })
 export class BoardComponent implements OnInit, OnDestroy {
@@ -67,14 +67,17 @@ export class BoardComponent implements OnInit, OnDestroy {
   showCreateListSubmenu: boolean = false;
 
   menuConfig!: MenuConfig;
-  isRenamingBoard : boolean = false;
+  isRenamingBoard: boolean = false;
   listRenamingStatus: boolean = false;
   newBoardName: string = '';
   private routeSub!: Subscription;
   private ticketUpdateSub!: Subscription;
-  plusButtonHoverColor : string = 'var(--secondary)'
-  plusButtonColor : string = 'var(--secondary-darker)'
-  backgroundColor : string = 'var(--background)'
+  plusButtonHoverColor: string = 'var(--secondary)';
+  plusButtonColor: string = 'var(--secondary-darker)';
+  backgroundColor: string = 'var(--background)';
+
+  // Boolean to keep track of whether dragging list should be disabled
+  isListDraggingDisabled: boolean = false;
 
   boardNameSlug: string | null = null;
 
@@ -85,7 +88,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     private listService: ListService,
     private ticketService: TicketService,
     private ticketUpdateService: TicketUpdateService,
-    private overlayService: OverlayService,
+    private overlayService: OverlayService
   ) {}
 
   ngOnInit(): void {
@@ -187,6 +190,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     };
   }
 
+  onHoldingCreateBoardItemSubmenu(isHolding: boolean): void {
+    this.isListDraggingDisabled = isHolding;
+  }
+
   // Event handler for dragging lists
   onListDrop(event: CdkDragDrop<any[]>): void {
     if (this.boardDetails && this.boardDetails.lists) {
@@ -263,8 +270,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
   }
 
-  onListRenaming(isRenamingList : boolean) : void {  
-    this.listRenamingStatus = isRenamingList
+  onListRenaming(isRenamingList: boolean): void {
+    this.listRenamingStatus = isRenamingList;
   }
 
   // Handler for list duplicated

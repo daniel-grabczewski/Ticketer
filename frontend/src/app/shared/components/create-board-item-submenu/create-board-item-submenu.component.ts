@@ -32,6 +32,7 @@ export class CreateBoardItemSubmenuComponent {
   // Outputs
   @Output() menuAction = new EventEmitter<CreateBoardItemSubmenuOutput>();
   @Output() close = new EventEmitter<void>();
+  @Output() isHoldingCreateBoardItemSubmenu = new EventEmitter<boolean>();
 
   private justOpened: boolean = false;
   xScale = X_SCALE_VALUE;
@@ -39,6 +40,7 @@ export class CreateBoardItemSubmenuComponent {
   textInputValue: string = '';
   xColor: string = 'var(--neutral-lighter)';
   xHoverColor: string = 'var(--error)';
+  private holding = false;
 
   // Account for this component detecting initial click from parent as an outside click, closing this menu immediately upon opening with the @HostListener
   ngOnInit() {
@@ -68,7 +70,25 @@ export class CreateBoardItemSubmenuComponent {
     }
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.close.emit();
-    } 
+    }
+  }
+
+  @HostListener('mousedown')
+  onMouseDown(): void {
+    this.holding = true;
+    this.isHoldingCreateBoardItemSubmenu.emit(this.holding);
+  }
+
+  @HostListener('mouseup')
+  onMouseUp(): void {
+    this.holding = false;
+    this.isHoldingCreateBoardItemSubmenu.emit(this.holding);
+  }
+
+  @HostListener('mouseleave')
+  onMouseLeave(): void {
+    this.holding = false;
+    this.isHoldingCreateBoardItemSubmenu.emit(this.holding);
   }
 
   // Handle close button click
