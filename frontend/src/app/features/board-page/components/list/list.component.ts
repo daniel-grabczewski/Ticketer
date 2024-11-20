@@ -37,6 +37,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { CreateBoardItemSubmenuComponent } from '../../../../shared/components/create-board-item-submenu/create-board-item-submenu.component';
 import { Router } from '@angular/router';
 import { SubmenuInputTransfer } from '../../../../shared/models/menu.model';
+import { PlusButtonComponent } from '../../../../shared/components/plus-button/plus-button.component';
 
 @Component({
   selector: 'app-list',
@@ -49,6 +50,7 @@ import { SubmenuInputTransfer } from '../../../../shared/models/menu.model';
     DragDropModule,
     TicketComponent,
     CreateBoardItemSubmenuComponent,
+    PlusButtonComponent
   ],
 })
 export class ListComponent implements OnInit, OnChanges {
@@ -83,6 +85,9 @@ export class ListComponent implements OnInit, OnChanges {
     name: string;
   }>();
   @Output() listRenaming = new EventEmitter<boolean>()
+
+  plusButtonHoverColor : string = 'var(--secondary-darker)'
+  plusButtonColor : string = 'var(--neutral-lighter)'
 
   cdkDropListId!: string;
 

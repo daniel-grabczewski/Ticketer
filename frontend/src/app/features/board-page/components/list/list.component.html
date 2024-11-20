@@ -66,9 +66,7 @@
   <!-- Add Ticket Section -->
   <div class="add-ticket-section">
     <ng-container *ngIf="!showCreateTicketSubmenu">
-      <button class="add-ticket" (click)="onAddTicketButtonClick()">
-        + Add a ticket
-      </button>
+      <app-plus-button label="Add a ticket" [color]="plusButtonColor" [hoverColor]="plusButtonHoverColor" (click)="onAddTicketButtonClick()"></app-plus-button>
     </ng-container>
     <ng-container *ngIf="showCreateTicketSubmenu">
       <app-create-board-item-submenu
