@@ -1,4 +1,11 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  HostListener,
+  ElementRef,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {
@@ -20,15 +27,24 @@ export class CreateBoardItemSubmenuComponent {
   @Input() placeholder: string = '';
   @Input() buttonText: string = '';
 
+  constructor(private elementRef: ElementRef) {}
+
   // Outputs
   @Output() menuAction = new EventEmitter<CreateBoardItemSubmenuOutput>();
   @Output() close = new EventEmitter<void>();
 
+  private justOpened: boolean = false;
   xScale = X_SCALE_VALUE;
   // Component State
   textInputValue: string = '';
   xColor: string = 'var(--neutral-lighter)';
   xHoverColor: string = 'var(--error)';
+
+  // Account for this component detecting initial click from parent as an outside click, closing this menu immediately upon opening with the @HostListener
+  ngOnInit() {
+    this.justOpened = true;
+    setTimeout(() => (this.justOpened = false), 0);
+  }
 
   // Handle action button click
   onActionClicked() {
@@ -42,6 +58,17 @@ export class CreateBoardItemSubmenuComponent {
       // Close the submenu
       this.close.emit();
     }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    // Make sure the component doesn't close on initial opening click
+    if (this.justOpened) {
+      return;
+    }
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.close.emit();
+    } 
   }
 
   // Handle close button click
