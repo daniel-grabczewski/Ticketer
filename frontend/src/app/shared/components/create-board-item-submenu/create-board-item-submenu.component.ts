@@ -27,15 +27,21 @@ export class CreateBoardItemSubmenuComponent {
   xScale = X_SCALE_VALUE;
   // Component State
   textInputValue: string = '';
-  xColor : string = 'var(--neutral-lighter)'
-  xHoverColor : string = 'var(--error)'
+  xColor: string = 'var(--neutral-lighter)';
+  xHoverColor: string = 'var(--error)';
 
   // Handle action button click
   onActionClicked() {
     // Emit the menu action with the specified structure
-    this.menuAction.emit({ text: this.textInputValue });
-    // Close the submenu
-    this.close.emit();
+
+    // If ticket name is empty, do not emit value
+    if (this.textInputValue === '') {
+      this.close.emit();
+    } else {
+      this.menuAction.emit({ text: this.textInputValue });
+      // Close the submenu
+      this.close.emit();
+    }
   }
 
   // Handle close button click
