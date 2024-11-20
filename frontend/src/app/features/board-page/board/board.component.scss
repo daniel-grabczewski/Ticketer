@@ -90,7 +90,6 @@ $gap-between-lists : 1.5rem;
   box-sizing:border-box;
   background-color: rgba($color: #ffffff, $alpha: 0.22);
   border-radius: $list-border-radius;
-  height : 4.8rem;
   display: flex;
   flex-direction: column;
   margin-left : -$list-horizontal-padding;
@@ -99,7 +98,7 @@ $gap-between-lists : 1.5rem;
   transition: background-color 0.2s ease;
   &:hover {
     cursor : pointer;
-    background-color : rgba($color: #ffffff, $alpha: 0.25);;
+    background-color : rgba($color: #ffffff, $alpha: 0.3);;
 }
 }
 

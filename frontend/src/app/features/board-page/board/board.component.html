@@ -58,7 +58,7 @@ cdkDropListOrientation="horizontal">
       <!-- Add List Section -->
        <div class="add-list-section-wrapper" [ngStyle]="{'background' : (showCreateListSubmenu) ? 'var(--background)' : 'transparent'}">
       <div *ngIf="!showCreateListSubmenu" class="add-list-section" (click)="onAddListButtonClick()">
-          <app-plus-button label="Add another list" [color]="plusButtonColor" [hoverColor]="plusButtonHoverColor" (click)="onAddListButtonClick()"></app-plus-button>
+          <app-plus-button label="Add another list" [color]="plusButtonColor" [hoverColor]="plusButtonHoverColor" [isFullWidth] = "true" height = "4.8rem" (click)="onAddListButtonClick()" ></app-plus-button>
         </div>
         <ng-container *ngIf="showCreateListSubmenu">
           <app-create-board-item-submenu
