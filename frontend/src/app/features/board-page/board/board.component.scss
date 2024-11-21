@@ -50,21 +50,24 @@ $gap-between-lists: 1.5rem;
   justify-content: space-between;
 }
 
-.board-name {
-  h1 {
-    color: $secondary;
-    cursor: pointer;
-    font-size: 3rem;
-  }
+@mixin board-name-template($width:min-content, $border-color: transparent, $background-color:transparent) {
+  font-size : 3rem;
+  font-weight : bold;
+  width : $width;
+  color : $secondary;
+  border-radius: $text-input-border-radius;
+  box-sizing: border-box;
+  border : 0.2rem solid $border-color;
+  padding : 0.35rem;
+  background-color : $background-color;
+}
 
-  input[type='text'] {
-    font-size: 1.5rem;
-    font-weight: bold;
-    border: none;
-    outline: none;
-    background: transparent;
-    color: $secondary;
-  }
+.board-name {
+  @include board-name-template(max-content,)
+}
+
+.board-name-input {
+  @include board-name-template(max-content, $secondary, $neutral-darker);
 }
 
 .menu-button {

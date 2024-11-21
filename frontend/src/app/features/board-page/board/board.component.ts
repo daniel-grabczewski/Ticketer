@@ -53,6 +53,7 @@ import { TicketInput } from '../../../shared/models/uniqueComponentInputOutput.m
 import { PlusButtonComponent } from '../../../shared/components/plus-button/plus-button.component';
 import { CdkScrollable, CdkScrollableModule } from '@angular/cdk/scrolling';
 import { DragStateService } from '../../../core/services/drag-state.service';
+import { UtilsService } from '../../../shared/utils/utils.service';
 
 @Component({
   selector: 'app-board',
@@ -100,7 +101,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     private ticketService: TicketService,
     private ticketUpdateService: TicketUpdateService,
     private overlayService: OverlayService,
-    private dragStateService: DragStateService
+    private dragStateService: DragStateService,
+    private utilsService: UtilsService
   ) {}
 
   // ViewChild to get the ElementRef of the scrollable container
@@ -144,6 +146,12 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onDragEnded() {
     this.dragStateService.setIsDragging(false);
+  }
+
+  onBoardNameKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.saveBoardName();
+    }
   }
 
   private scrollSpeed = 22; // Pixels per frame
@@ -586,10 +594,21 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   saveBoardName(): void {
     if (this.newBoardName.trim() !== '') {
-      this.updateBoard({
-        name: this.newBoardName.trim(),
-        colorId: this.boardDetails!.colorId,
-      });
+      if (this.newBoardName.trim() !== this.boardDetails?.name) {
+        this.updateBoard({
+          name: this.utilsService.cleanStringWhiteSpace(this.newBoardName),
+          colorId: this.boardDetails!.colorId,
+        });
+        this.boardDetails!.name = this.utilsService.cleanStringWhiteSpace(
+          this.newBoardName
+        );
+      } else {
+        // Revert to previous name
+        this.newBoardName = this.utilsService.cleanStringWhiteSpace(
+          this.newBoardName
+        );
+      }
+      this.isRenamingBoard = false;
     }
     this.isRenamingBoard = false;
   }

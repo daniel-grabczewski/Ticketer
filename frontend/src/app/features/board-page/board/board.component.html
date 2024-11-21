@@ -9,22 +9,22 @@
     <div class="board-header">
       <div class="board-header-inner-container">
         <!-- Board Name -->
-        <div class="board-name">
           <ng-container *ngIf="!isRenamingBoard">
-            <h1 (click)="enableBoardRenaming($event)">
+            <span class="board-name" (click)="enableBoardRenaming($event)">
               {{ boardDetails?.name }}
-            </h1>
+            </span>
           </ng-container>
           <ng-container *ngIf="isRenamingBoard">
             <input
               id="board-name-input"
+              class="board-name-input"
               type="text"
               [(ngModel)]="newBoardName"
               (blur)="saveBoardName()"
+              (keydown)="onBoardNameKeydown($event)"
               (click)="$event.stopPropagation()"
             />
           </ng-container>
-        </div>
         <!-- Menu Button -->
         <button
           id="board-menu-button"
