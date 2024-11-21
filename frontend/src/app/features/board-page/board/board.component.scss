@@ -50,29 +50,31 @@ $gap-between-lists: 1.5rem;
   justify-content: space-between;
 }
 
-@mixin board-name-template($width:min-content, $border-color: transparent, $background-color:transparent) {
+@mixin board-name-template($max-width : '150rem', $border-color: transparent, $background-color:transparent ) {
   font-size : 3rem;
   font-weight : bold;
-  width : $width;
   color : $secondary;
   border-radius: $text-input-border-radius;
   box-sizing: border-box;
   border : 0.2rem solid $border-color;
   padding : 0.35rem;
+  overflow: hidden; // Hide overflowing text
   background-color : $background-color;
+  white-space: nowrap; // Prevent text from wrapping
+  max-width : $max-width
 }
 
 .board-name {
-  @include board-name-template(max-content,)
+  @include board-name-template(150rem);
+  text-overflow: ellipsis; // Display '...'
 }
 
 .board-name-input {
-  @include board-name-template(max-content, $secondary, $neutral-darker);
+  @include board-name-template( 150rem, $secondary, $neutral-darker);
   outline: none; // Remove the outline when focused
-  display: inline-block; // Ensure it behaves like a span
-  min-width: 5rem; // Prevent collapsing when empty
-  user-select: text; // Ensure text can be selected
-  white-space: pre-wrap; // Preserve spaces and line breaks
+  display: inline-block;
+  min-width: 5rem;
+  user-select: text;
 }
 
 .menu-button {

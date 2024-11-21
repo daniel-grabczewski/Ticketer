@@ -160,8 +160,51 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onBoardNameInput(): void {
+    // Remove any newline characters to prevent new lines
+    let content = this.boardNameSpan.nativeElement.textContent;
+    content = content.replace(/[\r\n]+/g, '');
+    this.boardNameSpan.nativeElement.textContent = content;
+
     // Update newBoardName with the current content
-    this.newBoardName = this.boardNameSpan.nativeElement.textContent;
+    this.newBoardName = content;
+
+    // Scroll to the end to show the latest characters
+    this.boardNameSpan.nativeElement.scrollLeft =
+      this.boardNameSpan.nativeElement.scrollWidth;
+  }
+
+  onBoardNamePaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const clipboardData = event.clipboardData;
+    if (clipboardData) {
+      let text = clipboardData.getData('text/plain');
+      // Remove any newline characters
+      const sanitizedText = text.replace(/[\r\n]+/g, '');
+      // Insert the sanitized text at the cursor position
+      this.insertTextAtCursor(sanitizedText);
+    }
+  }
+
+  insertTextAtCursor(text: string): void {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) {
+      return;
+    }
+    const range = selection.getRangeAt(0);
+    range.deleteContents();
+
+    const textNode = document.createTextNode(text);
+    range.insertNode(textNode);
+
+    // Move the caret after the inserted text node
+    range.setStartAfter(textNode);
+    range.collapse(true);
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    // Update the newBoardName with the inserted text
+    this.onBoardNameInput();
   }
 
   private scrollSpeed = 22; // Pixels per frame
