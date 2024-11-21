@@ -126,14 +126,6 @@
       cursor: pointer;
   }
 
-  .cdk-drag-animating {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-  }
-
-  .ticket-list.cdk-drop-list-dragging
-    .ticket-container:not(.cdk-drag-placeholder) {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-  }
 
   .drag-preview {
     cursor: pointer; /* Custom cursor for the drag preview */
