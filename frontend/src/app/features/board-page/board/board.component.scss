@@ -21,7 +21,7 @@ $gap-between-lists: 1.5rem;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  padding-top: 12.5rem;
+  padding-top: 14.5rem;
   background: none;
   padding-right : 1rem;
 }
@@ -78,17 +78,7 @@ $gap-between-lists: 1.5rem;
 }
 
 .menu-button {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: $secondary;
-  cursor: pointer;
-}
-
-.menu-wrapper {
-  top: 50px;
-  left: 16px;
-  z-index: 1000;
+ margin-top : 1.5rem;
 }
 
 .add-list-section-wrapper {

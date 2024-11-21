@@ -31,13 +31,7 @@
           </div>
         </ng-container>
         <!-- Menu Button -->
-        <button
-          id="board-menu-button"
-          class="menu-button"
-          (click)="openMenuOverlay($event)"
-        >
-          ⋮ menu
-        </button>
+        <app-cog-button id="board-menu-button" class="menu-button" (click)="openMenuOverlay($event)" [scale] = "3" color="rgba(0, 0, 0, 0.35)" hoverColor="rgba(0, 0, 0, 0.55)"></app-cog-button>
       </div>
     </div>
 

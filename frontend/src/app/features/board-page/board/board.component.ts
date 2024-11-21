@@ -54,6 +54,7 @@ import { PlusButtonComponent } from '../../../shared/components/plus-button/plus
 import { CdkScrollable, CdkScrollableModule } from '@angular/cdk/scrolling';
 import { DragStateService } from '../../../core/services/drag-state.service';
 import { UtilsService } from '../../../shared/utils/utils.service';
+import { CogButtonComponent } from '../../../shared/components/cog-button/cog-button.component';
 
 @Component({
   selector: 'app-board',
@@ -69,6 +70,7 @@ import { UtilsService } from '../../../shared/utils/utils.service';
     RouterModule,
     PlusButtonComponent,
     CdkScrollableModule,
+    CogButtonComponent,
   ],
 })
 export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
