@@ -1,4 +1,12 @@
-import { Component, OnInit, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  HostListener,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ActivatedRoute,
@@ -43,6 +51,7 @@ import { Subscription } from 'rxjs';
 import { TicketUpdateService } from '../../../core/services/ticket-update.service';
 import { TicketInput } from '../../../shared/models/uniqueComponentInputOutput.model';
 import { PlusButtonComponent } from '../../../shared/components/plus-button/plus-button.component';
+import { CdkScrollable, CdkScrollableModule } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-board',
@@ -57,9 +66,10 @@ import { PlusButtonComponent } from '../../../shared/components/plus-button/plus
     CreateBoardItemSubmenuComponent,
     RouterModule,
     PlusButtonComponent,
+    CdkScrollableModule,
   ],
 })
-export class BoardComponent implements OnInit, OnDestroy {
+export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   boardDetails: GetBoardFullDetailsResponse | null = null;
   colorMap: { [key: number]: string } = {};
   listIds: string[] = []; // List of all cdkDropListIds
@@ -91,6 +101,15 @@ export class BoardComponent implements OnInit, OnDestroy {
     private overlayService: OverlayService
   ) {}
 
+
+  // ViewChild to get the ElementRef of the scrollable container
+  @ViewChild('scrollableBoard', { static: true })
+  scrollableBoardElementRef!: ElementRef;
+
+  ngAfterViewInit(): void {
+    // After the view is initialized, we can set up any necessary references
+  }
+
   ngOnInit(): void {
     this.routeSub = this.route.paramMap.subscribe((params: ParamMap) => {
       const boardId = params.get('boardId');
@@ -118,17 +137,15 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
   }
 
-  @ViewChild('scrollableBoard', { static: true }) scrollableBoard!: ElementRef;
-
   private scrollSpeed = 22; // Pixels per frame
   private scrollFrame: any; // For canceling requestAnimationFrame
 
   // Listener for mouse movement
-  @HostListener('document:mousemove', ['$event'])
+  @HostListener('window:mousemove', ['$event'])
   handleMouseMove(event: MouseEvent): void {
-    console.log('Mouse move')
     const threshold = 50; // Distance from the edge to trigger scrolling
-    const rect = this.scrollableBoard.nativeElement.getBoundingClientRect();
+    const rect =
+      this.scrollableBoardElementRef.nativeElement.getBoundingClientRect();
 
     // Check if the cursor is within the threshold near the left edge
     if (event.clientX - rect.left < threshold) {
@@ -155,7 +172,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private smoothScroll(speed: number): void {
-    const element = this.scrollableBoard.nativeElement;
+    const element = this.scrollableBoardElementRef.nativeElement;
 
     // Adjust the scrollLeft value
     element.scrollLeft += speed;

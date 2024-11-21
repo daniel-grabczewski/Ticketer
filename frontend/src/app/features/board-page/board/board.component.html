@@ -1,40 +1,57 @@
-<div #scrollableBoard class="board-page-wrapper" [ngStyle]="getBackgroundStyle()">
-<div class="board-page-container" cdkDropListGroup *ngIf="boardDetails" cdkDropList
-(cdkDropListDropped)="onListDrop($event)"
-[cdkDropListDisabled]="listRenamingStatus"
-[cdkDropListData]="boardDetails.lists"
-cdkDropListOrientation="horizontal">
-  <!-- Board Header -->
-  <div class="board-header">
-    <div class="board-header-inner-container">
-      <!-- Board Name -->
-      <div class="board-name">
-        <ng-container *ngIf="!isRenamingBoard">
-          <h1 (click)="enableBoardRenaming($event)">{{ boardDetails?.name }}</h1>
-        </ng-container>
-        <ng-container *ngIf="isRenamingBoard">
-          <input
-            id="board-name-input"
-            type="text"
-            [(ngModel)]="newBoardName"
-            (blur)="saveBoardName()"
-            (click)="$event.stopPropagation()"
-          />
-        </ng-container>
+<div
+  #scrollableBoard
+  class="board-page-wrapper"
+  [ngStyle]="getBackgroundStyle()"
+  cdkScrollable
+>
+  <div class="board-page-container" *ngIf="boardDetails">
+    <!-- Board Header -->
+    <div class="board-header">
+      <div class="board-header-inner-container">
+        <!-- Board Name -->
+        <div class="board-name">
+          <ng-container *ngIf="!isRenamingBoard">
+            <h1 (click)="enableBoardRenaming($event)">
+              {{ boardDetails?.name }}
+            </h1>
+          </ng-container>
+          <ng-container *ngIf="isRenamingBoard">
+            <input
+              id="board-name-input"
+              type="text"
+              [(ngModel)]="newBoardName"
+              (blur)="saveBoardName()"
+              (click)="$event.stopPropagation()"
+            />
+          </ng-container>
+        </div>
+        <!-- Menu Button -->
+        <button
+          id="board-menu-button"
+          class="menu-button"
+          (click)="openMenuOverlay($event)"
+        >
+          ⋮ menu
+        </button>
       </div>
-      <!-- Menu Button -->
-      <button
-        id="board-menu-button"
-        class="menu-button"
-        (click)="openMenuOverlay($event)"
-      >
-        ⋮ menu
-      </button>
     </div>
-  </div>
 
-  <!-- List -->
-      <div *ngFor="let list of boardDetails.lists; let i = index" cdkDrag  cdkDragPreviewClass="list-drag-preview" class = "board-list-container" [cdkDragDisabled] ="isListDraggingDisabled" >
+    <!-- Lists Drag-and-Drop Container -->
+    <div
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      [cdkDropListData]="boardDetails.lists"
+      (cdkDropListDropped)="onListDrop($event)"
+      [cdkDropListDisabled]="listRenamingStatus"
+      [cdkDropListAutoScrollDisabled]="false"
+      class="lists-container"
+    >
+      <div
+        *ngFor="let list of boardDetails.lists; let i = index"
+        cdkDrag
+        class="board-list-container"
+        [cdkDragDisabled]="isListDraggingDisabled"
+      >
         <app-list
           [id]="list.id"
           [name]="list.name"
@@ -50,26 +67,47 @@ cdkDropListOrientation="horizontal">
           (listDeleted)="onListDeleted($event)"
           (ticketCreated)="onTicketCreated($event)"
           (listRenaming)="onListRenaming($event)"
-          (isHoldingCreateBoardItemSubmenu)="onHoldingCreateBoardItemSubmenu($event)"
+          (isHoldingCreateBoardItemSubmenu)="
+            onHoldingCreateBoardItemSubmenu($event)
+          "
         ></app-list>
+        
+        <!-- Placeholder for List Dragging -->
         <div *cdkDragPlaceholder class="list-placeholder"></div>
       </div>
-
-      <!-- Add List Section -->
-       <div class="add-list-section-wrapper" [ngStyle]="{'background' : (showCreateListSubmenu) ? 'var(--background)' : 'transparent'}">
-      <div *ngIf="!showCreateListSubmenu" class="add-list-section" (click)="onAddListButtonClick()">
-          <app-plus-button label="Add another list" [color]="plusButtonColor" [hoverColor]="plusButtonHoverColor" [isFullWidth] = "true" height = "4.8rem" (click)="onAddListButtonClick()" ></app-plus-button>
-        </div>
-        <ng-container *ngIf="showCreateListSubmenu">
-          <app-create-board-item-submenu
-            [placeholder]="'Enter list name...'"
-            [buttonText]="'Add list'"
-            (menuAction)="onCreateListSubmenuAction($event)"
-            (close)="onCreateListSubmenuClose()"
-          ></app-create-board-item-submenu>
-        </ng-container>
-      
+          <!-- Add List Section -->
+    <div
+    class="add-list-section-wrapper"
+    [ngStyle]="{
+      background: showCreateListSubmenu ? 'var(--background)' : 'transparent'
+    }"
+  >
+    <div
+      *ngIf="!showCreateListSubmenu"
+      class="add-list-section"
+      (click)="onAddListButtonClick()"
+    >
+      <app-plus-button
+        label="Add another list"
+        [color]="plusButtonColor"
+        [hoverColor]="plusButtonHoverColor"
+        [isFullWidth]="true"
+        height="4.8rem"
+        (click)="onAddListButtonClick()"
+      ></app-plus-button>
     </div>
-  <router-outlet></router-outlet>
-</div>
+    <ng-container *ngIf="showCreateListSubmenu">
+      <app-create-board-item-submenu
+        [placeholder]="'Enter list name...'"
+        [buttonText]="'Add list'"
+        (menuAction)="onCreateListSubmenuAction($event)"
+        (close)="onCreateListSubmenuClose()"
+      ></app-create-board-item-submenu>
+    </ng-container>
+  </div>
+    </div>
+
+
+    <router-outlet></router-outlet>
+  </div>
 </div>

@@ -1,41 +1,48 @@
 @import '../../../assets/styles/main.scss';
 
-$gap-between-lists : 1.5rem;
+$gap-between-lists: 1.5rem;
 
 .board-page-wrapper {
   position: relative;
   height: 100%;
-  overflow-y: hidden; 
+  overflow-y: hidden;
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   scrollbar-color: rgb(182, 182, 182) rgb(0, 0, 0, 0.5);
+  overflow-x: auto; // Ensure horizontal scrolling
 }
 
 .board-page-container {
-  width : min-content;
+  width: min-content;
   position: relative;
   height: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-shrink: 0;
+  padding-top: 12.5rem;
+  background: none;
+  padding-right : 1rem;
+}
+
+.lists-container {
+  display: flex;
+  flex-direction: row;
+  gap: $gap-between-lists;
   padding-left: $gap-between-lists;
   padding-right: $gap-between-lists;
-  padding-top: 12.5rem;
-  gap: $gap-between-lists;
-  background: none;
 }
 
 .board-header {
   position: fixed;
-  top: 6rem; /* Ensures it stays at the top of the viewport */
-  left: 1rem; /* Adds a margin of 1rem from the left of the viewport */
-  right: 1rem; /* Adds a margin of 1rem from the right of the viewport */
-  padding: 1rem; /* Maintains the internal padding */
-  display: flex; /* Keeps flex properties intact */
-  flex-direction: column; /* Maintains the column layout */
-  z-index: 1000; /* Ensures it is above other elements */
+  top: 6rem;
+  left: 1rem;
+  right: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
 }
 
 .board-header-inner-container {
@@ -75,31 +82,31 @@ $gap-between-lists : 1.5rem;
 }
 
 .add-list-section-wrapper {
-  width: $total-list-width; /* Same width as list */
+  width: $total-list-width;
   padding: 1rem $list-horizontal-padding;
-  height : min-content;
-  margin-right : -$gap-between-lists;
-  box-sizing : border-box;
+  height: min-content;
+  margin-right: -$gap-between-lists;
+  box-sizing: border-box;
   border-radius: $list-border-radius;
 }
 
 .add-list-section {
   display: flex;
-  justify-content: center;  /* Horizontally center if needed */
-  padding-left : $list-horizontal-padding;
-  box-sizing:border-box;
+  justify-content: center;
+  padding-left: $list-horizontal-padding;
+  box-sizing: border-box;
   background-color: rgba($color: #ffffff, $alpha: 0.22);
   border-radius: $list-border-radius;
   display: flex;
   flex-direction: column;
-  margin-left : -$list-horizontal-padding;
-  margin-right : -$list-horizontal-padding;
-  margin-top : -1rem;
+  margin-left: -$list-horizontal-padding;
+  margin-right: -$list-horizontal-padding;
+  margin-top: -1rem;
   transition: background-color $button-transition-time ease;
   &:hover {
-    cursor : pointer;
-    background-color : rgba($color: #ffffff, $alpha: 0.3);;
-}
+    cursor: pointer;
+    background-color: rgba($color: #ffffff, $alpha: 0.3);
+  }
 }
 
 .add-list-button {
@@ -114,17 +121,12 @@ $gap-between-lists : 1.5rem;
 .list-placeholder {
   background-color: $background-lighter;
   border-radius: $list-border-radius;
-  height : 30rem;
-  min-width : $total-list-width;
-  max-width : $total-list-width;
-  border : none;
-}
-
-.list-drag-preview {
-  pointer-events: auto !important; /* Re-enable pointer events */
-  cursor: pointer; /* Ensure pointer cursor */
+  height: 30rem;
+  min-width: $total-list-width;
+  max-width: $total-list-width;
+  border: none;
 }
 
 .board-list-container {
-  height : min-content;
+  height: min-content;
 }
