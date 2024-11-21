@@ -109,6 +109,10 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('scrollableBoard', { static: true })
   scrollableBoardElementRef!: ElementRef;
 
+  // ViewChild to get the ElementRef of the contenteditable span
+  @ViewChild('boardNameSpan', { static: false })
+  boardNameSpan!: ElementRef;
+
   ngAfterViewInit(): void {
     // After the view is initialized, we can set up any necessary references
   }
@@ -150,8 +154,14 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onBoardNameKeydown(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent inserting a newline
       this.saveBoardName();
     }
+  }
+
+  onBoardNameInput(): void {
+    // Update newBoardName with the current content
+    this.newBoardName = this.boardNameSpan.nativeElement.textContent;
   }
 
   private scrollSpeed = 22; // Pixels per frame
@@ -590,11 +600,30 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     event.stopPropagation(); // Prevent event from propagating
     this.isRenamingBoard = true;
     this.newBoardName = this.boardDetails!.name;
+
+    // Wait for the view to update
+    setTimeout(() => {
+      // Set the content of the span
+      this.boardNameSpan.nativeElement.textContent = this.newBoardName;
+
+      // Focus the contenteditable span
+      this.boardNameSpan.nativeElement.focus();
+
+      // Select all text
+      const range = document.createRange();
+      range.selectNodeContents(this.boardNameSpan.nativeElement);
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }, 0);
   }
 
   saveBoardName(): void {
-    if (this.newBoardName.trim() !== '') {
-      if (this.newBoardName.trim() !== this.boardDetails?.name) {
+    // Ensure we have the latest content
+    this.newBoardName = this.boardNameSpan.nativeElement.textContent.trim();
+
+    if (this.newBoardName !== '') {
+      if (this.newBoardName !== this.boardDetails?.name) {
         this.updateBoard({
           name: this.utilsService.cleanStringWhiteSpace(this.newBoardName),
           colorId: this.boardDetails!.colorId,
@@ -602,13 +631,11 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.boardDetails!.name = this.utilsService.cleanStringWhiteSpace(
           this.newBoardName
         );
-      } else {
-        // Revert to previous name
-        this.newBoardName = this.utilsService.cleanStringWhiteSpace(
-          this.newBoardName
-        );
       }
-      this.isRenamingBoard = false;
+    } else {
+      // If empty, revert to previous name
+      this.newBoardName = this.boardDetails!.name;
+      this.boardNameSpan.nativeElement.textContent = this.newBoardName;
     }
     this.isRenamingBoard = false;
   }

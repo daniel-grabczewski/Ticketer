@@ -68,6 +68,11 @@ $gap-between-lists: 1.5rem;
 
 .board-name-input {
   @include board-name-template(max-content, $secondary, $neutral-darker);
+  outline: none; // Remove the outline when focused
+  display: inline-block; // Ensure it behaves like a span
+  min-width: 5rem; // Prevent collapsing when empty
+  user-select: text; // Ensure text can be selected
+  white-space: pre-wrap; // Preserve spaces and line breaks
 }
 
 .menu-button {
