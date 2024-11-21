@@ -1,0 +1,26 @@
+@import '../../../assets/styles/main.scss';
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  line-height: 0;
+
+  svg {
+    display: block;
+  }
+
+  .svg-path {
+    stroke: var(--color, var(--neutral-darker));
+    fill: var(--color, var(--neutral-darker));
+    transition: stroke $button-transition-time;
+    transition: fill $button-transition-time;
+  }
+  
+  &:hover .svg-path {
+    stroke: var(--hover-color, var(--background-lighter));
+    fill: var(--hover-color, var(--background-lighter));  // Change fill on hover too
+  }
+}
