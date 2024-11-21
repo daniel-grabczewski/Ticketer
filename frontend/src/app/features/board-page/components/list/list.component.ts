@@ -39,6 +39,7 @@ import { Router } from '@angular/router';
 import { SubmenuInputTransfer } from '../../../../shared/models/menu.model';
 import { PlusButtonComponent } from '../../../../shared/components/plus-button/plus-button.component';
 import { DragStateService } from '../../../../core/services/drag-state.service';
+import { UtilsService } from '../../../../shared/utils/utils.service';
 
 @Component({
   selector: 'app-list',
@@ -108,7 +109,8 @@ export class ListComponent implements OnInit, OnChanges {
     private dragStateService: DragStateService,
     private router: Router,
     private overlayService: OverlayService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private utilsService : UtilsService
   ) {}
   draggedTicketHeight: number = 0;
   // Reintroducing the isDragging flag
@@ -300,12 +302,12 @@ export class ListComponent implements OnInit, OnChanges {
   saveListName(): void {
     if (this.newListName.trim() !== '') {
       if (this.newListName.trim() !== this.name) {
-        this.onRenameList(this.newListName.trim());
+        this.onRenameList(this.utilsService.cleanStringWhiteSpace(this.newListName));
       }
-      this.name = this.newListName.trim();
+      this.name = this.utilsService.cleanStringWhiteSpace(this.newListName)
     } else {
       // Revert to previous name
-      this.newListName = this.name;
+      this.newListName = this.utilsService.cleanStringWhiteSpace(this.newListName)
     }
     this.isRenamingList = false;
     this.listRenaming.emit(this.isRenamingList);
