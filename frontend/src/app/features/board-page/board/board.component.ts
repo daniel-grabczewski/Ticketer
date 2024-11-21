@@ -52,6 +52,7 @@ import { TicketUpdateService } from '../../../core/services/ticket-update.servic
 import { TicketInput } from '../../../shared/models/uniqueComponentInputOutput.model';
 import { PlusButtonComponent } from '../../../shared/components/plus-button/plus-button.component';
 import { CdkScrollable, CdkScrollableModule } from '@angular/cdk/scrolling';
+import { DragStateService } from '../../../core/services/drag-state.service';
 
 @Component({
   selector: 'app-board',
@@ -98,9 +99,9 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     private listService: ListService,
     private ticketService: TicketService,
     private ticketUpdateService: TicketUpdateService,
-    private overlayService: OverlayService
+    private overlayService: OverlayService,
+    private dragStateService: DragStateService
   ) {}
-
 
   // ViewChild to get the ElementRef of the scrollable container
   @ViewChild('scrollableBoard', { static: true })
@@ -137,12 +138,24 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  onDragStarted() {
+    this.dragStateService.setIsDragging(true);
+  }
+
+  onDragEnded() {
+    this.dragStateService.setIsDragging(false);
+  }
+
   private scrollSpeed = 22; // Pixels per frame
   private scrollFrame: any; // For canceling requestAnimationFrame
 
   // Listener for mouse movement
   @HostListener('window:mousemove', ['$event'])
   handleMouseMove(event: MouseEvent): void {
+    if (!this.dragStateService.getIsDragging()) {
+      return;
+    }
+
     const threshold = 50; // Distance from the edge to trigger scrolling
     const rect =
       this.scrollableBoardElementRef.nativeElement.getBoundingClientRect();

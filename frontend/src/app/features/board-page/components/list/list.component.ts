@@ -38,6 +38,7 @@ import { CreateBoardItemSubmenuComponent } from '../../../../shared/components/c
 import { Router } from '@angular/router';
 import { SubmenuInputTransfer } from '../../../../shared/models/menu.model';
 import { PlusButtonComponent } from '../../../../shared/components/plus-button/plus-button.component';
+import { DragStateService } from '../../../../core/services/drag-state.service';
 
 @Component({
   selector: 'app-list',
@@ -104,6 +105,7 @@ export class ListComponent implements OnInit, OnChanges {
 
   constructor(
     private ticketService: TicketService,
+    private dragStateService: DragStateService,
     private router: Router,
     private overlayService: OverlayService,
     private cdr: ChangeDetectorRef
@@ -255,6 +257,7 @@ export class ListComponent implements OnInit, OnChanges {
 
   onDragStarted(event: CdkDragStart): void {
     this.isDragging = true;
+    this.dragStateService.setIsDragging(true);
     const element = event.source.element.nativeElement as HTMLElement;
     const ticketElement = element.querySelector(
       '.ticket-container'
@@ -269,6 +272,7 @@ export class ListComponent implements OnInit, OnChanges {
   }
 
   onDragEnded(): void {
+    this.dragStateService.setIsDragging(false);
     setTimeout(() => {
       this.isDragging = false;
       this.draggedTicketHeight = 0; // Reset the height

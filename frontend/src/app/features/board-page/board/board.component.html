@@ -51,6 +51,8 @@
         cdkDrag
         class="board-list-container"
         [cdkDragDisabled]="isListDraggingDisabled"
+        (cdkDragStarted)="onDragStarted()"
+        (cdkDragEnded)="onDragEnded()"
       >
         <app-list
           [id]="list.id"
