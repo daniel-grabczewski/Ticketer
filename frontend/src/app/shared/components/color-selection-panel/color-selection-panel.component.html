@@ -1,11 +1,9 @@
 <div class="colors-container">
-  <div class="color-row" *ngFor="let row of getRows()">
-    <div
-      *ngFor="let color of row"
-      class="color-box"
-      [style.background-color]="color.hexCode"
-      [class.selected]="color.id === selectedColorId"
-      (click)="onColorClick(color.id)"
-    ></div>
-  </div>
+  <div
+    *ngFor="let color of colors"
+    class="color-box"
+    [style.background-color]="color.hexCode"
+    [class.selected]="color.id === selectedColorId"
+    (click)="onColorClick(color.id)"
+  ></div>
 </div>

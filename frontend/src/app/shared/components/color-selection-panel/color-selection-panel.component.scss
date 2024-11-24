@@ -1,29 +1,21 @@
 @import '../../../assets/styles/main.scss';
 
 .colors-container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  background: $neutral-lighter;
-  width: min-content;
-  padding: 8px;
-  border-radius: 8px;
-}
-
-.color-row {
-  display: flex;
-  gap: 8px;
+  display: grid;
+  width: 100%; 
+  grid-template-columns: repeat(3, 1fr); 
+  grid-auto-rows: 1fr; 
+  gap: 0.5rem; 
 }
 
 .color-box {
-  width: 80px;
-  height: 80px;
-  border-radius: 8px;
+  aspect-ratio: 1; /* Maintain square shape */
+  border-radius: 0.5rem;
   cursor: pointer;
-  transition: border $button-transition-time ease;
-  border: 2px solid transparent;
+  box-shadow: 0 0 0 0.15rem transparent;
 
   &.selected {
-    border: 3px solid $background;
+    box-shadow: 0 0 0 0.15rem $background-lighter; 
   }
 }
+
