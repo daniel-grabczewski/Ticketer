@@ -1,25 +1,19 @@
-<div class="menu-container-wrapper" (click)="$event.stopPropagation()">
-  <div class="menu-container">
+<div class="menu-container" (click)="$event.stopPropagation()">
     <!-- Header with title and quit button -->
     <div class="menu-header">
-      <h3 class="menu-title">{{ menuConfig.title }}</h3>
-      <app-x-button (click)="closeMenu()" [scale]="xScale"></app-x-button>
+      <h3>{{ menuConfig.title }}</h3>
+      <app-x-button class="quit-button" (click)="closeMenu()" config=menu></app-x-button>
     </div>
 
-    <div class="menu-buttons">
-      <div
-        class="menu-button-container"
-        *ngFor="let submenuItem of rearrangedSubmenus; let index = index"
-      >
-        <!-- Menu Button -->
+    <div class="menu-buttons-container">
         <button
+        *ngFor="let submenuItem of rearrangedSubmenus; let index = index"
           class="menu-button"
           [ngClass]="{ 'confirmation-button': submenuItem.submenu.type === 'confirmation-submenu' }"
           (click)="handleSubmenuClick(index, $event)"
         >
           {{ submenuItem.buttonText }}
         </button>
-      </div>
     </div>
   </div>
-</div>
+
