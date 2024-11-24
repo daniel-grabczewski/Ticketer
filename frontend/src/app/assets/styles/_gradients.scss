@@ -1,30 +1,27 @@
 @import './colors';
 
-// CSS Variables 
+$gradient-default: $background-lighter;
 
-//   Refer in a different file, e.g.
-//   :host([data-color-id="1"]) {
-//   background-image: var(--gradient-1);
-//   }
+$gradient-1: linear-gradient(to right bottom, #126d4d, #1e7856, #28825e, #328d67, #3b9870, #42a278, #49ab81, #50b589, #57c093, #5ecb9d, #65d7a7, #6ce2b1);
 
+$gradient-2: linear-gradient(to right bottom, #247424, #2c7c2c, #348334, #3c8b3b, #439343, #499b49, #4fa44f, #55ac55, #5bb75b, #60c260, #66ce66, #6cd96c);
+
+$gradient-3: linear-gradient(to right bottom, #4a1a99, #5121a1, #5828aa, #5e2eb2, #6535bb, #6c3bc3, #7240cc, #7946d4, #814cde, #8952e7, #9259f1, #9a5ffb);
+
+$gradient-4: linear-gradient(to right bottom, #b75d25, #bc622c, #c16832, #c66d39, #cb733f, #d17b46, #d7824e, #dd8a55, #e6965f, #eea169, #f7ad73, #ffb97e);
+
+$gradient-5: linear-gradient(to right bottom, #a13174, #a9387c, #b13e84, #ba458d, #c24b95, #c9519b, #cf58a2, #d65ea8, #dd65ad, #e46db2, #eb74b7, #f27bbc);
+
+$gradient-6: linear-gradient(to right bottom, #9c1c1c, #a72625, #b32f2d, #be3736, #ca403f, #ce4746, #d14d4c, #d55453, #d25a59, #ce5f5f, #cb6565, #c76a6a);
+
+// Assign SCSS variables to CSS variables using interpolation
 :root {
-  --gradient-default: var(--background-lighter);
+  --gradient-default: #{$gradient-default};
 
-  // #50C996 
-  --gradient-1: linear-gradient(to right bottom, #126d4d, #1e7856, #28825e, #328d67, #3b9870, #42a278, #49ab81, #50b589, #57c093, #5ecb9d, #65d7a7, #6ce2b1);
-
-  // #3BBA3B 
-  --gradient-2: linear-gradient(to right bottom, #247424, #2c7c2c, #348334, #3c8b3b, #439343, #499b49, #4fa44f, #55ac55, #5bb75b, #60c260, #66ce66, #6cd96c);
-
-  // #8131F9  
-  --gradient-3: linear-gradient(to right bottom, #4a1a99, #5121a1, #5828aa, #5e2eb2, #6535bb, #6c3bc3, #7240cc, #7946d4, #814cde, #8952e7, #9259f1, #9a5ffb);
-
-  // #FEA362 
-  --gradient-4: linear-gradient(to right bottom, #b75d25, #bc622c, #c16832, #c66d39, #cb733f, #d17b46, #d7824e, #dd8a55, #e6965f, #eea169, #f7ad73, #ffb97e);
-
-  // #F773BE 
-  --gradient-5: linear-gradient(to right bottom, #a13174, #a9387c, #b13e84, #ba458d, #c24b95, #c9519b, #cf58a2, #d65ea8, #dd65ad, #e46db2, #eb74b7, #f27bbc);
-
-  // #EE4646
-  --gradient-6: linear-gradient(to right bottom, #9c1c1c, #a72625, #b32f2d, #be3736, #ca403f, #ce4746, #d14d4c, #d55453, #d25a59, #ce5f5f, #cb6565, #c76a6a);
+  --gradient-1: #{$gradient-1};
+  --gradient-2: #{$gradient-2};
+  --gradient-3: #{$gradient-3};
+  --gradient-4: #{$gradient-4};
+  --gradient-5: #{$gradient-5};
+  --gradient-6: #{$gradient-6};
 }
