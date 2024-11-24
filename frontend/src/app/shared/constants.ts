@@ -1,1 +1,1 @@
-export const X_SCALE_VALUE = 1;
+export const X_SCALE_VALUE = 1.1;
