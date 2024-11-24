@@ -1,0 +1,67 @@
+// Width variables
+$menu-width-desktop: 240px;
+$submenu-width-desktop: 240px;
+$menu-width-mobile: calc(100vw - 48px); // 24px margin on each side
+$menu-width-mobile-max: 400px;
+
+// Color variables
+$menu-background-color : $neutral-darker;
+
+
+@mixin menu-container() {
+  background-color: $menu-background-color;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  width: max-content;
+  display: flex;
+  flex-direction : column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: $box-shadow;
+
+  // Centre menu in the center of the screen on mobile
+  @media (max-width: $breakpoint-mobile) /*790px*/{
+    position: fixed; 
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+  }
+}
+
+@mixin menu-header() {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width : 100%;
+  margin-bottom: 0.5rem;
+
+  // For title
+  font-size: 1.25rem;
+  color : $secondary;
+  font-weight:600;
+}
+
+@mixin quit-button() {
+  margin-top :0.2rem;
+}
+
+@mixin menu-buttons-container {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin menu-button {
+  @include button($min-width : 100%, $scale : 1.2, $margin-bottom : 0.5rem);
+}
+
+@mixin confirmation-button {
+  @include button($error, $error-darker, $min-width : 100% , $scale : 1.2)
+}
+
+
+
+// Colors for x-button used on menu
+:root {
+  --menu-x-button-color: #{$background-lighter};
+  --menu-x-button-hover-color: #{$error-darker};
+}
