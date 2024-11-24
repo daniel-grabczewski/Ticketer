@@ -1,12 +1,13 @@
-<div class="submenu-container">
+<div class="menu-container">
   <!-- Header with title and close button -->
-  <div class="submenu-header">
-    <h2>{{ title }}</h2>
-    <app-x-button (click)="onCloseClicked()" [scale] = "xScale"></app-x-button>
+  <div class="menu-header">
+    <h3>{{ title }}</h3>
+    <app-x-button (click)="onCloseClicked()" config = "menu"></app-x-button>
   </div>
 
   <!-- Color selection panel -->
   <app-color-selection-panel
+  class="color-selection-panel"
     [selectedColorId]="selectedColorId"
     (colorSelected)="onColorSelected($event)"
   ></app-color-selection-panel>
