@@ -6,9 +6,11 @@ $menu-width-mobile-max: 400px;
 
 // Color variables
 $menu-background-color : $neutral-darker;
+$submenu-background-color : $neutral-lighter;
+$menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 
 
-@mixin menu-container() {
+@mixin menu-container {
   background-color: $menu-background-color;
   border-radius: 0.5rem;
   padding: 1rem;
@@ -17,7 +19,12 @@ $menu-background-color : $neutral-darker;
   flex-direction : column;
   justify-content: center;
   align-items: center;
-  box-shadow: $box-shadow;
+  box-shadow: $menu-box-shadow;
+  color : $secondary;
+
+  > * {
+    width: 100%;
+  }
 
   // Centre menu in the center of the screen on mobile
   @media (max-width: $breakpoint-mobile) /*790px*/{
@@ -28,21 +35,16 @@ $menu-background-color : $neutral-darker;
   }
 }
 
-@mixin menu-header() {
+@mixin menu-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  width : 100%;
-  margin-bottom: 0.5rem;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+  gap : 1rem;
 
   // For title
   font-size: 1.25rem;
-  color : $secondary;
   font-weight:600;
-}
-
-@mixin quit-button() {
-  margin-top :0.2rem;
 }
 
 @mixin menu-buttons-container {
@@ -54,11 +56,58 @@ $menu-background-color : $neutral-darker;
   @include button($min-width : 100%, $scale : 1.2, $margin-bottom : 0.5rem);
 }
 
+@mixin submenu-button {
+  @include button($min-width : max-content, $scale : 1.2, $margin-bottom : 0.5rem);
+}
+
 @mixin confirmation-button {
   @include button($error, $error-darker, $min-width : 100% , $scale : 1.2)
 }
 
+@mixin input-core {
+  margin-top : 0.25rem;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+  font-size: 0.8rem;
+  background-color: $secondary;
+  box-sizing: border-box;
+  border : none;
+}
 
+@mixin input-group {
+  margin-top : 0.5rem;
+  font-weight: 500;
+
+  input[type='text'] {
+    @include input-core;
+  }
+
+  select {
+    @include input-core;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%204%205'><path%20fill='%23aaa'%20d='M2%200L0%202h4L2%200z%20M2%205L0%203h4l-2%202z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 0.5rem 0.65rem;
+  }
+}
+
+@mixin action-button-group {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-start;
+  button {
+    @include submenu-button;
+  }
+}
+
+@mixin background-selection-header {
+  display : flex;
+  justify-content: start;
+  font-size : 1.25rem;
+  margin-bottom : 0.5rem;
+}
 
 // Colors for x-button used on menu
 :root {
