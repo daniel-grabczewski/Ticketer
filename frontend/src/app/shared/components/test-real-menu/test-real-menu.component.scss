@@ -8,10 +8,6 @@
 @include menu-header;
 }
 
-.quit-button {
-  @include quit-button;
-}
-
 .menu-buttons-container {
   @include menu-buttons-container;
 }
