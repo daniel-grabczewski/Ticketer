@@ -1,14 +1,18 @@
 $button-transition-time : 0.2s;
 
-@mixin button($bg-color:$primary, $hover-bg-color:$primary-darker, $disabled-color:$neutral-darker) {
-  padding: 0.6rem 1rem 0.6rem 0.85rem;
+@mixin button($bg-color:$primary, $hover-bg-color:$primary-darker, $disabled-color:$neutral-lighter, $width : max-content, $min-width : max-content, $max-width : max-content, $scale : 1, $margin-bottom : 0px) {
+  padding: calc(0.6rem * $scale) calc(1rem * $scale) calc(0.6rem * $scale) calc(0.85rem * $scale);
   background-color: $bg-color;
   color: $secondary;
-  border-radius: 0.75rem;
+  border-radius: calc(0.75rem * $scale);
   border: none;
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: calc(0.95rem * $scale);
   transition: background-color $button-transition-time ease;
+  width: $width;
+  min-width: $min-width;
+  max-width: $max-width;
+  margin-bottom : $margin-bottom;
 
   &:hover {
     background-color: $hover-bg-color;
@@ -19,4 +23,5 @@ $button-transition-time : 0.2s;
     cursor: not-allowed;
   }
 }
+
 
