@@ -2,6 +2,7 @@
 @import './gradients';
 @import './colors';
 @import './buttons';
+@import './menus';
 
 $page-max-width : 1200px;
 
@@ -29,25 +30,21 @@ $list-width: 18.75rem;
 $total-list-width: $list-width + ($list-horizontal-padding * 2);
 
 
-// Width variables
-$menu-width-desktop: 240px;
-$submenu-width-desktop: 240px;
-$menu-width-mobile: calc(100vw - 48px); // 24px margin on each side
-$menu-width-mobile-max: 400px;
+
 
 // Media query breakpoints
-$breakpoint-mobile: 790;
-$breakpoint-small-mobile: 320;
+$breakpoint-mobile: 790px;
+$breakpoint-small-mobile: 320px;
 
 // Media query mixins
 @mixin mobile {
-  @media (max-width: #{$breakpoint-mobile}px) {
+  @media (max-width: $breakpoint-mobile) {
     @content;
   }
 }
 
 @mixin small-mobile {
-  @media (max-width: #{$breakpoint-small-mobile}px) {
+  @media (max-width: $breakpoint-small-mobile) {
     @content;
   }
 }
