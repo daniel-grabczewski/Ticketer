@@ -8,6 +8,6 @@
   @include menu-header;
 }
 
-.action-button-group {
-@include action-button-group;
+button {
+  @include submenu-button;
 }

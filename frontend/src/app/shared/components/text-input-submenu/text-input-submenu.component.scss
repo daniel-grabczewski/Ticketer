@@ -12,6 +12,6 @@
 @include input-group;
 }
 
-.action-button-group {
- @include action-button-group;
+button {
+  @include submenu-button;
 }
