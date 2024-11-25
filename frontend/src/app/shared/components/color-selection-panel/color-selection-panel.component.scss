@@ -1,21 +1,10 @@
 @import '../../../assets/styles/main.scss';
 
 .colors-container {
-  display: grid;
-  width: 100%; 
-  grid-template-columns: repeat(3, 1fr); 
-  grid-auto-rows: 1fr; 
-  gap: 0.5rem; 
+@include colors-container;
 }
 
 .color-box {
-  aspect-ratio: 1; /* Maintain square shape */
-  border-radius: 0.5rem;
-  cursor: pointer;
-  box-shadow: 0 0 0 0.15rem transparent;
-
-  &.selected {
-    box-shadow: 0 0 0 0.15rem $background-lighter; 
-  }
+@include color-box;
 }
 
