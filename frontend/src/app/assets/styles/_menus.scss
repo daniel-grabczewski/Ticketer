@@ -43,8 +43,11 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
   gap : 1rem;
 
   // For title
-  font-size: 1.25rem;
-  font-weight:600;
+  h3 {
+    font-size: 1.25rem;
+    font-weight:500;
+  }
+  
 }
 
 @mixin menu-buttons-container {
