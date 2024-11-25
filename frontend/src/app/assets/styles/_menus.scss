@@ -4,16 +4,21 @@ $submenu-width-desktop: 240px;
 $menu-width-mobile: calc(100vw - 48px); // 24px margin on each side
 $menu-width-mobile-max: 400px;
 
+$menu-mobile-scale : 1.4;
+$h3-desktop-size : 1.25;
+
 // Color variables
 $menu-background-color : $neutral-darker;
 $submenu-background-color : $neutral-lighter;
 $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 
+//=====================================================
+// Menu container
 
-@mixin menu-container {
+@mixin menu-container-base($scale : 1) {
   background-color: $menu-background-color;
-  border-radius: 0.5rem;
-  padding: 1rem;
+  border-radius: #{0.5 * $scale}rem;
+  padding: #{1 * $scale}rem;
   width: max-content;
   display: flex;
   flex-direction : column;
@@ -35,6 +40,17 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
   }
 }
 
+@mixin menu-container {
+  @media (max-width: $breakpoint-mobile) {
+    @include menu-container-base($menu-mobile-scale)
+  }
+  @media (min-width : $breakpoint-minimum-desktop) {
+    @include menu-container-base()
+  }
+}
+
+
+
 @mixin menu-header {
   display: flex;
   justify-content: space-between;
@@ -44,14 +60,14 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 
   @media (max-width : $breakpoint-mobile) {
     h3 {
-      font-size: 1.6rem;
+      font-size: #{$h3-desktop-size * $menu-mobile-scale}rem;
       font-weight:500;
     }
   }
 
   @media (min-width : $breakpoint-minimum-desktop) {
     h3 {
-      font-size: 1.25rem;
+      font-size: #{$h3-desktop-size}rem;
       font-weight:500;
     }
   }
@@ -84,7 +100,7 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 
 @mixin menu-button {
   @media (max-width: $breakpoint-mobile) {
-    @include menu-button-base(1.4);
+    @include menu-button-base($menu-mobile-scale);
   }
 
   @media (min-width: $breakpoint-minimum-desktop) {
@@ -94,7 +110,7 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 
 @mixin submenu-button {
   @media (max-width: $breakpoint-mobile) {
-    @include submenu-button-base(1.4);
+    @include submenu-button-base($menu-mobile-scale);
   }
 
   @media (min-width: $breakpoint-minimum-desktop) {
@@ -104,7 +120,7 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 
 @mixin submenu-confirmation-button {
   @media (max-width: $breakpoint-mobile) {
-    @include submenu-confirmation-button-base(1.4);
+    @include submenu-confirmation-button-base($menu-mobile-scale);
   }
 
   @media (min-width: $breakpoint-minimum-desktop) {
@@ -114,7 +130,7 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 
 @mixin menu-confirmation-button {
   @media (max-width: $breakpoint-mobile) {
-    @include menu-confirmation-button-base(1.4);
+    @include menu-confirmation-button-base($menu-mobile-scale);
   }
 
   @media (min-width: $breakpoint-minimum-desktop) {
@@ -190,6 +206,8 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 }
 
 // Colors for x-button used on menu
+$menu-x-button-color : $background-lighter;
+$menu-x-button-hover-color : $error-darker;
 
 :root {
   --menu-x-button-color: #{$background-lighter};
