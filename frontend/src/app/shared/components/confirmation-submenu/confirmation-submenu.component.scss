@@ -1,46 +1,20 @@
 @import '../../../assets/styles/main.scss';
 
-.submenu-container {
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  background-color: $neutral-lighter;
-  border-radius: 8px;
-  width: $submenu-width-desktop;
-  box-shadow: $box-shadow;
-
-  @include mobile {
-    width: $menu-width-mobile;
-    max-width: $menu-width-mobile-max;
-  }
+.menu-container {
+@include menu-container;
 }
 
-.submenu-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  h2 {
-    margin: 0;
-    font-size: 18px;
-  }
+.menu-header {
+@include menu-header;
 }
 
 .confirmation-message {
-  margin-top: 16px;
-
-  p {
-    margin: 0;
-    font-size: 16px;
-  }
+  margin-bottom : 0.5rem;
+  font-size: 1.2rem;
+  font-weight : 300;
+  max-width : 15rem;
 }
 
-.action-button-group {
-  margin-top: 16px;
-  display: flex;
-  justify-content: flex-end;
-
-  button {
-    @include button($error, $error-darker)
-  }
+button {
+  @include submenu-confirmation-button;
 }

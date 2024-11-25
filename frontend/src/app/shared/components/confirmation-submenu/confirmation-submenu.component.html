@@ -1,8 +1,8 @@
-<div class="submenu-container">
+<div class="menu-container">
   <!-- Header with title and close button -->
-  <div class="submenu-header">
-    <h2>{{ title }}</h2>
-    <app-x-button (click)="onCloseClicked()" [scale] = "xScale"></app-x-button>
+  <div class="menu-header">
+    <h3>{{ title }}</h3>
+    <app-x-button (click)="onCloseClicked()" config="menu"></app-x-button>
   </div>
 
   <!-- Confirmation message -->
@@ -11,9 +11,7 @@
   </div>
 
   <!-- Action button -->
-  <div class="action-button-group">
     <button (click)="onActionClicked()">
       {{ buttonText }}
     </button>
-  </div>
 </div>
