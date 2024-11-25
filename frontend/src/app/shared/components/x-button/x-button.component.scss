@@ -1,6 +1,6 @@
 @import '../../../assets/styles/main.scss';
 
-.icon-button {
+@mixin icon-button-base($color : $neutral-darker, $hover-color : $background-lighter, $scale : 1)  {
   background: none;
   border: none;
   cursor: pointer;
@@ -9,15 +9,39 @@
   line-height: 0;
 
   svg {
+    width: #{$scale * 16}px;
+    height : #{$scale * 16}px;
     display: block;
   }
 
-  .svg-line {
-    stroke: var(--color, var(--neutral-darker));
+  path {
+    stroke: $color;
     transition: stroke $button-transition-time;
+    stroke-width: 10;
   }
 
-  &:hover .svg-line {
-    stroke: var(--hover-color, var(--background-lighter));
+  &:hover path {
+    stroke: $hover-color;
   }
 }
+
+.icon-button-default-config {
+  @media (max-width : $breakpoint-mobile) {
+    @include icon-button-base($scale : 1.2)
+  }
+
+  @media (min-width : $breakpoint-minimum-desktop) {
+    @include icon-button-base()
+  }
+}
+
+.icon-button-menu-config {
+  @media (max-width : $breakpoint-mobile) {
+    @include icon-button-base($menu-x-button-color, $menu-x-button-hover-color, $menu-mobile-scale)
+  }
+  
+  @media (min-width : $breakpoint-minimum-desktop) {
+    @include icon-button-base($menu-x-button-color, $menu-x-button-hover-color)
+  }
+}
+

@@ -1,4 +1,5 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
 
 export enum XButtonConfig {
   Default = '',
@@ -10,38 +11,21 @@ export enum XButtonConfig {
   templateUrl: './x-button.component.html',
   styleUrls: ['./x-button.component.scss'],
   standalone: true,
+  imports : [CommonModule]
 })
-export class XButtonComponent implements OnChanges {
-  @Input() scale: number = 1; // Default scale
-  @Input() color: string = 'var(--neutral-darker)'; // Default color
-  @Input() hoverColor: string = 'var(--background-lighter)'; // Default hover color
+export class XButtonComponent {
   @Input() config: XButtonConfig | string = XButtonConfig.Default;
 
-  colorInternal: string = this.color;
-  hoverColorInternal: string = this.hoverColor;
-  scaleInternal: number = this.scale;
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['config'] || changes['scale'] || changes['color']) {
-      this.applyConfig();
-    }
-  }
-
-  private applyConfig(): void {
-    this.colorInternal = this.color;
-    this.hoverColorInternal = this.hoverColor;
-    this.scaleInternal = this.scale;
-
+  getClassBasedOnConfig() : string {
     switch (this.config) {
-      case XButtonConfig.Menu:
-        this.colorInternal = 'var(--menu-x-button-color)';
-        this.hoverColorInternal = 'var(--menu-x-button-hover-color)';
-        this.scaleInternal = 1.2;
-        break;
+      case 'menu':
+      return 'icon-button-menu-config'
+      default:
+        return 'icon-button-default-config'
     }
   }
 
   getStrokeWidth(): number {
-    return 7.4 * Math.sqrt(this.scaleInternal);
+    return 7.4 * Math.sqrt(1);
   }
 }

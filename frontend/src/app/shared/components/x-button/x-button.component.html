@@ -1,11 +1,9 @@
-<button class="icon-button" [style.--color]="colorInternal" [style.--hover-color]="hoverColorInternal">
+<button [ngClass]="getClassBasedOnConfig()">
   <svg
-    [attr.width]="scaleInternal * 16"
-    [attr.height]="scaleInternal * 16"
     viewBox="0 0 64 64"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M8 8 L56 56" class="svg-line" [attr.stroke-width]="getStrokeWidth()" stroke-linecap="round" />
-    <path d="M56 8 L8 56" class="svg-line" [attr.stroke-width]="getStrokeWidth()" stroke-linecap="round" />
+    <path d="M8 8 L56 56" stroke-linecap="round" />
+    <path d="M56 8 L8 56" stroke-linecap="round" />
   </svg>
 </button>
