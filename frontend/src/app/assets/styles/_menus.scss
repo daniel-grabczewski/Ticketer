@@ -42,12 +42,19 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
   margin-bottom: 1rem;
   gap : 1rem;
 
-  // For title
-  h3 {
-    font-size: 1.25rem;
-    font-weight:500;
+  @media (max-width : $breakpoint-mobile) {
+    h3 {
+      font-size: 1.6rem;
+      font-weight:500;
+    }
   }
-  
+
+  @media (min-width : $breakpoint-minimum-desktop) {
+    h3 {
+      font-size: 1.25rem;
+      font-weight:500;
+    }
+  }
 }
 
 @mixin menu-buttons-container {
@@ -55,21 +62,67 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
   flex-direction: column;
 }
 
+// Base mixins for buttons with a scale parameter
+// ===================================================
+
+@mixin menu-button-base($scale) {
+  @include button($min-width: 100%, $scale: $scale, $margin-bottom: 0.5rem);
+}
+
+@mixin submenu-button-base($scale) {
+  @include button($min-width: max-content, $scale: $scale);
+}
+
+@mixin submenu-confirmation-button-base($scale) {
+  @include button($error, $error-darker, $min-width: max-content, $scale: $scale);
+}
+
+@mixin menu-confirmation-button-base($scale) {
+  @include button($error, $error-darker, $min-width: 100%, $scale: $scale);
+}
+
+
 @mixin menu-button {
-  @include button($min-width : 100%, $scale : 1.2, $margin-bottom : 0.5rem);
+  @media (max-width: $breakpoint-mobile) {
+    @include menu-button-base(1.4);
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    @include menu-button-base(1.2);
+  }
 }
 
 @mixin submenu-button {
-  @include button($min-width : max-content, $scale : 1.2);
+  @media (max-width: $breakpoint-mobile) {
+    @include submenu-button-base(1.4);
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    @include submenu-button-base(1.2);
+  }
 }
 
 @mixin submenu-confirmation-button {
-  @include button($error, $error-darker, $min-width : max-content , $scale : 1.2)
+  @media (max-width: $breakpoint-mobile) {
+    @include submenu-confirmation-button-base(1.4);
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    @include submenu-confirmation-button-base(1.2);
+  }
 }
 
 @mixin menu-confirmation-button {
-  @include button($error, $error-darker, $min-width : 100% , $scale : 1.2)
+  @media (max-width: $breakpoint-mobile) {
+    @include menu-confirmation-button-base(1.4);
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    @include menu-confirmation-button-base(1.2);
+  }
 }
+
+// ===================================================
 
 @mixin input-core {
   margin-top : 0.25rem;
@@ -137,6 +190,7 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 }
 
 // Colors for x-button used on menu
+
 :root {
   --menu-x-button-color: #{$background-lighter};
   --menu-x-button-hover-color: #{$error-darker};
