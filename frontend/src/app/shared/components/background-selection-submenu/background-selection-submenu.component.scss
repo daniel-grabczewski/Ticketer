@@ -1,45 +1,17 @@
 @import '../../../assets/styles/main.scss';
 
-.submenu-container {
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  background-color: $neutral-lighter;
-  border-radius: 8px;
-  width: $submenu-width-desktop;
-  box-shadow: $box-shadow;
-
-  @include mobile {
-    width: $menu-width-mobile;
-    max-width: $menu-width-mobile-max;
-  }
+.menu-container {
+@include menu-container;
 }
 
-.submenu-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  h2 {
-    margin: 0;
-    font-size: 18px;
-  }
+.menu-header {
+@include menu-header;
 }
 
-.color-selection-title {
-  margin-top: 16px;
-
-  label {
-    font-weight: bold;
-  }
+.background-selection-header {
+  @include background-selection-header;
 }
 
-.action-button-group {
-  margin-top: 16px;
-  display: flex;
-  justify-content: flex-end;
-
-  button {
-   @include button()
-  }
+button {
+  @include submenu-button;
 }
