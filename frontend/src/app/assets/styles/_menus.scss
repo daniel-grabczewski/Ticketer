@@ -60,7 +60,11 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
   @include button($min-width : max-content, $scale : 1.2);
 }
 
-@mixin confirmation-button {
+@mixin submenu-confirmation-button {
+  @include button($error, $error-darker, $min-width : max-content , $scale : 1.2)
+}
+
+@mixin menu-confirmation-button {
   @include button($error, $error-darker, $min-width : 100% , $scale : 1.2)
 }
 

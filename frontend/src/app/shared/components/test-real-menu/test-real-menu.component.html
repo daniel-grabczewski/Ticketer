@@ -9,7 +9,7 @@
         <button
         *ngFor="let submenuItem of rearrangedSubmenus; let index = index"
           class="menu-button"
-          [ngClass]="{ 'confirmation-button': submenuItem.submenu.type === 'confirmation-submenu' }"
+          [ngClass]="{ 'menu-confirmation-button': submenuItem.submenu.type === 'confirmation-submenu' }"
           (click)="handleSubmenuClick(index, $event)"
         >
           {{ submenuItem.buttonText }}
