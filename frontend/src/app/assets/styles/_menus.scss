@@ -18,7 +18,7 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction : column;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   box-shadow: $menu-box-shadow;
   color : $secondary;
 
@@ -57,7 +57,7 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 }
 
 @mixin submenu-button {
-  @include button($min-width : max-content, $scale : 1.2, $margin-bottom : 0.5rem);
+  @include button($min-width : max-content, $scale : 1.2);
 }
 
 @mixin confirmation-button {
@@ -66,6 +66,7 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 
 @mixin input-core {
   margin-top : 0.25rem;
+  margin-bottom : 1rem;
   width: 100%;
   padding: 0.5rem;
   border-radius: 0.3rem;
@@ -103,10 +104,29 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 }
 
 @mixin background-selection-header {
-  display : flex;
-  justify-content: start;
   font-size : 1.25rem;
   margin-bottom : 0.5rem;
+}
+
+
+@mixin colors-container {
+  display: grid;
+  width: 100%; 
+  grid-template-columns: repeat(3, 1fr); 
+  grid-auto-rows: 1fr; 
+  gap: 0.5rem; 
+  margin-bottom : 1rem;
+}
+
+@mixin color-box {
+  aspect-ratio: 1; /* Maintain square shape */
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 0 0 0.15rem transparent;
+
+  &.selected {
+    box-shadow: 0 0 0 0.15rem $background-lighter; 
+  }
 }
 
 // Colors for x-button used on menu
