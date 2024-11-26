@@ -4,8 +4,7 @@ $submenu-width-desktop: 240px;
 $menu-width-mobile: calc(100vw - 48px); // 24px margin on each side
 $menu-width-mobile-max: 400px;
 
-$menu-mobile-scale : 1.4;
-$h3-desktop-size : 1.25;
+$menu-mobile-scale : 1.8;
 
 // Color variables
 $menu-background-color : $neutral-darker;
@@ -49,40 +48,44 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
   }
 }
 
+//=====================================================
+// Menu header
 
-
-@mixin menu-header {
+@mixin menu-header-base($scale : 1) {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 1rem;
-  gap : 1rem;
+  margin-bottom: #{1 * $scale}rem;
+  gap : #{1 * $scale}rem;
 
-  @media (max-width : $breakpoint-mobile) {
     h3 {
-      font-size: #{$h3-desktop-size * $menu-mobile-scale}rem;
+      font-size: #{1.25 * $scale}rem;
       font-weight:500;
     }
+}
+
+@mixin menu-header {
+  @media (max-width: $breakpoint-mobile) {
+    @include menu-header-base($menu-mobile-scale)
   }
-
   @media (min-width : $breakpoint-minimum-desktop) {
-    h3 {
-      font-size: #{$h3-desktop-size}rem;
-      font-weight:500;
-    }
+    @include menu-header-base()
   }
 }
+
+//=====================================================
+// Menu buttons container
 
 @mixin menu-buttons-container {
   display: flex;
   flex-direction: column;
 }
 
-// Base mixins for buttons with a scale parameter
 // ===================================================
+// Menu buttons
 
 @mixin menu-button-base($scale) {
-  @include button($min-width: 100%, $scale: $scale, $margin-bottom: 0.5rem);
+  @include button($min-width: 100%, $scale: $scale, $margin-bottom: #{0.5 * $scale}rem);
 }
 
 @mixin submenu-button-base($scale) {
@@ -139,69 +142,131 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 }
 
 // ===================================================
+// Input
 
-@mixin input-core {
-  margin-top : 0.25rem;
-  margin-bottom : 1rem;
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 0.3rem;
-  font-size: 0.8rem;
+@mixin input-core ($scale : 1) {
+  margin-top : #{0.25 * $scale}rem;
+  //display : block;
+  width : 100%;
+  margin-bottom : #{1 * $scale}rem;
+  padding: #{0.5 * $scale}rem;
+  border-radius: #{0.3 * $scale}rem;
+  font-size: #{0.8 * $scale}rem;
   background-color: $secondary;
   box-sizing: border-box;
   border : none;
 }
 
-@mixin input-group {
-  margin-top : 0.5rem;
+@mixin input-group-base($scale : 1) {
+  margin-top : #{0.5 * $scale}rem;
   font-weight: 500;
 
+  label {
+    font-size : #{1 * $scale}rem;
+  }
+
   input[type='text'] {
-    @include input-core;
+    @include input-core($scale);
   }
 
   select {
-    @include input-core;
+    @include input-core($scale);
     appearance: none;
     background-image: url("data:image/svg+xml;charset=US-ASCII,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%204%205'><path%20fill='%23aaa'%20d='M2%200L0%202h4L2%200z%20M2%205L0%203h4l-2%202z'/></svg>");
     background-repeat: no-repeat;
-    background-position: right 0.5rem center;
-    background-size: 0.5rem 0.65rem;
+    background-position: right #{0.5 * $scale}rem center;
+    background-size: #{0.5 * $scale}rem #{0.65 * $scale}rem;
   }
 }
 
-@mixin action-button-group {
-  margin-top: 24px;
-  display: flex;
-  justify-content: flex-start;
-  button {
-    @include submenu-button;
+@mixin input-group() {
+  @media (max-width: $breakpoint-mobile) {
+    @include input-group-base($menu-mobile-scale);
   }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    @include input-group-base();
+  }
+}
+
+// ===================================================
+// Background selection header
+
+@mixin background-selection-header-base($scale : 1) {
+  font-size : #{1 * $scale}rem;
+  margin-bottom : #{0.5 * $scale}rem;
 }
 
 @mixin background-selection-header {
-  font-size : 1.25rem;
-  margin-bottom : 0.5rem;
+  @media (max-width: $breakpoint-mobile) {
+    @include background-selection-header-base($menu-mobile-scale);
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    @include background-selection-header-base();
+  }
 }
 
+// ===================================================
+// Confirmation message
 
-@mixin colors-container {
+@mixin confirmation-message-base($scale : 1) {
+  margin-bottom : #{0.5 * $scale}rem;
+  font-size: #{1 * $scale}rem;
+  max-width : #{15 * $scale}rem;
+  font-weight:normal;
+}
+
+@mixin confirmation-message {
+  @media (max-width: $breakpoint-mobile) {
+    @include confirmation-message-base($menu-mobile-scale);
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    @include confirmation-message-base();
+  }
+}
+
+// ===================================================
+// Color selection
+
+@mixin colors-container-base($scale : 1) {
   display: grid;
   width: 100%; 
   grid-template-columns: repeat(3, 1fr); 
   grid-auto-rows: 1fr; 
-  gap: 0.5rem; 
-  margin-bottom : 1rem;
+  gap: #{0.5 * $scale}rem; 
+  margin-bottom : #{1 * $scale}rem;
+}
+
+@mixin colors-container {
+  @media (max-width: $breakpoint-mobile) {
+    @include colors-container-base($menu-mobile-scale);
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    @include colors-container-base();
+  }
+}
+
+@mixin color-box-base($scale : 1) {
+  aspect-ratio: 1;
+  border-radius: #{0.5 * $scale}rem;
+  cursor: pointer;
+  box-shadow: 0 0 0 #{0.15 * $scale}rem transparent;
+
+  &.selected {
+    box-shadow: 0 0 0 #{0.15 * $scale}rem $background-lighter; 
+  }
 }
 
 @mixin color-box {
-  aspect-ratio: 1; /* Maintain square shape */
-  border-radius: 0.5rem;
-  cursor: pointer;
-  box-shadow: 0 0 0 0.15rem transparent;
+  @media (max-width: $breakpoint-mobile) {
+    @include color-box-base($menu-mobile-scale);
+  }
 
-  &.selected {
-    box-shadow: 0 0 0 0.15rem $background-lighter; 
+  @media (min-width: $breakpoint-minimum-desktop) {
+    @include color-box-base();
   }
 }
 
@@ -209,7 +274,3 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 $menu-x-button-color : $background-lighter;
 $menu-x-button-hover-color : $error-darker;
 
-:root {
-  --menu-x-button-color: #{$background-lighter};
-  --menu-x-button-hover-color: #{$error-darker};
-}
