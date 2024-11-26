@@ -87,7 +87,7 @@ namespace backend.Data
 
             modelBuilder.Entity<Ticket>()
                 .Property(t => t.Description)
-                .HasMaxLength(1000);
+                .HasMaxLength(10000);
 
                             modelBuilder.Entity<User>().HasData(
     new User { Id = "google-oauth2|116927637409288985519", UserName = "User", IsGuest = false }
