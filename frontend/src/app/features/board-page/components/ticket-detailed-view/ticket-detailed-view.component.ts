@@ -213,6 +213,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
       description: this.newDescription,
       colorId: this.ticketDetails.colorId,
     };
+    this.isEditingDescription = false;
     this.ticketService.updateTicket(updateRequest).subscribe({
       next: () => {
         this.ticketDetails.description = this.newDescription;
