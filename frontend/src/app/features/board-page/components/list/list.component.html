@@ -1,23 +1,18 @@
 <div class="list-container">
   <!-- List Header -->
   <div class="list-header">
-    <ng-container *ngIf="!isRenamingList">
-      <span class="list-title" (click)="enableListRenaming($event)">
-        {{ name }}
-      </span>
-    </ng-container>
-    <ng-container *ngIf="isRenamingList">
-      <input
-        autocomplete="off"
-        id="list-name-input-{{ id }}"
-        class="list-title-input"
-        type="text"
-        [(ngModel)]="newListName"
-        (blur)="saveListName()"
-        (keydown)="onListNameKeydown($event)"
-        (click)="$event.stopPropagation()"
-      />
-    </ng-container>
+    <input
+      autocomplete="off"
+      id="list-name-input-{{ id }}"
+      class="list-title-input"
+      type="text"
+      [(ngModel)]="newListName"
+      [readonly]="!isRenamingList"
+      [ngClass]="{ 'editing': isRenamingList }"
+      (click)="onListNameClick($event)"
+      (blur)="saveListName()"
+      (keydown)="onListNameKeydown($event)"
+    />
     <button
       class="menu-button"
       (click)="openMenuOverlay($event); $event.stopPropagation()"

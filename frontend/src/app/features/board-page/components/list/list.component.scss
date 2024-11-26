@@ -25,35 +25,34 @@
     justify-content: space-between;
   }
 
-  .list-title {
-    width: 100%; /* Allow it to fill the available space in the container */
-    max-width: 100%; /* Prevent it from exceeding the container's width */
+  .list-title-input {
+    width: 100%;
     font-size: 1.8rem;
     font-weight: bold;
+    color : $secondary;
+    border: none;
+    background-color: transparent;
     color: $secondary;
     cursor: pointer;
+    padding: 0 $list-title-padding-left;
     margin: 0;
-    padding-left: $list-title-padding-left;
-    overflow-wrap: break-word; /* Ensure long words or strings break within the container */
-    word-wrap: break-word; /* Legacy support */
-    word-break: break-word; /* Support for older browsers */
-    white-space: normal; /* Allow normal text wrapping */
-  }
-
-  .list-title-input {
-    width : 100%;
-    flex-grow: 1;
-    margin: 0;
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: $secondary; /* Change text color to black */
-    border: none;
-    border-color : none;
-    border-radius: $text-input-border-radius;
-    padding-left : $list-title-padding-left;
+    line-height: 1.2;
     box-sizing: border-box;
-    background-color: $neutral-darker; /* White background */
+    border: 1px solid transparent;
+    border-radius : $text-input-border-radius;
+  
+    &:read-only {
+      cursor: pointer;
+    }
+  
+    &.editing {
+      background-color: $neutral-darker;
+      border: 1px solid $secondary;
+      cursor: text;
+      border-radius : $text-input-border-radius;
+    }
   }
+  
 
   .menu-button {
     align-self: flex-start;

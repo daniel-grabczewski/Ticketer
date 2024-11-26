@@ -110,7 +110,7 @@ export class ListComponent implements OnInit, OnChanges {
     private router: Router,
     private overlayService: OverlayService,
     private cdr: ChangeDetectorRef,
-    private utilsService : UtilsService
+    private utilsService: UtilsService
   ) {}
   draggedTicketHeight: number = 0;
   // Reintroducing the isDragging flag
@@ -120,6 +120,9 @@ export class ListComponent implements OnInit, OnChanges {
     // Set a unique cdkDropListId
     this.cdkDropListId = 'cdk-drop-list-' + this.id;
     this.menuConfig = generateListActionsMenuConfig(this.name);
+
+    // Initialize newListName with the current name
+    this.newListName = this.name;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -281,33 +284,40 @@ export class ListComponent implements OnInit, OnChanges {
     }, 0);
   }
 
+  onListNameClick(event: MouseEvent): void {
+    if (!this.isRenamingList) {
+      event.stopPropagation();
+      this.enableListRenaming();
+    }
+  }
+
   // Methods for renaming the list title
-  enableListRenaming(event: MouseEvent): void {
-    event.stopPropagation();
+  enableListRenaming(): void {
     this.isRenamingList = true;
     this.listRenaming.emit(this.isRenamingList);
     this.newListName = this.name;
     // Wait for the input to be rendered, then focus and select text
-    setTimeout(() => {
-      const inputElement = document.getElementById(
-        `list-name-input-${this.id}`
-      ) as HTMLInputElement;
-      if (inputElement) {
-        inputElement.focus();
-        inputElement.select();
-      }
-    }, 0);
+
+    const inputElement = document.getElementById(
+      `list-name-input-${this.id}`
+    ) as HTMLInputElement;
+    if (inputElement) {
+      inputElement.focus();
+      inputElement.select();
+    }
   }
 
   saveListName(): void {
     if (this.newListName.trim() !== '') {
       if (this.newListName.trim() !== this.name) {
-        this.onRenameList(this.utilsService.cleanStringWhiteSpace(this.newListName));
+        this.onRenameList(
+          this.utilsService.cleanStringWhiteSpace(this.newListName)
+        );
       }
-      this.name = this.utilsService.cleanStringWhiteSpace(this.newListName)
+      this.name = this.utilsService.cleanStringWhiteSpace(this.newListName);
     } else {
       // Revert to previous name
-      this.newListName = this.utilsService.cleanStringWhiteSpace(this.newListName)
+      this.newListName = this.name;
     }
     this.isRenamingList = false;
     this.listRenaming.emit(this.isRenamingList);
@@ -391,6 +401,7 @@ export class ListComponent implements OnInit, OnChanges {
   }
 
   // Handle click outside to save the list name
+  /*
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     if (this.isRenamingList) {
@@ -403,4 +414,5 @@ export class ListComponent implements OnInit, OnChanges {
       }
     }
   }
+    */
 }
