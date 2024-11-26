@@ -21,24 +21,18 @@
       <div class="left-section">
         <!-- Ticket Name -->
         <div class="ticket-name-section">
-          <ng-container *ngIf="!isEditingName">
-            <span class = "ticket-name" (click)="enableNameEditing($event)">{{ ticketDetails.name }}</span>
-          </ng-container>
-          <ng-container *ngIf="isEditingName">
-            <input
-              autocomplete="off"
-              id="ticket-name-input"
-              type="text"
-              class="ticket-name-input"
-              [(ngModel)]="newName"
-              (blur)="saveTicketName()"
-              (keydown.enter)="saveTicketName()"
-              (keydown.escape)="cancelNameEditing()"
-              (click)="$event.stopPropagation()"
-            />
-          </ng-container>
-          
-          
+          <input
+            id="ticket-name-input"
+            type="text"
+            class="ticket-name-input"
+            [(ngModel)]="newName"
+            [readonly]="!isEditingName"
+            [ngClass]="{ 'editing': isEditingName }"
+            (click)="onTicketNameClick($event)"
+            (blur)="saveTicketName()"
+            (keydown.enter)="saveTicketName()"
+            (keydown.escape)="cancelNameEditing()"
+          />
         </div>
         <!-- Subheading -->
         <p class="subheading">In list {{ ticketDetails.listName }}</p>

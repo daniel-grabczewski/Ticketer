@@ -154,21 +154,24 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
     event.stopPropagation();
   }
 
-  // Edit Ticket Name
-  enableNameEditing(event: MouseEvent): void {
+// Handle click on the ticket name input when not editing
+onTicketNameClick(event: MouseEvent): void {
+  if (!this.isEditingName) {
     event.stopPropagation();
-    this.isEditingName = true;
-
-    setTimeout(() => {
-      const inputElement = document.getElementById(
-        'ticket-name-input'
-      ) as HTMLInputElement;
-      if (inputElement) {
-        inputElement.focus();
-        inputElement.select();
-      }
-    }, 0);
+    this.enableNameEditing();
   }
+}
+
+// Edit Ticket Name
+enableNameEditing(): void {
+  this.isEditingName = true;
+
+    const inputElement = document.getElementById('ticket-name-input') as HTMLInputElement;
+    if (inputElement) {
+      inputElement.focus();
+      inputElement.select();
+    }
+}
 
   saveTicketName(): void {
     if (this.newName.trim() !== '') {
