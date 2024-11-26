@@ -67,6 +67,7 @@ $gap-between-lists: 1.5rem;
 .board-name {
   @include board-name-template(150rem);
   text-overflow: ellipsis; // Display '...'
+  cursor : pointer;
 }
 
 .board-name-input {
