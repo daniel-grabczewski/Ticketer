@@ -11,18 +11,23 @@
 }
 
 .ticket-detailed-view {
-  position: relative;
+  position: fixed;
+  top: 40%;
+  left: 50%; 
+  transform: translate(-50%, -50%); 
   margin: 40px auto;
-  background-color: $neutral-lighter;
+  background-color: $neutral-darker;
   width: 80%;
   max-width: 800px;
   border-radius: 8px;
   overflow: hidden;
+  color : $secondary;
+  min-height : 50vh;
 }
 
 .header-stripe {
   position: relative;
-  height: 50px;
+  height: 4rem;
 }
 
 .close-button {
@@ -38,7 +43,7 @@
 
 .content-container {
   display: flex;
-  padding: 16px;
+  padding : 1rem;
 }
 
 .left-section {
@@ -50,24 +55,43 @@
   flex: 1;
 }
 
-.ticket-name-section h2 {
-  margin: 0;
+.ticket-name-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  justify-content: space-between;
+}
+
+.ticket-name {
+  box-sizing: border-box;
+  padding: 0.2rem;
+  width: 100%; 
+  max-width: 100%; 
+  font-size: 1.8rem;
+  padding-left : 0.2rem;
+  font-weight: bold;
   cursor: pointer;
 }
 
-.ticket-name-section input[type='text'] {
-  width: 100%;
-  font-size: 24px;
+.ticket-name-input {
+  background : $secondary;
+  padding: 0.2rem;
+  padding : 0;
+  width : 100%;
+  font-size: 1.8rem;
+  padding-left : 0.2rem;
   font-weight: bold;
   border: none;
-  outline: none;
-  background: transparent;
-  color: $secondary;
+  border-color : none;
+  border-radius: $text-input-border-radius;
+  box-sizing: border-box;
+  background-color: $background-lighter; 
+  color : $secondary;
 }
 
 .subheading {
-  color: $neutral-darker;
-  font-size: 14px;
+  font-size: 1rem;
+  font-weight : 300;
 }
 
 .description-section h3 {
