@@ -9,10 +9,7 @@
 }
 
 .confirmation-message {
-  margin-bottom : 0.5rem;
-  font-size: 1.1rem;
-  max-width : 15rem;
-  font-weight : 300;
+  @include confirmation-message;
 }
 
 button {
