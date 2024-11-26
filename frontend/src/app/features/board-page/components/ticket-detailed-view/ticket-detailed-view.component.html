@@ -22,11 +22,13 @@
         <!-- Ticket Name -->
         <div class="ticket-name-section">
           <ng-container *ngIf="!isEditingName">
-            <h2 (click)="enableNameEditing($event)">{{ ticketDetails.name }}</h2>
+            <span (click)="enableNameEditing($event)">{{ ticketDetails.name }}</span>
           </ng-container>
           <ng-container *ngIf="isEditingName">
             <input
+              id="ticket-name-input"
               type="text"
+              class="ticket-name-input"
               [(ngModel)]="newName"
               (blur)="saveTicketName()"
               (keydown.enter)="saveTicketName()"

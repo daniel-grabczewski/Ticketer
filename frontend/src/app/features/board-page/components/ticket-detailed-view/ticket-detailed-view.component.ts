@@ -27,6 +27,7 @@ import {
   SubmenuInputTransfer,
   SubmenuOutputTransfer,
 } from '../../../../shared/models/menu.model';
+import { UtilsService } from '../../../../shared/utils/utils.service';
 
 @Component({
   selector: 'app-ticket-detailed-view',
@@ -58,7 +59,8 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
     private listService: ListService,
     private colorService: ColorService,
     private ticketUpdateService: TicketUpdateService,
-    private overlayService: OverlayService
+    private overlayService: OverlayService,
+    private utilsService : UtilsService
   ) {}
 
   ngOnInit(): void {
@@ -156,19 +158,31 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
   enableNameEditing(event: MouseEvent): void {
     event.stopPropagation();
     this.isEditingName = true;
+
+    setTimeout(() => {
+      const inputElement = document.getElementById(
+        'ticket-name-input'
+      ) as HTMLInputElement;
+      if (inputElement) {
+        inputElement.focus();
+        inputElement.select();
+      }
+    }, 0);
   }
 
   saveTicketName(): void {
     if (this.newName.trim() !== '') {
       const updateRequest: UpdateTicketRequest = {
         id: this.ticketDetails.id,
-        name: this.newName.trim(),
+        name: this.utilsService.cleanStringWhiteSpace(this.newName),
         description: this.ticketDetails.description,
         colorId: this.ticketDetails.colorId,
       };
+      this.ticketDetails.name = this.utilsService.cleanStringWhiteSpace(this.newName);
+      this.newName = this.ticketDetails.name
       this.ticketService.updateTicket(updateRequest).subscribe({
         next: () => {
-          this.ticketDetails.name = this.newName.trim();
+          this.ticketDetails.name = this.utilsService.cleanStringWhiteSpace(this.newName);
           this.isEditingName = false;
           this.ticketUpdateService.emitTicketUpdate(this.ticketDetails);
         },
@@ -176,12 +190,14 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
           console.error('Failed to update ticket name:', error);
         },
       });
+    } else {
+      this.ticketDetails.name = this.utilsService.cleanStringWhiteSpace(this.ticketDetails.name)
     }
   }
 
   cancelNameEditing(): void {
     this.isEditingName = false;
-    this.newName = this.ticketDetails.name;
+    this.newName = this.utilsService.cleanStringWhiteSpace(this.ticketDetails.name);
   }
 
   // Edit Ticket Description
