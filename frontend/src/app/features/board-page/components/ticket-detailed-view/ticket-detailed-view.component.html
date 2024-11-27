@@ -18,7 +18,7 @@
     <!-- Check if ticketDetails is available -->
     <div *ngIf="!errorLoadingTicket && ticketDetails" class="content-container">
       <!-- Left Section -->
-      <div class="left-section">
+      
 <!-- Ticket Name -->
 <div class="ticket-name-section">
   <textarea
@@ -42,10 +42,11 @@
           <span class="list-name-subheading">{{ ticketDetails.listName }}</span>
          </div>
 
-        <!-- Description -->
+      <div class="description-actions-container">
 <!-- Description -->
+<div class="left-section">
 <div class="description-section">
-  <h3 class="header-title">DESCRIPTION</h3>
+  <h3 class="description-title">DESCRIPTION</h3>
   <textarea
     id="ticket-description-textarea"
     [(ngModel)]="newDescription"
@@ -73,7 +74,7 @@
       <!-- Right Section -->
       <div class="right-section">
         <div class = "actions-container">
-        <h3 class="header-title">ACTIONS</h3>
+        <h3 class="actions-title">ACTIONS</h3>
         <button class="action-button" (click)="openMoveToListSubmenu($event)">
           Move to different list
         </button>
@@ -88,6 +89,7 @@
         </button>
       </div>
       </div>
+    </div>
     </div>
   </div>
 </div>

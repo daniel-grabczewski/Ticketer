@@ -44,11 +44,16 @@
 .content-container {
   display: flex;
   padding : 2rem;
+  flex-direction: column;
+}
+
+.description-actions-container {
+  display : flex;
+  gap : 1rem;
 }
 
 .left-section {
   flex: 2;
-  margin-right: 1rem;
 }
 
 
@@ -107,11 +112,20 @@ $text-field-offset : 0.3rem;
   font-weight : 500;
 }
 
-.header-title {
+.description-title {
   font-size : 1rem;
   font-weight : 550;
   letter-spacing: 0.05rem;
   margin-bottom : 0.2rem;
+}
+
+.actions-title {
+  font-size : 1rem;
+  font-weight : 550;
+  letter-spacing: 0.05rem;
+  margin-bottom : 0.5rem;
+  
+  
 }
 
 .description-section textarea {
@@ -173,16 +187,13 @@ $text-field-offset : 0.3rem;
 }
 
 .right-section {
-  flex: 1;
   display : flex;
-  align-items : center;
+  align-items : start;
   justify-content :end;
 }
 
 .actions-container {
   max-width : 8rem;
-  
-  padding : 1rem;
 }
 
 .action-button {
