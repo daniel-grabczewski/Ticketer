@@ -43,7 +43,7 @@
         <!-- Description -->
 <!-- Description -->
 <div class="description-section">
-  <h3 class="description-header">DESCRIPTION</h3>
+  <h3 class="header-title">DESCRIPTION</h3>
   <textarea
     id="ticket-description-textarea"
     [(ngModel)]="newDescription"
@@ -70,7 +70,8 @@
 
       <!-- Right Section -->
       <div class="right-section">
-        <h3>Actions</h3>
+        <div class = "actions-container">
+        <h3 class="header-title">ACTIONS</h3>
         <button class="action-button" (click)="openMoveToListSubmenu($event)">
           Move to different list
         </button>
@@ -78,11 +79,12 @@
           Change cover color
         </button>
         <button
-          class="action-button delete-button"
+          class="delete-button"
           (click)="openDeleteConfirmationSubmenu($event)"
         >
           Delete
         </button>
+      </div>
       </div>
     </div>
   </div>
