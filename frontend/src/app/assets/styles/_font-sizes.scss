@@ -1,0 +1,104 @@
+$font-size-xs:  0.75rem;  // Extra Small (12px)
+$font-size-sm:  0.875rem; // Small (14px)
+$font-size-md:  1rem;     // Medium / Default (16px)
+$font-size-lg:  1.125rem; // Large (18px)
+$font-size-xl:  1.25rem;  // Extra Large (20px)
+$font-size-xxl: 1.5rem;   // Extra Extra Large (24px)
+$font-size-xxxl: 2rem;    // Extra Extra Extra Large (32px)
+$font-size-xxxxl: 3rem;   // Massive (48px)
+
+// Responsive Scaling 
+$font-size-responsive-base: 1;
+$font-size-scale-ratio: 1.25; // Scale ratio for responsive font sizes
+
+$font-size-responsive-xs: 12px;
+$font-size-responsive-sm: 14px;  
+$font-size-responsive-md: 16px;    
+$font-size-responsive-lg: 18px;
+$font-size-responsive-xl: 20px;
+$font-size-responsive-xxl: 24px;
+$font-size-xxxl-reponsive : 32px;
+
+
+
+@mixin font-size-xs {
+  @media (max-width: $breakpoint-mobile) {
+    font-size: $font-size-responsive-xs;
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    font-size: $font-size-xs;
+  }
+}
+
+@mixin font-size-sm {
+  @media (max-width: $breakpoint-mobile) {
+    font-size: $font-size-responsive-sm;
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    font-size: $font-size-sm;
+  }
+}
+
+@mixin font-size-md {
+  @media (max-width: $breakpoint-mobile) {
+    font-size: $font-size-responsive-md;
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    font-size: $font-size-md;
+  }
+}
+
+@mixin font-size-lg {
+  @media (max-width: $breakpoint-mobile) {
+    font-size: $font-size-responsive-lg;
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    font-size: $font-size-lg;
+  }
+}
+
+@mixin font-size-xl {
+  @media (max-width: $breakpoint-mobile) {
+    font-size: $font-size-responsive-xl;
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    font-size: $font-size-xl;
+  }
+}
+
+@mixin font-size-xxl {
+  @media (max-width: $breakpoint-mobile) {
+    font-size: $font-size-responsive-xxl;
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    font-size: $font-size-xxl;
+  }
+}
+
+// $font-size-xxxl would return $font-size-responsive-xxxl for mobile
+@mixin font-size-xxxl {
+  @media (max-width: $breakpoint-mobile) {
+    font-size: $font-size-responsive-xxl;
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    font-size: $font-size-xxxl-reponsive;
+  }
+}
+
+// $font-size-xxxxl would return $font-size-responsive-xxxl for mobile
+@mixin font-size-xxxxl {
+  @media (max-width: $breakpoint-mobile) {
+    font-size: $font-size-responsive-xxl;
+  }
+
+  @media (min-width: $breakpoint-minimum-desktop) {
+    font-size: $font-size-xxxl-reponsive;
+  }
+}
