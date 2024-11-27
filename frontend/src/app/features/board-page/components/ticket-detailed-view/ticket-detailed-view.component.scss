@@ -28,6 +28,10 @@
   position: relative;
   height: 5rem;
   margin-bottom : 0.3rem;
+  display : flex;
+  justify-content: end;
+  align-items : center;
+  padding-right : 2rem;
 }
 
 .close-button {
@@ -194,15 +198,15 @@ $text-field-offset : 0.3rem;
 }
 
 .actions-container {
-  max-width : 8rem;
+  max-width : min-content;
 }
 
 .action-button {
-  @include button($min-width: 100%, $scale: 0.8, $margin-bottom : 0.4rem);
+  @include button($min-width: 100%, $margin-bottom : 0.4rem);
 }
 
 .delete-button {
-  @include button($error, $error-darker, $min-width: 100%,  $scale: 0.8);
+  @include button($error, $error-darker, $min-width: 100%,);
 }
 
 .error-message {

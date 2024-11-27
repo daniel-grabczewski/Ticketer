@@ -6,7 +6,7 @@
   >
     <!-- Header Stripe with Color and Close Button -->
     <div class="header-stripe" [style.backgroundColor]="colorHex">
-      <button class="close-button" (click)="closeTicketView()">×</button>
+      <app-x-button config="menu" (click)="closeTicketView()"></app-x-button>
     </div>
 
     <!-- Error Loading Ticket -->

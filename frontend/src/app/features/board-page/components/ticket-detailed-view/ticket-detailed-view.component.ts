@@ -28,13 +28,14 @@ import {
   SubmenuOutputTransfer,
 } from '../../../../shared/models/menu.model';
 import { UtilsService } from '../../../../shared/utils/utils.service';
+import { XButtonComponent } from '../../../../shared/components/x-button/x-button.component';
 
 @Component({
   selector: 'app-ticket-detailed-view',
   templateUrl: './ticket-detailed-view.component.html',
   styleUrls: ['./ticket-detailed-view.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, XButtonComponent],
 })
 export class TicketDetailedViewComponent implements OnInit, OnDestroy {
   ticketId!: string;
