@@ -57,10 +57,10 @@
 
   <div class="description-buttons"
   [ngClass]="isEditingDescription ? 'description-buttons' : 'hidden-description-buttons'">
-    <button class="save-button" (click)="saveTicketDescription()" [disabled]="!isEditingDescription">
+    <button class="save-button" (click)="saveTicketDescription()">
       Save
     </button>
-    <button class="cancel-button" (click)="cancelDescriptionEditing()" [disabled]="!isEditingDescription">
+    <button class="cancel-button" (click)="cancelDescriptionEditing()">
       Cancel
     </button>
   </div>

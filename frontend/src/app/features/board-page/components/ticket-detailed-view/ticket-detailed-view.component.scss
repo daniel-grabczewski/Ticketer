@@ -149,11 +149,20 @@ $text-field-offset : 0.3rem;
 
 .description-buttons {
   margin-bottom : 0.2rem;
+  margin-left : -$text-field-offset;
 }
 
 .description-buttons .save-button,
 .description-buttons .cancel-button {
-  margin-right: 8px;
+  margin-right: 0.5rem;
+}
+
+.cancel-button {
+  @include button($error, $error-darker, $min-width: 5rem, $max-width : 7rem, $scale: 0.8);
+}
+
+.save-button {
+  @include button($success-darker, $success-extra-dark, $min-width: 4.75rem, $max-width : 7rem, $scale: 0.8);
 }
 
 .hidden-description-buttons.description-buttons {
