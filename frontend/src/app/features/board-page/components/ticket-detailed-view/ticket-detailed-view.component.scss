@@ -1,33 +1,43 @@
- @import '../../../../assets/styles/main.scss';
+@import '../../../../assets/styles/main.scss';
 
 .overlay {
   position: fixed;
+  overflow-y: auto;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
+  display : flex;
+  justify-content: center;
+  align-items: start;
+
 }
 
 .ticket-detailed-view {
   position: relative;
-  margin: auto;
   background-color: $neutral-darker;
-  width: 50vw;
-  min-height : 30rem;
-  max-width: 50rem;
-  max-height : 50rem;
+  max-height : max-content;
+  width : 50rem;
   border-radius: 0.5rem;
-  overflow: hidden;
   color: $secondary;
-  margin-top : 15vh;
+  margin-right : 2rem;
+  margin-left : 2rem;
+  margin-top : 3rem;
+  margin-bottom : 2rem;
+  scrollbar-color: $background-lighter $neutral-darker;
+  overflow: hidden;
+
+  @media (max-width : 600px) {
+    margin-right : 0.5rem;
+    margin-left : 0.5rem;
+  }
 }
 
 .header-stripe {
   position: relative;
   height: 5rem;
-  margin-bottom : 0.3rem;
   display : flex;
   justify-content: end;
   align-items : center;
@@ -47,13 +57,23 @@
 
 .content-container {
   display: flex;
-  padding : 2rem;
+  padding : 1.5rem 2rem 2rem 2rem;
   flex-direction: column;
 }
 
 .description-actions-container {
   display : flex;
   gap : 1rem;
+
+  @media (max-width : $breakpoint-mobile) {
+    flex-direction : column;
+
+    .right-section {
+      justify-content : start;
+    }
+
+
+  }
 }
 
 .left-section {
@@ -72,7 +92,7 @@ $text-field-offset : 0.3rem;
 
 .ticket-name-textarea {
   width: 100%;
-  @include font-size-xxl;
+  font-size : $font-size-xxl;
   font-weight: bold;
   border: none;
   background-color: transparent;
@@ -86,9 +106,12 @@ $text-field-offset : 0.3rem;
   box-sizing: border-box;
   border-radius: $text-input-border-radius;
   resize: none;
-  overflow: hidden;
   min-height: calc(1.2 * 1.7rem); /* Adjusted min-height for one line */
   max-height: 10rem; /* Adjust as needed */
+  margin-bottom : 0.2rem;
+  overflow : hidden;
+  padding-bottom : 0.25rem;
+  
 
   &:read-only {
     cursor: pointer;
@@ -152,6 +175,7 @@ $text-field-offset : 0.3rem;
   border-radius: $text-input-border-radius;
   white-space: pre-wrap;
   margin-bottom : 0.5rem;
+  scrollbar-color: $background-lighter transparent;
 
   &:read-only {
     cursor: pointer;
@@ -167,6 +191,10 @@ $text-field-offset : 0.3rem;
     color: rgb(255 255 255 / 55%);
     //color: $placeholder;
   }
+
+  @media (max-height : 700px) {
+    max-height : 10rem;
+  }
 }
 
 .description-buttons {
@@ -180,11 +208,11 @@ $text-field-offset : 0.3rem;
 }
 
 .cancel-button {
-  @include button($background-lighter, $error-darker, $min-width: 5rem, $max-width : 7rem, $scale: 0.8);
+  @include button($background-lighter, $error-darker, $min-width: 5rem, $max-width : 7rem, $scale: 0.9);
 }
 
 .save-button {
-  @include button($secondary-darker, $success-darker, $font-color : $background, $min-width: 4.75rem, $max-width : 7rem, $scale: 0.8);
+  @include button($secondary-darker, $success-darker, $font-color : $background, $min-width: 4.75rem, $max-width : 7rem, $scale: 0.9);
 }
 
 .hidden-description-buttons.description-buttons {
@@ -199,6 +227,7 @@ $text-field-offset : 0.3rem;
 
 .actions-container {
   max-width : min-content;
+  height : min-content;
 }
 
 .action-button {
