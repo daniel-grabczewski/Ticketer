@@ -175,11 +175,11 @@ $text-field-offset : 0.3rem;
 }
 
 .cancel-button {
-  @include button($error, $error-darker, $min-width: 5rem, $max-width : 7rem, $scale: 0.8);
+  @include button($background-lighter, $error-darker, $min-width: 5rem, $max-width : 7rem, $scale: 0.8);
 }
 
 .save-button {
-  @include button($success-darker, $success-extra-dark, $min-width: 4.75rem, $max-width : 7rem, $scale: 0.8);
+  @include button($secondary-darker, $success-darker, $font-color : $background, $min-width: 4.75rem, $max-width : 7rem, $scale: 0.8);
 }
 
 .hidden-description-buttons.description-buttons {
