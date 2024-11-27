@@ -32,6 +32,17 @@ export class DropdownSubmenuComponent implements DropdownSubmenuInput {
   // Component State
   selectedOption: { id: string; name: string } | null = null;
 
+  // Max character limit for option in dropdown menu
+  private readonly MAX_CHAR_LIMIT = 30;
+
+  processString(value: string): string {
+    if (!value) return '';
+    if (value.length > this.MAX_CHAR_LIMIT) {
+      return value.substring(0, this.MAX_CHAR_LIMIT) + '...';
+    }
+    return value;
+  }
+
   // Handle action button click
   onActionClicked() {
     if (this.selectedOption) {

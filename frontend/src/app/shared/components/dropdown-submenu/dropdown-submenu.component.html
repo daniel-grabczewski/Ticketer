@@ -14,13 +14,13 @@
       [ngModelOptions]="{ standalone: true }"
     >
       <option value="" disabled>{{ dropdownPlaceholder }}</option>
-      <option *ngFor="let option of dropdownItems" [ngValue]="option">
-        {{ option.name }}
+      <option class="test" *ngFor="let option of dropdownItems" [ngValue]="option">
+        {{ processString(option.name) }}
       </option>
     </select>
   </div>
 
-    <button [disabled]="!selectedOption" (click)="onActionClicked()">
-      {{ buttonText }}
-    </button>
+  <button [disabled]="!selectedOption" (click)="onActionClicked()">
+    {{ buttonText }}
+  </button>
 </div>

@@ -2,6 +2,15 @@
 
 .menu-container {
 @include menu-container;
+
+
+@media (max-width: $breakpoint-mobile) {
+  max-width : 25rem;
+}
+
+@media (min-width: $breakpoint-minimum-desktop) {
+  max-width : 14rem;
+}
 }
 
 .menu-header {
@@ -10,6 +19,7 @@
 
 .input-group {
  @include input-group;
+ max-width : 100%;
 }
 
 button {

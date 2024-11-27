@@ -171,6 +171,8 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 
   select {
     @include input-core($scale);
+    padding-right : #{1 * $scale}rem;
+    text-overflow : ellipsis;
     appearance: none;
     background-image: url("data:image/svg+xml;charset=US-ASCII,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%204%205'><path%20fill='%23aaa'%20d='M2%200L0%202h4L2%200z%20M2%205L0%203h4l-2%202z'/></svg>");
     background-repeat: no-repeat;
