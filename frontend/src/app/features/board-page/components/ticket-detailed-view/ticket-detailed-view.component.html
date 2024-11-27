@@ -55,11 +55,12 @@
     placeholder="Click to add a description..."
   ></textarea>
 
-  <div class="description-buttons" *ngIf="isEditingDescription">
-    <button class="save-button" (click)="saveTicketDescription()">
+  <div class="description-buttons"
+  [ngClass]="isEditingDescription ? 'description-buttons' : 'hidden-description-buttons'">
+    <button class="save-button" (click)="saveTicketDescription()" [disabled]="!isEditingDescription">
       Save
     </button>
-    <button class="cancel-button" (click)="cancelDescriptionEditing()">
+    <button class="cancel-button" (click)="cancelDescriptionEditing()" [disabled]="!isEditingDescription">
       Cancel
     </button>
   </div>

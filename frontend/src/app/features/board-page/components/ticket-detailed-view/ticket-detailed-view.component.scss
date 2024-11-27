@@ -129,6 +129,7 @@ $text-field-offset : 0.3rem;
   box-sizing: border-box;
   border-radius: $text-input-border-radius;
   white-space: pre-wrap;
+  margin-bottom : 0.5rem;
 
   &:read-only {
     cursor: pointer;
@@ -147,14 +148,16 @@ $text-field-offset : 0.3rem;
 }
 
 .description-buttons {
-  margin-top: 8px;
-  //visibility : hidden;
-  
+  margin-bottom : 0.2rem;
 }
 
 .description-buttons .save-button,
 .description-buttons .cancel-button {
   margin-right: 8px;
+}
+
+.hidden-description-buttons.description-buttons {
+  visibility : hidden;
 }
 
 
