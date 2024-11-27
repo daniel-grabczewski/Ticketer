@@ -1,10 +1,10 @@
 $button-transition-time : 0.2s;
 
-@mixin button($bg-color:$primary, $hover-bg-color:$primary-darker, $disabled-color:$neutral-lighter, $width : max-content, $min-width : max-content, $max-width : max-content, $scale : 1, $margin-bottom : 0px) {
+@mixin button($bg-color:$primary, $hover-bg-color:$primary-darker, $disabled-color:$neutral-lighter, $width : max-content, $min-width : max-content, $max-width : max-content, $scale : 1, $margin-bottom : 0px, $font-color : $secondary) {
   padding: #{0.6 * $scale}rem #{0.6 * $scale}rem #{0.6 * $scale}rem #{0.6 * $scale}rem;
   text-align: center;
   background-color: $bg-color;
-  color: $secondary;
+  color: $font-color;
   border-radius: calc(0.75rem * $scale);
   border: none;
   cursor: pointer;
