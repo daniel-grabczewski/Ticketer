@@ -308,6 +308,7 @@ export class ListComponent implements OnInit, OnChanges {
       ) as HTMLTextAreaElement;
       if (textareaElement) {
         textareaElement.focus();
+        textareaElement.select();
         this.adjustTitleTextareaHeight();
       }
     }, 0);
