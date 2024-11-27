@@ -103,6 +103,7 @@ export class ListComponent implements OnInit, OnChanges {
   // Variables for renaming list
   isRenamingList: boolean = false;
   newListName: string = '';
+  private originalName: string = '';
 
   constructor(
     private ticketService: TicketService,
@@ -120,6 +121,10 @@ export class ListComponent implements OnInit, OnChanges {
     // Set a unique cdkDropListId
     this.cdkDropListId = 'cdk-drop-list-' + this.id;
     this.menuConfig = generateListActionsMenuConfig(this.name);
+
+    setTimeout(() => {
+      this.adjustTitleTextareaHeight();
+    }, 0);
 
     // Initialize newListName with the current name
     this.newListName = this.name;
@@ -295,16 +300,45 @@ export class ListComponent implements OnInit, OnChanges {
   enableListRenaming(): void {
     this.isRenamingList = true;
     this.listRenaming.emit(this.isRenamingList);
-    this.newListName = this.name;
-    // Wait for the input to be rendered, then focus and select text
+    this.originalName = this.newListName; // Store the original name
 
-    const inputElement = document.getElementById(
-      `list-name-input-${this.id}`
-    ) as HTMLInputElement;
-    if (inputElement) {
-      inputElement.focus();
-      inputElement.select();
+    setTimeout(() => {
+      const textareaElement = document.getElementById(
+        `list-name-textarea-${this.id}`
+      ) as HTMLTextAreaElement;
+      if (textareaElement) {
+        textareaElement.focus();
+        this.adjustTitleTextareaHeight();
+      }
+    }, 0);
+  }
+
+  handleTitleEnter(event: Event): void {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter' && !keyboardEvent.shiftKey) {
+      keyboardEvent.preventDefault();
+      this.saveListName();
     }
+  }
+
+  adjustTitleTextareaHeight(): void {
+    const textarea = document.getElementById(
+      `list-name-textarea-${this.id}`
+    ) as HTMLTextAreaElement;
+    if (textarea) {
+      textarea.style.height = 'auto'; // Reset the height
+      const scrollHeight = textarea.scrollHeight;
+      const rem = parseFloat(
+        getComputedStyle(document.documentElement).fontSize || '16'
+      );
+      const maxHeight = 10 * rem; // Max height of 10rem
+      textarea.style.height = Math.min(scrollHeight, maxHeight) + 'px';
+    }
+  }
+
+  cancelNameEditing(): void {
+    this.isRenamingList = false;
+    this.newListName = this.originalName;
   }
 
   saveListName(): void {
@@ -317,7 +351,7 @@ export class ListComponent implements OnInit, OnChanges {
       this.name = this.utilsService.cleanStringWhiteSpace(this.newListName);
     } else {
       // Revert to previous name
-      this.newListName = this.name;
+      this.newListName = this.originalName;
     }
     this.isRenamingList = false;
     this.listRenaming.emit(this.isRenamingList);

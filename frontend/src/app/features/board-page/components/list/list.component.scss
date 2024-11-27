@@ -25,31 +25,38 @@
     justify-content: space-between;
   }
 
-  .list-title-input {
+  .list-title-textarea {
     width: 100%;
     font-size: 1.8rem;
     font-weight: bold;
-    color : $secondary;
+    color: $secondary;
     border: none;
     background-color: transparent;
-    color: $secondary;
     cursor: pointer;
-    padding: 0 $list-title-padding-left;
+    padding: 0;
+    padding-left: $list-title-padding-left;
     margin: 0;
     line-height: 1.2;
     box-sizing: border-box;
     border: 1px solid transparent;
-    border-radius : $text-input-border-radius;
+    border-radius: $text-input-border-radius;
+    resize: none;
+    overflow: hidden;
+    min-height: calc(1.2 * 1.8rem); /* Height of one line of text */
+    max-height: 10rem; /* Adjust as needed */
   
     &:read-only {
       cursor: pointer;
     }
   
     &.editing {
-      background-color: $neutral-darker;
+      background-color: $background-lighter;
       border: 1px solid $secondary;
       cursor: text;
-      border-radius : $text-input-border-radius;
+    }
+  
+    &::placeholder {
+      color: rgb(255 255 255 / 55%);
     }
   }
   

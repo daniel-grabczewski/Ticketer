@@ -1,25 +1,30 @@
 <div class="list-container">
   <!-- List Header -->
-  <div class="list-header">
-    <input
-      autocomplete="off"
-      id="list-name-input-{{ id }}"
-      class="list-title-input"
-      type="text"
-      [(ngModel)]="newListName"
-      [readonly]="!isRenamingList"
-      [ngClass]="{ 'editing': isRenamingList }"
-      (click)="onListNameClick($event)"
-      (blur)="saveListName()"
-      (keydown)="onListNameKeydown($event)"
-    />
-    <button
-      class="menu-button"
-      (click)="openMenuOverlay($event); $event.stopPropagation()"
-    >
-      ⋮
-    </button>
-  </div>
+<!-- List Header -->
+<div class="list-header">
+  <textarea
+    autocomplete="off"
+    id="list-name-textarea-{{ id }}"
+    class="list-title-textarea"
+    [(ngModel)]="newListName"
+    [readonly]="!isRenamingList"
+    [ngClass]="{ 'editing': isRenamingList }"
+    (click)="onListNameClick($event)"
+    (blur)="saveListName()"
+    (input)="adjustTitleTextareaHeight()"
+    (keydown.enter)="handleTitleEnter($event)"
+    (keydown.escape)="cancelNameEditing()"
+    placeholder="Click to add a list title..."
+    rows="1"
+  ></textarea>
+  <button
+    class="menu-button"
+    (click)="openMenuOverlay($event); $event.stopPropagation()"
+  >
+    ⋮
+  </button>
+</div>
+
 
   <!-- Tickets Drag-and-Drop Container -->
   <div
