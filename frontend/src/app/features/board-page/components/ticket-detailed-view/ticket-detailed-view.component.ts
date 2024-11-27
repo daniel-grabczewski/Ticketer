@@ -50,6 +50,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
   newDescription: string = '';
   disableCloseOnOutsideClick: boolean = false;
   private originalDescription: string = '';
+  private originalName: string = '';
 
   private routeSub!: Subscription;
 
@@ -61,7 +62,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
     private colorService: ColorService,
     private ticketUpdateService: TicketUpdateService,
     private overlayService: OverlayService,
-    private utilsService : UtilsService
+    private utilsService: UtilsService
   ) {}
 
   ngOnInit(): void {
@@ -93,6 +94,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
         this.newDescription = this.ticketDetails.description;
         setTimeout(() => {
           this.adjustTextareaHeight();
+          this.adjustTitleTextareaHeight();
         }, 0);
         if (this.ticketDetails.colorId) {
           this.colorHex = this.getColorHex(this.ticketDetails.colorId);
@@ -126,7 +128,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
       this.cancelDescriptionEditing(); // Discard changes if editing
     }
     // Navigate back to the board route using absolute navigation
-    
+
     if (this.boardId) {
       if (this.boardNameSlug) {
         console.log('board slug exists');
@@ -161,24 +163,53 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
     event.stopPropagation();
   }
 
-// Handle click on the ticket name input when not editing
-onTicketNameClick(event: MouseEvent): void {
-  if (!this.isEditingName) {
-    event.stopPropagation();
-    this.enableNameEditing();
-  }
-}
-
-// Edit Ticket Name
-enableNameEditing(): void {
-  this.isEditingName = true;
-
-    const inputElement = document.getElementById('ticket-name-input') as HTMLInputElement;
-    if (inputElement) {
-      inputElement.focus();
-      inputElement.select();
+  // Handle click on the ticket name input when not editing
+  onTicketNameClick(event: MouseEvent): void {
+    if (!this.isEditingName) {
+      event.stopPropagation();
+      this.enableNameEditing();
     }
-}
+  }
+
+  // Edit Ticket Name
+  enableNameEditing(): void {
+    this.isEditingName = true;
+    this.originalName = this.newName; // Store the original name
+
+    setTimeout(() => {
+      const textareaElement = document.getElementById(
+        'ticket-name-textarea'
+      ) as HTMLTextAreaElement;
+      if (textareaElement) {
+        textareaElement.focus();
+        textareaElement.select();
+        this.adjustTitleTextareaHeight();
+      }
+    }, 0);
+  }
+
+  adjustTitleTextareaHeight(): void {
+    const textarea = document.getElementById(
+      'ticket-name-textarea'
+    ) as HTMLTextAreaElement;
+    if (textarea) {
+      textarea.style.height = 'auto'; // Reset the height
+      const scrollHeight = textarea.scrollHeight;
+      const rem = parseFloat(
+        getComputedStyle(document.documentElement).fontSize || '16'
+      );
+      const maxHeight = 10 * rem; // Max height of 10rem
+      textarea.style.height = Math.min(scrollHeight, maxHeight) + 'px';
+    }
+  }
+
+  handleTitleEnter(event: Event): void {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter' && !keyboardEvent.shiftKey) {
+      keyboardEvent.preventDefault();
+      this.saveTicketName();
+    }
+  }
 
   saveTicketName(): void {
     if (this.newName.trim() !== '') {
@@ -188,11 +219,11 @@ enableNameEditing(): void {
         description: this.ticketDetails.description,
         colorId: this.ticketDetails.colorId,
       };
-      this.ticketDetails.name = this.utilsService.cleanStringWhiteSpace(this.newName);
-      this.newName = this.ticketDetails.name
       this.ticketService.updateTicket(updateRequest).subscribe({
         next: () => {
-          this.ticketDetails.name = this.utilsService.cleanStringWhiteSpace(this.newName);
+          this.ticketDetails.name = this.utilsService.cleanStringWhiteSpace(
+            this.newName
+          );
           this.isEditingName = false;
           this.ticketUpdateService.emitTicketUpdate(this.ticketDetails);
         },
@@ -201,36 +232,41 @@ enableNameEditing(): void {
         },
       });
     } else {
-      this.ticketDetails.name = this.utilsService.cleanStringWhiteSpace(this.ticketDetails.name)
+      // Revert to original name if new name is empty
+      this.newName = this.originalName;
+      this.isEditingName = false;
     }
   }
 
   adjustTextareaHeight(): void {
-    const textarea = document.getElementById('ticket-description-textarea') as HTMLTextAreaElement;
+    const textarea = document.getElementById(
+      'ticket-description-textarea'
+    ) as HTMLTextAreaElement;
     if (textarea) {
       textarea.style.height = 'auto'; // Reset the height
       const scrollHeight = textarea.scrollHeight;
-      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize || '16');
+      const rem = parseFloat(
+        getComputedStyle(document.documentElement).fontSize || '16'
+      );
       const extraSpace = 1 * rem; // 1rem in pixels
       const minHeight = 6 * rem; // 6rem in pixels
       const maxHeight = 20 * rem; // 20rem in pixels
-  
+
       let newHeight = scrollHeight + extraSpace;
-  
+
       if (newHeight > maxHeight) {
         newHeight = maxHeight;
       } else if (newHeight < minHeight) {
         newHeight = minHeight;
       }
-  
+
       textarea.style.height = newHeight + 'px';
     }
   }
-  
 
   cancelNameEditing(): void {
     this.isEditingName = false;
-    this.newName = this.utilsService.cleanStringWhiteSpace(this.ticketDetails.name);
+    this.newName = this.originalName;
   }
 
   onDescriptionClick(event: MouseEvent): void {

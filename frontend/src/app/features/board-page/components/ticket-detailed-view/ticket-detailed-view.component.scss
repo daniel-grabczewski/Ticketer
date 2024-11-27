@@ -61,7 +61,7 @@
 
 $text-field-offset : 0.3rem;
 
-.ticket-name-input {
+.ticket-name-textarea {
   width: 100%;
   font-size: 1.8rem;
   font-weight: bold;
@@ -69,14 +69,17 @@ $text-field-offset : 0.3rem;
   background-color: transparent;
   color: $secondary;
   cursor: pointer;
-  padding: 0.1rem;
-  padding-left : $text-field-offset;
-  margin-left : -$text-field-offset;
+  padding: 0; /* Removed vertical padding */
+  padding-left: $text-field-offset;
+  margin-left: -$text-field-offset;
   line-height: 1.2;
   border: 1px solid transparent;
   box-sizing: border-box;
-  border-radius : $text-input-border-radius;
-  text-overflow: ellipsis;
+  border-radius: $text-input-border-radius;
+  resize: none;
+  overflow: hidden;
+  min-height: calc(1.2 * 1.8rem); /* Adjusted min-height for one line */
+  max-height: 10rem; /* Adjust as needed */
 
   &:read-only {
     cursor: pointer;
@@ -84,15 +87,15 @@ $text-field-offset : 0.3rem;
 
   &.editing {
     background-color: $background-lighter;
-    padding: 0.1rem;
-    padding-left : $text-field-offset;
-    margin-left : -$text-field-offset;
     border: 1px solid $secondary;
-    box-sizing: border-box;
     cursor: text;
-    border-radius : $text-input-border-radius;
+  }
+
+  &::placeholder {
+    color: rgb(255 255 255 / 55%);
   }
 }
+
 
 .subheading {
   font-size: 1rem;

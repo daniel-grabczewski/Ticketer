@@ -19,21 +19,23 @@
     <div *ngIf="!errorLoadingTicket && ticketDetails" class="content-container">
       <!-- Left Section -->
       <div class="left-section">
-        <!-- Ticket Name -->
-        <div class="ticket-name-section">
-          <input
-            id="ticket-name-input"
-            type="text"
-            class="ticket-name-input"
-            [(ngModel)]="newName"
-            [readonly]="!isEditingName"
-            [ngClass]="{ 'editing': isEditingName }"
-            (click)="onTicketNameClick($event)"
-            (blur)="saveTicketName()"
-            (keydown.enter)="saveTicketName()"
-            (keydown.escape)="cancelNameEditing()"
-          />
-        </div>
+<!-- Ticket Name -->
+<div class="ticket-name-section">
+  <textarea
+    rows="1"
+    id="ticket-name-textarea"
+    class="ticket-name-textarea"
+    [(ngModel)]="newName"
+    [readonly]="!isEditingName"
+    [ngClass]="{ 'editing': isEditingName }"
+    (click)="onTicketNameClick($event)"
+    (blur)="saveTicketName()"
+    (input)="adjustTitleTextareaHeight()"
+    (keydown.enter)="handleTitleEnter($event)"
+    (keydown.escape)="cancelNameEditing()"
+  ></textarea>
+</div>
+
         <!-- Subheading -->
          <div class="subheading">
           <span>In list </span>
