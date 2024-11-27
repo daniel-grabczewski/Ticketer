@@ -41,29 +41,30 @@
          </div>
 
         <!-- Description -->
-        <div class="description-section">
-          <h3>Description</h3>
-          <ng-container *ngIf="!isEditingDescription">
-            <p (click)="enableDescriptionEditing($event)">
-              {{ ticketDetails.description || 'Click to add a description...' }}
-            </p>
-          </ng-container>
-          <ng-container *ngIf="isEditingDescription">
-            <textarea
-              [(ngModel)]="newDescription"
-              (click)="$event.stopPropagation()"
-              (keydown.escape)="cancelDescriptionEditing()"
-            ></textarea>
-            <div class="description-buttons">
-              <button class="save-button" (click)="saveTicketDescription()">
-                Save
-              </button>
-              <button class="cancel-button" (click)="cancelDescriptionEditing()">
-                Cancel
-              </button>
-            </div>
-          </ng-container>
-        </div>
+<!-- Description -->
+<div class="description-section">
+  <h3 class="description-header">DESCRIPTION</h3>
+  <textarea
+    id="ticket-description-textarea"
+    [(ngModel)]="newDescription"
+    [readonly]="!isEditingDescription"
+    [ngClass]="{ 'editing': isEditingDescription }"
+    (click)="onDescriptionClick($event)"
+    (keydown.escape)="cancelDescriptionEditing()"
+    (input)="adjustTextareaHeight()"
+    placeholder="Click to add a description..."
+  ></textarea>
+
+  <div class="description-buttons" *ngIf="isEditingDescription">
+    <button class="save-button" (click)="saveTicketDescription()">
+      Save
+    </button>
+    <button class="cancel-button" (click)="cancelDescriptionEditing()">
+      Cancel
+    </button>
+  </div>
+</div>
+
       </div>
 
       <!-- Right Section -->

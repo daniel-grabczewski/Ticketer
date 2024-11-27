@@ -49,6 +49,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
   newName: string = '';
   newDescription: string = '';
   disableCloseOnOutsideClick: boolean = false;
+  private originalDescription: string = '';
 
   private routeSub!: Subscription;
 
@@ -90,12 +91,14 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
         this.ticketDetails = ticketData;
         this.newName = this.ticketDetails.name;
         this.newDescription = this.ticketDetails.description;
+        setTimeout(() => {
+          this.adjustTextareaHeight();
+        }, 0);
         if (this.ticketDetails.colorId) {
           this.colorHex = this.getColorHex(this.ticketDetails.colorId);
         } else {
           this.colorHex = '#CCCCCC'; // Default color
         }
-        // listName is already included in ticketDetails
       },
       error: (error) => {
         console.error('Failed to retrieve ticket details:', error);
@@ -119,7 +122,11 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
 
   // Close the ticket detailed view
   closeTicketView(): void {
+    if (this.isEditingDescription) {
+      this.cancelDescriptionEditing(); // Discard changes if editing
+    }
     // Navigate back to the board route using absolute navigation
+    
     if (this.boardId) {
       if (this.boardNameSlug) {
         console.log('board slug exists');
@@ -198,39 +205,86 @@ enableNameEditing(): void {
     }
   }
 
+  adjustTextareaHeight(): void {
+    const textarea = document.getElementById('ticket-description-textarea') as HTMLTextAreaElement;
+    if (textarea) {
+      textarea.style.height = 'auto'; // Reset the height
+      const scrollHeight = textarea.scrollHeight;
+      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize || '16');
+      const extraSpace = 1 * rem; // 1rem in pixels
+      const minHeight = 6 * rem; // 6rem in pixels
+      const maxHeight = 20 * rem; // 20rem in pixels
+  
+      let newHeight = scrollHeight + extraSpace;
+  
+      if (newHeight > maxHeight) {
+        newHeight = maxHeight;
+      } else if (newHeight < minHeight) {
+        newHeight = minHeight;
+      }
+  
+      textarea.style.height = newHeight + 'px';
+    }
+  }
+  
+
   cancelNameEditing(): void {
     this.isEditingName = false;
     this.newName = this.utilsService.cleanStringWhiteSpace(this.ticketDetails.name);
   }
 
+  onDescriptionClick(event: MouseEvent): void {
+    if (!this.isEditingDescription) {
+      event.stopPropagation();
+      this.enableDescriptionEditing();
+    }
+  }
+
   // Edit Ticket Description
-  enableDescriptionEditing(event: MouseEvent): void {
-    event.stopPropagation();
+  enableDescriptionEditing(): void {
     this.isEditingDescription = true;
+    this.originalDescription = this.newDescription; // Store the original description
+
+    setTimeout(() => {
+      const textareaElement = document.getElementById(
+        'ticket-description-textarea'
+      ) as HTMLTextAreaElement;
+      if (textareaElement) {
+        textareaElement.focus();
+      }
+      this.adjustTextareaHeight(); // Adjust the textarea height after focusing
+    }, 0);
   }
 
   saveTicketDescription(): void {
-    const updateRequest: UpdateTicketRequest = {
-      id: this.ticketDetails.id,
-      name: this.ticketDetails.name,
-      description: this.newDescription,
-      colorId: this.ticketDetails.colorId,
-    };
-    this.isEditingDescription = false;
-    this.ticketService.updateTicket(updateRequest).subscribe({
-      next: () => {
-        this.ticketDetails.description = this.newDescription;
-        this.ticketUpdateService.emitTicketUpdate(this.ticketDetails);
-      },
-      error: (error) => {
-        console.error('Failed to update ticket description:', error);
-      },
-    });
+    if (this.newDescription !== this.ticketDetails.description) {
+      const updateRequest: UpdateTicketRequest = {
+        id: this.ticketDetails.id,
+        name: this.ticketDetails.name,
+        description: this.newDescription,
+        colorId: this.ticketDetails.colorId,
+      };
+      this.ticketService.updateTicket(updateRequest).subscribe({
+        next: () => {
+          this.ticketDetails.description = this.newDescription;
+          this.ticketUpdateService.emitTicketUpdate(this.ticketDetails);
+          this.isEditingDescription = false; // Exit editing mode
+        },
+        error: (error) => {
+          console.error('Failed to update ticket description:', error);
+        },
+      });
+    } else {
+      this.isEditingDescription = false;
+    }
   }
 
   cancelDescriptionEditing(): void {
     this.isEditingDescription = false;
-    this.newDescription = this.ticketDetails.description;
+    this.newDescription = this.originalDescription; // Revert to original
+    setTimeout(() => {
+      this.adjustTextareaHeight();
+    }, 0);
   }
 
   // Open Move to Different List using OverlayService
