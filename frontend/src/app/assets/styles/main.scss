@@ -30,6 +30,10 @@ $list-vertical-padding : 0.75rem;
 $list-width: 15.5rem;
 $total-list-width: $list-width + ($list-horizontal-padding * 2);
 
+:root {
+  --list-horizontal-padding: #{$list-horizontal-padding};
+}
+
 
 @mixin no-highlight {
     -webkit-user-select: none; /* Safari and Chrome */

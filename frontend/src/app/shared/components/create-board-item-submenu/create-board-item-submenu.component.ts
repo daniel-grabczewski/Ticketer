@@ -26,6 +26,7 @@ export class CreateBoardItemSubmenuComponent {
   // Inputs based on CreateBoardItemSubmenuInput
   @Input() placeholder: string = '';
   @Input() buttonText: string = '';
+  @Input() isHorizontalPadding : boolean = false;
 
   constructor(private elementRef: ElementRef) {}
 
@@ -40,12 +41,20 @@ export class CreateBoardItemSubmenuComponent {
   textInputValue: string = '';
   xColor: string = 'var(--neutral-lighter)';
   xHoverColor: string = 'var(--error)';
+  horizontalPadding : string = 'var(--list-horizontal-padding)'
   private holding = false;
 
   // Account for this component detecting initial click from parent as an outside click, closing this menu immediately upon opening with the @HostListener
   ngOnInit() {
     this.justOpened = true;
     setTimeout(() => (this.justOpened = false), 0);
+  }
+
+  getPadding(): string {
+    if (this.isHorizontalPadding) {
+      return `0 ${this.horizontalPadding}`;
+    }
+    return '0 0';
   }
 
   // Handle action button click
