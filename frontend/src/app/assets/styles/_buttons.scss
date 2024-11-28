@@ -8,7 +8,7 @@ $button-transition-time : 0.2s;
   border-radius: calc(0.75rem * $scale);
   border: none;
   cursor: pointer;
-  font-size: calc(0.95rem * $scale);
+  font-size: calc($font-size-sm * $scale);
   transition: background-color $button-transition-time ease;
   width: $width;
   min-width: $min-width;
