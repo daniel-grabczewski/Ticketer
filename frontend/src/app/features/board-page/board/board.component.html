@@ -4,56 +4,54 @@
   [ngStyle]="getBackgroundStyle()"
   cdkScrollable
 >
-  <div class="board-page-container" *ngIf="boardDetails">
-    <!-- Board Header -->
-    <div class="board-header">
-      <div class="board-header-inner-container">
-        <!-- Board Name -->
-        <ng-container *ngIf="!isRenamingBoard">
-          <span class="board-name" (click)="enableBoardRenaming($event)">
-            {{ boardDetails?.name }}
-          </span>
-        </ng-container>
-        <ng-container *ngIf="isRenamingBoard">
-          <div>
-            <span
-              #boardNameSpan
-              contenteditable="true"
-              id="board-name-input"
-              class="board-name-input"
-              (blur)="saveBoardName()"
-              (input)="onBoardNameInput()"
-              (keydown)="onBoardNameKeydown($event)"
-              (click)="$event.stopPropagation()"
-              (paste)="onBoardNamePaste($event)"
-            >
-            </span>
-          </div>
-        </ng-container>
-        <!-- Menu Button -->
-        <app-cog-button id="board-menu-button" class="menu-button" (click)="openMenuOverlay($event)" [scale] = "3" color="rgba(0, 0, 0, 0.35)" hoverColor="rgba(0, 0, 0, 0.55)"></app-cog-button>
+<div class="board-header">
+  <div class="board-header-inner-container">
+    <!-- Board Name -->
+    <ng-container *ngIf="!isRenamingBoard">
+      <span class="board-name" (click)="enableBoardRenaming($event)">
+        {{ boardDetails?.name }}
+      </span>
+    </ng-container>
+    <ng-container *ngIf="isRenamingBoard">
+      <div>
+        <span
+          #boardNameSpan
+          contenteditable="true"
+          id="board-name-input"
+          class="board-name-input"
+          (blur)="saveBoardName()"
+          (input)="onBoardNameInput()"
+          (keydown)="onBoardNameKeydown($event)"
+          (click)="$event.stopPropagation()"
+          (paste)="onBoardNamePaste($event)"
+        >
+        </span>
       </div>
-    </div>
+    </ng-container>
+    <!-- Menu Button -->
+    <app-cog-button id="board-menu-button" class="menu-button" (click)="openMenuOverlay($event)" [scale] = "3" color="rgba(0, 0, 0, 0.35)" hoverColor="rgba(0, 0, 0, 0.55)"></app-cog-button>
+  </div>
+</div>
 
     <!-- Lists Drag-and-Drop Container -->
+     
     <div
+    *ngIf="boardDetails"
+    class="lists-container"
       cdkDropList
       cdkDropListOrientation="horizontal"
       [cdkDropListData]="boardDetails.lists"
       (cdkDropListDropped)="onListDrop($event)"
       [cdkDropListDisabled]="listRenamingStatus"
       [cdkDropListAutoScrollDisabled]="false"
-      class="lists-container"
     >
-      <div
+        <app-list
         *ngFor="let list of boardDetails.lists; let i = index"
         cdkDrag
         class="board-list-container"
         [cdkDragDisabled]="isListDraggingDisabled"
         (cdkDragStarted)="onDragStarted()"
         (cdkDragEnded)="onDragEnded()"
-      >
-        <app-list
           [id]="list.id"
           [name]="list.name"
           [position]="list.position"
@@ -71,12 +69,10 @@
           (isHoldingCreateBoardItemSubmenu)="
             onHoldingCreateBoardItemSubmenu($event)
           "
-        ></app-list>
-        
-        <!-- Placeholder for List Dragging -->
+        >
         <div *cdkDragPlaceholder class="list-placeholder"></div>
-      </div>
-          <!-- Add List Section -->
+      </app-list>
+
     <div
     class="add-list-section-wrapper"
     [ngStyle]="{
@@ -110,5 +106,4 @@
 
 
     <router-outlet></router-outlet>
-  </div>
 </div>

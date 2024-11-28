@@ -1,5 +1,15 @@
 @import '../../src/app/assets/styles/main.scss';
 
+.ticketer-app {
+  height : 100%;
+  display : flex;
+  flex-direction : column;
+}
+
+.router-wrapper {
+  flex-grow : 1;
+}
+
 p, button {
   margin : 0px;
 }
@@ -22,7 +32,7 @@ p, button {
   display: flex;
   justify-content: center;
   padding: 1.3rem 3rem;
-  position: fixed; 
+  position: relative; 
   top: 0; 
   left: 0;
   right: 0;
@@ -89,7 +99,7 @@ p, button {
     background: $background;
     display: flex;
     justify-content: flex-end;
-    position: fixed; 
+    position: relative; 
     top: 0; 
     left: 0;
     right: 0;
