@@ -340,6 +340,20 @@ export class ListComponent implements OnInit, OnChanges {
   cancelNameEditing(): void {
     this.isRenamingList = false;
     this.newListName = this.originalName;
+  
+    // Blur the textarea to remove focus
+    const textareaElement = document.getElementById(
+      `list-name-textarea-${this.id}`
+    ) as HTMLTextAreaElement;
+    if (textareaElement) {
+      textareaElement.blur();
+    }
+  
+    // Remove text selection
+    const selection = window.getSelection();
+    if (selection) {
+      selection.removeAllRanges();
+    }
   }
 
   saveListName(): void {
@@ -356,6 +370,20 @@ export class ListComponent implements OnInit, OnChanges {
     }
     this.isRenamingList = false;
     this.listRenaming.emit(this.isRenamingList);
+  
+    // Blur the textarea to remove focus
+    const textareaElement = document.getElementById(
+      `list-name-textarea-${this.id}`
+    ) as HTMLTextAreaElement;
+    if (textareaElement) {
+      textareaElement.blur();
+    }
+  
+    // Remove text selection
+    const selection = window.getSelection();
+    if (selection) {
+      selection.removeAllRanges();
+    }
   }
 
   onListNameKeydown(event: KeyboardEvent): void {

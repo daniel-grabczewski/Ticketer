@@ -12,7 +12,7 @@
     max-width: $list-width;
     max-height: 75vh; /* Set maximum height */
     position: relative; /* Added for positioning the menu */
-  }
+      }
 
   .list-container:hover {
     cursor : pointer;
@@ -26,6 +26,7 @@
   }
 
   .list-title-textarea {
+    @include no-highlight;
     width: 100%;
     font-size: 1.8rem;
     font-weight: bold;
@@ -47,6 +48,18 @@
   
     &:read-only {
       cursor: pointer;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  
+    &:not(.editing) {
+      border: 1px solid transparent;
+  
+      &:focus {
+        border: 1px solid transparent;
+      }
     }
   
     &.editing {
