@@ -10,8 +10,12 @@
     flex-direction: column;
     width: $list-width;
     max-width: $list-width;
-    max-height: 75vh; /* Set maximum height */
+    max-height: calc(90vh - 165.6px); /* Set maximum height */
     position: relative; /* Added for positioning the menu */
+
+    @media (max-height : 800px) {
+      max-height: calc(85vh - 165.6px);
+    }
       }
 
   .list-container:hover {
