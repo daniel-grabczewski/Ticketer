@@ -123,6 +123,7 @@ $gap-between-lists: 1.5rem;
   background-color: $background-lighter;
   border-radius: $list-border-radius;
   height: 30rem;
+  max-height : 45vh;
   min-width: $total-list-width;
   max-width: $total-list-width;
   border: none;
