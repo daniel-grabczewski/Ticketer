@@ -332,8 +332,8 @@ export class ListComponent implements OnInit, OnChanges {
       const rem = parseFloat(
         getComputedStyle(document.documentElement).fontSize || '16'
       );
-      const maxHeight = 10 * rem; // Max height of 10rem
-      textarea.style.height = Math.min(scrollHeight, maxHeight) + 'px';
+      //const maxHeight = 10 * rem; // Max height of 10rem
+      textarea.style.height = Math.min(scrollHeight) + 'px';
     }
   }
 

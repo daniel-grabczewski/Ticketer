@@ -48,7 +48,6 @@
     resize: none;
     overflow: hidden;
     min-height: calc(1.2 * 1.8rem); /* Height of one line of text */
-    max-height: 10rem; /* Adjust as needed */
   
     &:read-only {
       cursor: pointer;
