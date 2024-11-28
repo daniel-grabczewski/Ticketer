@@ -109,6 +109,7 @@
     flex-grow: 1; /* Allow the ticket list to grow and fill available space */
     scrollbar-width: thin;
     scrollbar-color: $background-lighter $background;
+    cursor :auto;
   }
 
   .add-ticket-section {

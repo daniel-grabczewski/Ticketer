@@ -32,7 +32,7 @@ export class CreateBoardItemSubmenuComponent {
   // Outputs
   @Output() menuAction = new EventEmitter<CreateBoardItemSubmenuOutput>();
   @Output() close = new EventEmitter<void>();
-  @Output() isHoldingCreateBoardItemSubmenu = new EventEmitter<boolean>();
+  @Output() isHoldingNonListItem = new EventEmitter<boolean>();
 
   private justOpened: boolean = false;
   xScale = X_SCALE_VALUE;
@@ -76,19 +76,19 @@ export class CreateBoardItemSubmenuComponent {
   @HostListener('mousedown')
   onMouseDown(): void {
     this.holding = true;
-    this.isHoldingCreateBoardItemSubmenu.emit(this.holding);
+    this.isHoldingNonListItem.emit(this.holding);
   }
 
   @HostListener('mouseup')
   onMouseUp(): void {
     this.holding = false;
-    this.isHoldingCreateBoardItemSubmenu.emit(this.holding);
+    this.isHoldingNonListItem.emit(this.holding);
   }
 
   @HostListener('mouseleave')
   onMouseLeave(): void {
     this.holding = false;
-    this.isHoldingCreateBoardItemSubmenu.emit(this.holding);
+    this.isHoldingNonListItem.emit(this.holding);
   }
 
   // Handle close button click

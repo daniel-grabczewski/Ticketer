@@ -27,13 +27,14 @@
 
   <!-- Tickets Drag-and-Drop Container -->
   <div
-    cdkDropList
-    [cdkDropListData]="tickets"
-    [cdkDropListConnectedTo]="connectedDropLists"
-    [id]="cdkDropListId"
-    class="ticket-list"
-    (cdkDropListDropped)="onTicketDrop($event)"
-  >
+  cdkDropList
+  [cdkDropListData]="tickets"
+  [cdkDropListConnectedTo]="connectedDropLists"
+  [id]="cdkDropListId"
+  class="ticket-list"
+  (cdkDropListDropped)="onTicketDrop($event)"
+  (pointerdown)="onTicketListPointerDown($event)"
+>
     <!-- Placeholder for Empty List -->
     <div *ngIf="tickets.length === 0" class="empty-list-placeholder">
       Drop tickets here
@@ -79,7 +80,7 @@
         [buttonText]="'Add ticket'"
         (menuAction)="onCreateTicketSubmenuAction($event)"
         (close)="onCreateTicketSubmenuClose()"
-        (isHoldingCreateBoardItemSubmenu)="onIsHoldingCreateBoardItemSubmenu($event)"
+        (isHoldingNonListItem)="onIsHoldingNonListItem($event)"
       ></app-create-board-item-submenu>
     </ng-container>
   </div>

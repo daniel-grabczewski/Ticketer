@@ -336,7 +336,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     };
   }
 
-  onHoldingCreateBoardItemSubmenu(isHolding: boolean): void {
+  onIsHoldingNonListItem(isHolding: boolean): void {
     this.isListDraggingDisabled = isHolding;
   }
 

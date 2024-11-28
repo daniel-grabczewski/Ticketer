@@ -87,7 +87,7 @@ export class ListComponent implements OnInit, OnChanges {
     name: string;
   }>();
   @Output() listRenaming = new EventEmitter<boolean>();
-  @Output() isHoldingCreateBoardItemSubmenu = new EventEmitter<boolean>();
+  @Output() isHoldingNonListItem = new EventEmitter<boolean>();
 
   plusButtonHoverColor: string = 'var(--secondary-darker)';
   plusButtonColor: string = 'var(--neutral-lighter)';
@@ -340,7 +340,7 @@ export class ListComponent implements OnInit, OnChanges {
   cancelNameEditing(): void {
     this.isRenamingList = false;
     this.newListName = this.originalName;
-  
+
     // Blur the textarea to remove focus
     const textareaElement = document.getElementById(
       `list-name-textarea-${this.id}`
@@ -348,7 +348,7 @@ export class ListComponent implements OnInit, OnChanges {
     if (textareaElement) {
       textareaElement.blur();
     }
-  
+
     // Remove text selection
     const selection = window.getSelection();
     if (selection) {
@@ -370,7 +370,7 @@ export class ListComponent implements OnInit, OnChanges {
     }
     this.isRenamingList = false;
     this.listRenaming.emit(this.isRenamingList);
-  
+
     // Blur the textarea to remove focus
     const textareaElement = document.getElementById(
       `list-name-textarea-${this.id}`
@@ -378,7 +378,7 @@ export class ListComponent implements OnInit, OnChanges {
     if (textareaElement) {
       textareaElement.blur();
     }
-  
+
     // Remove text selection
     const selection = window.getSelection();
     if (selection) {
@@ -459,8 +459,18 @@ export class ListComponent implements OnInit, OnChanges {
     this.showCreateTicketSubmenu = false;
   }
 
-  onIsHoldingCreateBoardItemSubmenu(isHolding: boolean): void {
-    this.isHoldingCreateBoardItemSubmenu.emit(isHolding);
+  onTicketListPointerDown(event: PointerEvent): void {
+    this.isHoldingNonListItem.emit(true);
+  }
+
+  // Listen to the document's pointerup event to re-enable dragging
+  @HostListener('document:pointerup', ['$event'])
+  onDocumentPointerUp(event: PointerEvent): void {
+    this.isHoldingNonListItem.emit(false);
+  }
+
+  onIsHoldingNonListItem(isHolding: boolean): void {
+    this.isHoldingNonListItem.emit(isHolding);
   }
 
   // Handle click outside to save the list name
