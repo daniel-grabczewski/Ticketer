@@ -90,6 +90,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   plusButtonHoverColor: string = 'var(--secondary)';
   plusButtonColor: string = 'var(--secondary-darker)';
   backgroundColor: string = 'var(--background)';
+  private scrollSpeed = 0;
 
   // Boolean to keep track of whether dragging list should be disabled
   isListDraggingDisabled: boolean = false;
@@ -135,6 +136,10 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.handleTicketUpdate(updatedTicket);
       }
     );
+
+    this.calculateScrollSpeed();
+    window.addEventListener('resize', this.onWindowResize.bind(this));
+
   }
 
   ngOnDestroy(): void {
@@ -145,6 +150,12 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.ticketUpdateSub) {
       this.ticketUpdateSub.unsubscribe();
     }
+
+    window.removeEventListener('resize', this.onWindowResize.bind(this));
+  }
+
+  private onWindowResize(): void {
+    this.calculateScrollSpeed();
   }
 
   onDragMoved(event: CdkDragMove<any>): void {
@@ -159,11 +170,11 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   
     // Check if the pointer is within the threshold near the left edge
     if (clientX - rect.left < threshold) {
-      this.startScrolling(-this.scrollSpeed); // Scroll left
+      this.startScrolling(-1); // Scroll left
     }
     // Check if the pointer is within the threshold near the right edge
     else if (rect.right - clientX < threshold) {
-      this.startScrolling(this.scrollSpeed); // Scroll right
+      this.startScrolling(1); // Scroll right
     } else {
       this.stopScrolling(); // Stop scrolling when the pointer is not near an edge
     }
@@ -175,6 +186,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onDragEnded() {
     this.dragStateService.setIsDragging(false);
+    this.stopScrolling(); 
   }
 
   onBoardNameKeydown(event: KeyboardEvent): void {
@@ -232,18 +244,33 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.onBoardNameInput();
   }
 
-  private scrollSpeed = 1500; // Pixels per frame
+  private calculateScrollSpeed(): void {
+    const screenWidth = window.innerWidth;
+    const maxSpeed = 1500; // Maximum scroll speed
+    const minSpeed = 500;  // Minimum scroll speed
+    const maxWidth = 1920; // Screen width at which scrollSpeed reaches maxSpeed
+    const minWidth = 320;  // Minimum screen width
+  
+    // Clamp screenWidth between minWidth and maxWidth
+    const clampedWidth = Math.max(minWidth, Math.min(screenWidth, maxWidth));
+  
+    // Calculate scrollSpeed
+    this.scrollSpeed =
+      ((clampedWidth - minWidth) / (maxWidth - minWidth)) * (maxSpeed - minSpeed) + minSpeed;
+  }
+
+  // Pixels per frame
   private scrollFrame: any; // For canceling requestAnimationFrame
   private currentScrollSpeed = 0; // Member variable for current speed
   private lastTimestamp: number = 0;
 
 
-private startScrolling(speed: number): void {
-  this.currentScrollSpeed = speed;
-  if (this.scrollFrame) return;
-  this.lastTimestamp = 0; // Reset timestamp
-  this.scrollFrame = requestAnimationFrame((timestamp) => this.smoothScroll(timestamp));
-}
+  private startScrolling(direction: number): void {
+    this.currentScrollSpeed = direction * this.scrollSpeed;
+    if (this.scrollFrame) return;
+    this.lastTimestamp = 0; // Reset timestamp
+    this.scrollFrame = requestAnimationFrame((timestamp) => this.smoothScroll(timestamp));
+  }
 
 private stopScrolling(): void {
   if (this.scrollFrame) {
