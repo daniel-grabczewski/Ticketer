@@ -20,6 +20,7 @@ import { TicketService } from '../../../core/services/ticket.service';
 import { GetBoardFullDetailsResponse } from '../../../shared/models/board.model';
 import {
   CdkDragDrop,
+  CdkDragMove,
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
@@ -146,6 +147,28 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  onDragMoved(event: CdkDragMove<any>): void {
+    const clientX = event.pointerPosition.x;
+  
+    if (!this.scrollableBoardElementRef) {
+      return; // Wait until the ViewChild is available
+    }
+  
+    const threshold = 50; // Distance from the edge to trigger scrolling
+    const rect = this.scrollableBoardElementRef.nativeElement.getBoundingClientRect();
+  
+    // Check if the pointer is within the threshold near the left edge
+    if (clientX - rect.left < threshold) {
+      this.startScrolling(-this.scrollSpeed); // Scroll left
+    }
+    // Check if the pointer is within the threshold near the right edge
+    else if (rect.right - clientX < threshold) {
+      this.startScrolling(this.scrollSpeed); // Scroll right
+    } else {
+      this.stopScrolling(); // Stop scrolling when the pointer is not near an edge
+    }
+  }
+
   onDragStarted() {
     this.dragStateService.setIsDragging(true);
   }
@@ -209,38 +232,11 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.onBoardNameInput();
   }
 
-  private scrollSpeed = 2000; // Pixels per frame
+  private scrollSpeed = 1500; // Pixels per frame
   private scrollFrame: any; // For canceling requestAnimationFrame
   private currentScrollSpeed = 0; // Member variable for current speed
   private lastTimestamp: number = 0;
 
-  // Listener for mouse movement
-  @HostListener('window:mousemove', ['$event'])
-handleMouseMove(event: MouseEvent): void {
-  console.log("hello")
-  if (!this.dragStateService.getIsDragging()) {
-    return;
-  }
-
-  if (!this.scrollableBoardElementRef) {
-    return; // Wait until the ViewChild is available
-  }
-
-  const threshold = 50; // Distance from the edge to trigger scrolling
-  const rect =
-    this.scrollableBoardElementRef.nativeElement.getBoundingClientRect();
-
-  // Check if the cursor is within the threshold near the left edge
-  if (event.clientX - rect.left < threshold) {
-    this.startScrolling(-this.scrollSpeed); // Scroll left
-  }
-  // Check if the cursor is within the threshold near the right edge
-  else if (rect.right - event.clientX < threshold) {
-    this.startScrolling(this.scrollSpeed); // Scroll right
-  } else {
-    this.stopScrolling(); // Stop scrolling when the cursor is not near an edge
-  }
-}
 
 private startScrolling(speed: number): void {
   this.currentScrollSpeed = speed;

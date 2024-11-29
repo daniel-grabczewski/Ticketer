@@ -17,7 +17,6 @@ $gap-between-lists: 1.5rem;
 }
 
 .lists-container {
-  background : green;
   @include no-highlight;
   display: flex;
   flex-direction: row;

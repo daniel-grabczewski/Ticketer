@@ -47,6 +47,7 @@
         class="ticket-wrapper"
         (cdkDragStarted)="onDragStarted($event)"
         (cdkDragEnded)="onDragEnded()"
+        (cdkDragMoved)="onTicketDragMoved($event)"
         (click)="onTicketClicked(ticket.id, $event)"
       >
         <app-ticket

@@ -17,6 +17,7 @@ import {
   moveItemInArray,
   transferArrayItem,
   CdkDragStart,
+  CdkDragMove,
 } from '@angular/cdk/drag-drop';
 import { TicketComponent } from '../ticket/ticket.component';
 import { TicketInput } from '../../../../shared/models/uniqueComponentInputOutput.model';
@@ -88,6 +89,7 @@ export class ListComponent implements OnInit, OnChanges {
   }>();
   @Output() listRenaming = new EventEmitter<boolean>();
   @Output() isHoldingNonListItem = new EventEmitter<boolean>();
+  @Output() dragMoved = new EventEmitter<CdkDragMove<any>>();
 
   plusButtonHoverColor: string = 'var(--secondary-darker)';
   plusButtonColor: string = 'var(--neutral-lighter)';
@@ -142,6 +144,10 @@ export class ListComponent implements OnInit, OnChanges {
   // Method to generate UUID for new tickets
   generateUUID(): string {
     return uuidv4();
+  }
+
+  onTicketDragMoved(event: CdkDragMove<any>): void {
+    this.dragMoved.emit(event);
   }
 
   onTicketClicked(ticketId: string, event: MouseEvent): void {

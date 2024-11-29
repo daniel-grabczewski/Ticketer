@@ -69,6 +69,8 @@
         (isHoldingNonListItem)="
           onIsHoldingNonListItem($event)
         "
+        (cdkDragMoved)="onDragMoved($event)"
+        (dragMoved)="onDragMoved($event)"
       >
       <div *cdkDragPlaceholder class="list-placeholder"></div>
     </app-list>
