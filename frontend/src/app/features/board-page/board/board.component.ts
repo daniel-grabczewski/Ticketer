@@ -209,7 +209,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.onBoardNameInput();
   }
 
-  private scrollSpeed = 22; // Pixels per frame
+  private scrollSpeed = 50; // Pixels per frame
   private scrollFrame: any; // For canceling requestAnimationFrame
 
   // Listener for mouse movement

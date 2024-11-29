@@ -5,8 +5,8 @@ $gap-between-lists: 1.5rem;
 .board-page-wrapper {
   position: relative;
   flex-grow : 1;
-  height : 100%;
-  //overflow-y: hidden;
+  height: 100%;
+  overflow-y: hidden;
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
@@ -16,31 +16,23 @@ $gap-between-lists: 1.5rem;
   flex-direction: column;
 }
 
-.board-page-container {
-  width: min-content;
-  position: relative;
-  height: 100%;
-
-  background: none;
-  padding-right : 1rem;
-  justify-content: start;
-  align-items: start;
-}
-
 .lists-container {
+  background : green;
   @include no-highlight;
   display: flex;
   flex-direction: row;
+  justify-content: start;
+  align-items: start;
   height : 100%;
   gap: $gap-between-lists;
   padding-left: $gap-between-lists;
   padding-right: $gap-between-lists;
-  overflow-x: auto; // Ensure horizontal scrolling
+  overflow-x: scroll; // Ensure horizontal scrolling
 }
 
 .board-header {
+  width : 100%;
   position: relative;
-  padding: 1rem;
   display: flex;
   flex-direction: column;
   z-index: 1000;
