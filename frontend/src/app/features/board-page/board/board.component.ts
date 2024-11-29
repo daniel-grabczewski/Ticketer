@@ -108,7 +108,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   // ViewChild to get the ElementRef of the scrollable container
-  @ViewChild('scrollableBoard', { static: true })
+  @ViewChild('scrollableBoard')
   scrollableBoardElementRef!: ElementRef;
 
   // ViewChild to get the ElementRef of the contenteditable span
@@ -209,59 +209,80 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.onBoardNameInput();
   }
 
-  private scrollSpeed = 50; // Pixels per frame
+  private scrollSpeed = 2000; // Pixels per frame
   private scrollFrame: any; // For canceling requestAnimationFrame
+  private currentScrollSpeed = 0; // Member variable for current speed
+  private lastTimestamp: number = 0;
 
   // Listener for mouse movement
   @HostListener('window:mousemove', ['$event'])
-  handleMouseMove(event: MouseEvent): void {
-    if (!this.dragStateService.getIsDragging()) {
-      return;
-    }
-
-    const threshold = 50; // Distance from the edge to trigger scrolling
-    const rect =
-      this.scrollableBoardElementRef.nativeElement.getBoundingClientRect();
-
-    // Check if the cursor is within the threshold near the left edge
-    if (event.clientX - rect.left < threshold) {
-      this.startScrolling(-this.scrollSpeed); // Scroll left
-    }
-    // Check if the cursor is within the threshold near the right edge
-    else if (rect.right - event.clientX < threshold) {
-      this.startScrolling(this.scrollSpeed); // Scroll right
-    } else {
-      this.stopScrolling(); // Stop scrolling when the cursor is not near an edge
-    }
+handleMouseMove(event: MouseEvent): void {
+  console.log("hello")
+  if (!this.dragStateService.getIsDragging()) {
+    return;
   }
 
-  private startScrolling(speed: number): void {
-    if (this.scrollFrame) return; // Prevent multiple frames
-    this.scrollFrame = requestAnimationFrame(() => this.smoothScroll(speed));
+  if (!this.scrollableBoardElementRef) {
+    return; // Wait until the ViewChild is available
   }
 
-  private stopScrolling(): void {
-    if (this.scrollFrame) {
-      cancelAnimationFrame(this.scrollFrame);
-      this.scrollFrame = null;
-    }
+  const threshold = 50; // Distance from the edge to trigger scrolling
+  const rect =
+    this.scrollableBoardElementRef.nativeElement.getBoundingClientRect();
+
+  // Check if the cursor is within the threshold near the left edge
+  if (event.clientX - rect.left < threshold) {
+    this.startScrolling(-this.scrollSpeed); // Scroll left
+  }
+  // Check if the cursor is within the threshold near the right edge
+  else if (rect.right - event.clientX < threshold) {
+    this.startScrolling(this.scrollSpeed); // Scroll right
+  } else {
+    this.stopScrolling(); // Stop scrolling when the cursor is not near an edge
+  }
+}
+
+private startScrolling(speed: number): void {
+  this.currentScrollSpeed = speed;
+  if (this.scrollFrame) return;
+  this.lastTimestamp = 0; // Reset timestamp
+  this.scrollFrame = requestAnimationFrame((timestamp) => this.smoothScroll(timestamp));
+}
+
+private stopScrolling(): void {
+  if (this.scrollFrame) {
+    cancelAnimationFrame(this.scrollFrame);
+    this.scrollFrame = null;
+    this.currentScrollSpeed = 0; // Reset the speed
+  }
+}
+
+private smoothScroll(timestamp: number): void {
+  const element = this.scrollableBoardElementRef.nativeElement;
+
+  console.log('scrollLeft:', element.scrollLeft);
+  console.log('scrollWidth:', element.scrollWidth);
+  console.log('clientWidth:', element.clientWidth);
+  console.log('maxScrollLeft:', element.scrollWidth - element.clientWidth);
+  if (!this.lastTimestamp) {
+    this.lastTimestamp = timestamp;
   }
 
-  private smoothScroll(speed: number): void {
-    const element = this.scrollableBoardElementRef.nativeElement;
+  const deltaTime = (timestamp - this.lastTimestamp) / 1000; // Convert to seconds
+  this.lastTimestamp = timestamp;
 
-    // Adjust the scrollLeft value
-    element.scrollLeft += speed;
+  // Adjust the scrollLeft value using speed and deltaTime
+  element.scrollLeft += this.currentScrollSpeed * deltaTime;
 
-    // Ensure scrolling stays within bounds
-    const maxScrollLeft = element.scrollWidth - element.clientWidth;
-    if (element.scrollLeft <= 0 || element.scrollLeft >= maxScrollLeft) {
-      this.stopScrolling();
-      return;
-    }
-
-    this.scrollFrame = requestAnimationFrame(() => this.smoothScroll(speed));
+  // Ensure scrolling stays within bounds
+  const maxScrollLeft = element.scrollWidth - element.clientWidth;
+  if (element.scrollLeft <= 0 || element.scrollLeft >= maxScrollLeft) {
+    this.stopScrolling();
+    return;
   }
+
+  this.scrollFrame = requestAnimationFrame((timestamp) => this.smoothScroll(timestamp));
+}
 
   private handleTicketUpdate(updatedTicket: TicketInput): void {
     if (this.boardDetails && this.boardDetails.lists) {
