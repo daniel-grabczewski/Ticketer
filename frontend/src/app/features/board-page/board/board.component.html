@@ -4,32 +4,29 @@
 >
     <!-- Board Header -->
     <div class="board-header">
-      <div class="board-header-inner-container">
-        <!-- Board Name -->
-        <ng-container *ngIf="!isRenamingBoard">
-          <span class="board-name" (click)="enableBoardRenaming($event)">
-            {{ boardDetails?.name }}
-          </span>
-        </ng-container>
-        <ng-container *ngIf="isRenamingBoard">
-          <div>
-            <span
-              #boardNameSpan
-              contenteditable="true"
-              id="board-name-input"
-              class="board-name-input"
-              (blur)="saveBoardName()"
-              (input)="onBoardNameInput()"
-              (keydown)="onBoardNameKeydown($event)"
-              (click)="$event.stopPropagation()"
-              (paste)="onBoardNamePaste($event)"
-            >
-            </span>
-          </div>
-        </ng-container>
-        <!-- Menu Button -->
-        <app-cog-button id="board-menu-button" class="menu-button" (click)="openMenuOverlay($event)" [scale] = "3" color="rgba(0, 0, 0, 0.35)" hoverColor="rgba(0, 0, 0, 0.55)"></app-cog-button>
-      </div>
+      <textarea
+        autocomplete="off"
+        id="board-name-textarea"
+        class="board-name-textarea"
+        [(ngModel)]="newBoardName"
+        [readonly]="!isRenamingBoard"
+        [ngClass]="{ 'editing': isRenamingBoard }"
+        (click)="onBoardNameClick($event)"
+        (blur)="saveBoardName()"
+        (input)="adjustTitleTextareaHeight()"
+        (keydown.enter)="handleBoardTitleEnter($event)"
+        (keydown.escape)="cancelBoardRenaming()"
+        rows="1"
+      ></textarea>
+      <!-- Menu Button -->
+      <app-cog-button
+        id="board-menu-button"
+        class="menu-button"
+        (click)="openMenuOverlay($event)"
+        [scale]="1.75"
+        color="rgba(0, 0, 0, 0.35)"
+        hoverColor="rgba(0, 0, 0, 0.55)"
+      ></app-cog-button>
     </div>
 
     <!-- Lists Drag-and-Drop Container -->

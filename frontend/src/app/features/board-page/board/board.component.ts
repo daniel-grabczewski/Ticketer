@@ -93,6 +93,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   plusButtonColor: string = 'var(--secondary-darker)';
   backgroundColor: string = 'var(--background)';
   private scrollSpeed = 0;
+  private originalName: string = '';
 
   // Boolean to keep track of whether dragging list should be disabled
   isListDraggingDisabled: boolean = false;
@@ -133,6 +134,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.fetchBoardDetails(boardId);
         this.loadColorMap();
       }
+
+      this.newBoardName = this.boardDetails?.name || '';
     });
 
     this.ticketUpdateSub = this.ticketUpdateService.ticketUpdated$.subscribe(
@@ -143,6 +146,10 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.calculateScrollSpeed();
     window.addEventListener('resize', this.onWindowResize.bind(this));
+
+    setTimeout(() => {
+      this.adjustTitleTextareaHeight();
+    }, 0);
   }
 
   ngOnDestroy(): void {
@@ -193,59 +200,30 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.stopScrolling();
   }
 
-  onBoardNameKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      event.preventDefault(); // Prevent inserting a newline
+  onBoardNameClick(event: MouseEvent): void {
+    if (!this.isRenamingBoard) {
+      event.stopPropagation();
+      this.enableBoardRenaming();
+    }
+  }
+
+  handleBoardTitleEnter(event: Event): void {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter' && !keyboardEvent.shiftKey) {
+      keyboardEvent.preventDefault();
       this.saveBoardName();
     }
   }
 
-  onBoardNameInput(): void {
-    // Remove any newline characters to prevent new lines
-    let content = this.boardNameSpan.nativeElement.textContent;
-    content = content.replace(/[\r\n]+/g, '');
-    this.boardNameSpan.nativeElement.textContent = content;
-
-    // Update newBoardName with the current content
-    this.newBoardName = content;
-
-    // Scroll to the end to show the latest characters
-    this.boardNameSpan.nativeElement.scrollLeft =
-      this.boardNameSpan.nativeElement.scrollWidth;
-  }
-
-  onBoardNamePaste(event: ClipboardEvent): void {
-    event.preventDefault();
-    const clipboardData = event.clipboardData;
-    if (clipboardData) {
-      let text = clipboardData.getData('text/plain');
-      // Remove any newline characters
-      const sanitizedText = text.replace(/[\r\n]+/g, '');
-      // Insert the sanitized text at the cursor position
-      this.insertTextAtCursor(sanitizedText);
+  adjustTitleTextareaHeight(): void {
+    const textarea = document.getElementById(
+      'board-name-textarea'
+    ) as HTMLTextAreaElement;
+    if (textarea) {
+      textarea.style.height = 'auto'; // Reset the height
+      const scrollHeight = textarea.scrollHeight;
+      textarea.style.height = scrollHeight + 'px';
     }
-  }
-
-  insertTextAtCursor(text: string): void {
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) {
-      return;
-    }
-    const range = selection.getRangeAt(0);
-    range.deleteContents();
-
-    const textNode = document.createTextNode(text);
-    range.insertNode(textNode);
-
-    // Move the caret after the inserted text node
-    range.setStartAfter(textNode);
-    range.collapse(true);
-
-    selection.removeAllRanges();
-    selection.addRange(range);
-
-    // Update the newBoardName with the inserted text
-    this.onBoardNameInput();
   }
 
   private calculateScrollSpeed(): void {
@@ -361,10 +339,14 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.boardService.getBoardById(boardId).subscribe({
       next: (data) => {
         this.boardDetails = data;
+        this.newBoardName = this.boardDetails.name;
         // Generate listIds with prefixes
         this.listIds = this.boardDetails.lists.map(
           (list) => 'cdk-drop-list-' + list.id
         );
+        setTimeout(() => {
+          this.adjustTitleTextareaHeight();
+        }, 0);
         // Generate menu config
         this.menuConfig = generateBoardActionsMenuConfig(
           this.boardDetails.name,
@@ -704,34 +686,25 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // Renaming board from the top-left name
-  enableBoardRenaming(event: MouseEvent): void {
-    event.stopPropagation(); // Prevent event from propagating
+  enableBoardRenaming(): void {
     this.isRenamingBoard = true;
-    this.newBoardName = this.boardDetails!.name;
+    this.originalName = this.newBoardName; // Store the original name
 
-    // Wait for the view to update
     setTimeout(() => {
-      // Set the content of the span
-      this.boardNameSpan.nativeElement.textContent = this.newBoardName;
-
-      // Focus the contenteditable span
-      this.boardNameSpan.nativeElement.focus();
-
-      // Select all text
-      const range = document.createRange();
-      range.selectNodeContents(this.boardNameSpan.nativeElement);
-      const selection = window.getSelection();
-      selection?.removeAllRanges();
-      selection?.addRange(range);
+      const textareaElement = document.getElementById(
+        'board-name-textarea'
+      ) as HTMLTextAreaElement;
+      if (textareaElement) {
+        textareaElement.focus();
+        textareaElement.select();
+        this.adjustTitleTextareaHeight();
+      }
     }, 0);
   }
 
   saveBoardName(): void {
-    // Ensure we have the latest content
-    this.newBoardName = this.boardNameSpan.nativeElement.textContent.trim();
-
-    if (this.newBoardName !== '') {
-      if (this.newBoardName !== this.boardDetails?.name) {
+    if (this.newBoardName.trim() !== '') {
+      if (this.newBoardName.trim() !== this.boardDetails?.name) {
         this.updateBoard({
           name: this.utilsService.cleanStringWhiteSpace(this.newBoardName),
           colorId: this.boardDetails!.colorId,
@@ -741,30 +714,55 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
         );
       }
     } else {
-      // If empty, revert to previous name
-      this.newBoardName = this.boardDetails!.name;
-      this.boardNameSpan.nativeElement.textContent = this.newBoardName;
+      // Revert to previous name
+      this.newBoardName = this.originalName;
     }
     this.isRenamingBoard = false;
+
+    // Blur the textarea to remove focus
+    const textareaElement = document.getElementById(
+      'board-name-textarea'
+    ) as HTMLTextAreaElement;
+    if (textareaElement) {
+      textareaElement.blur();
+    }
+
+    // Remove text selection
+    const selection = window.getSelection();
+    if (selection) {
+      selection.removeAllRanges();
+    }
   }
 
   cancelBoardRenaming(): void {
     this.isRenamingBoard = false;
+    this.newBoardName = this.originalName;
+
+    // Blur the textarea to remove focus
+    const textareaElement = document.getElementById(
+      'board-name-textarea'
+    ) as HTMLTextAreaElement;
+    if (textareaElement) {
+      textareaElement.blur();
+    }
+
+    // Remove text selection
+    const selection = window.getSelection();
+    if (selection) {
+      selection.removeAllRanges();
+    }
   }
 
   // Handle click outside to close menu or cancel renaming
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    const menuButton = document.getElementById('board-menu-button');
-    const boardNameInput = document.getElementById('board-name-input');
+    if (this.isRenamingBoard) {
+      const target = event.target as HTMLElement;
+      const inputElement = document.getElementById('board-name-textarea');
 
-    if (
-      this.isRenamingBoard &&
-      boardNameInput &&
-      !boardNameInput.contains(target)
-    ) {
-      this.saveBoardName();
+      if (inputElement && !inputElement.contains(target)) {
+        this.saveBoardName();
+      }
     }
   }
 
