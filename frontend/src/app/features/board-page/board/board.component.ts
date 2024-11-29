@@ -6,6 +6,8 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
+  ViewChildren,
+  QueryList,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -117,6 +119,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('boardNameSpan', { static: false })
   boardNameSpan!: ElementRef;
 
+  @ViewChildren(ListComponent) listComponents!: QueryList<ListComponent>;
+
   ngAfterViewInit(): void {
     // After the view is initialized, we can set up any necessary references
   }
@@ -139,7 +143,6 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.calculateScrollSpeed();
     window.addEventListener('resize', this.onWindowResize.bind(this));
-
   }
 
   ngOnDestroy(): void {
@@ -160,14 +163,15 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onDragMoved(event: CdkDragMove<any>): void {
     const clientX = event.pointerPosition.x;
-  
+
     if (!this.scrollableBoardElementRef) {
       return; // Wait until the ViewChild is available
     }
-  
+
     const threshold = 50; // Distance from the edge to trigger scrolling
-    const rect = this.scrollableBoardElementRef.nativeElement.getBoundingClientRect();
-  
+    const rect =
+      this.scrollableBoardElementRef.nativeElement.getBoundingClientRect();
+
     // Check if the pointer is within the threshold near the left edge
     if (clientX - rect.left < threshold) {
       this.startScrolling(-1); // Scroll left
@@ -186,7 +190,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onDragEnded() {
     this.dragStateService.setIsDragging(false);
-    this.stopScrolling(); 
+    this.stopScrolling();
   }
 
   onBoardNameKeydown(event: KeyboardEvent): void {
@@ -247,16 +251,18 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   private calculateScrollSpeed(): void {
     const screenWidth = window.innerWidth;
     const maxSpeed = 1500; // Maximum scroll speed
-    const minSpeed = 500;  // Minimum scroll speed
+    const minSpeed = 500; // Minimum scroll speed
     const maxWidth = 1920; // Screen width at which scrollSpeed reaches maxSpeed
-    const minWidth = 320;  // Minimum screen width
-  
+    const minWidth = 320; // Minimum screen width
+
     // Clamp screenWidth between minWidth and maxWidth
     const clampedWidth = Math.max(minWidth, Math.min(screenWidth, maxWidth));
-  
+
     // Calculate scrollSpeed
     this.scrollSpeed =
-      ((clampedWidth - minWidth) / (maxWidth - minWidth)) * (maxSpeed - minSpeed) + minSpeed;
+      ((clampedWidth - minWidth) / (maxWidth - minWidth)) *
+        (maxSpeed - minSpeed) +
+      minSpeed;
   }
 
   // Pixels per frame
@@ -264,48 +270,51 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   private currentScrollSpeed = 0; // Member variable for current speed
   private lastTimestamp: number = 0;
 
-
   private startScrolling(direction: number): void {
     this.currentScrollSpeed = direction * this.scrollSpeed;
     if (this.scrollFrame) return;
     this.lastTimestamp = 0; // Reset timestamp
-    this.scrollFrame = requestAnimationFrame((timestamp) => this.smoothScroll(timestamp));
+    this.scrollFrame = requestAnimationFrame((timestamp) =>
+      this.smoothScroll(timestamp)
+    );
   }
 
-private stopScrolling(): void {
-  if (this.scrollFrame) {
-    cancelAnimationFrame(this.scrollFrame);
-    this.scrollFrame = null;
-    this.currentScrollSpeed = 0; // Reset the speed
+  private stopScrolling(): void {
+    if (this.scrollFrame) {
+      cancelAnimationFrame(this.scrollFrame);
+      this.scrollFrame = null;
+      this.currentScrollSpeed = 0; // Reset the speed
+    }
   }
-}
 
-private smoothScroll(timestamp: number): void {
-  const element = this.scrollableBoardElementRef.nativeElement;
+  private smoothScroll(timestamp: number): void {
+    const element = this.scrollableBoardElementRef.nativeElement;
 
-  console.log('scrollLeft:', element.scrollLeft);
-  console.log('scrollWidth:', element.scrollWidth);
-  console.log('clientWidth:', element.clientWidth);
-  console.log('maxScrollLeft:', element.scrollWidth - element.clientWidth);
-  if (!this.lastTimestamp) {
+    console.log('scrollLeft:', element.scrollLeft);
+    console.log('scrollWidth:', element.scrollWidth);
+    console.log('clientWidth:', element.clientWidth);
+    console.log('maxScrollLeft:', element.scrollWidth - element.clientWidth);
+    if (!this.lastTimestamp) {
+      this.lastTimestamp = timestamp;
+    }
+
+    const deltaTime = (timestamp - this.lastTimestamp) / 1000; // Convert to seconds
     this.lastTimestamp = timestamp;
+
+    // Adjust the scrollLeft value using speed and deltaTime
+    element.scrollLeft += this.currentScrollSpeed * deltaTime;
+
+    // Ensure scrolling stays within bounds
+    const maxScrollLeft = element.scrollWidth - element.clientWidth;
+    if (element.scrollLeft <= 0 || element.scrollLeft >= maxScrollLeft) {
+      this.stopScrolling();
+      return;
+    }
+
+    this.scrollFrame = requestAnimationFrame((timestamp) =>
+      this.smoothScroll(timestamp)
+    );
   }
-
-  const deltaTime = (timestamp - this.lastTimestamp) / 1000; // Convert to seconds
-  this.lastTimestamp = timestamp;
-
-  // Adjust the scrollLeft value using speed and deltaTime
-  element.scrollLeft += this.currentScrollSpeed * deltaTime;
-
-  // Ensure scrolling stays within bounds
-  const maxScrollLeft = element.scrollWidth - element.clientWidth;
-  if (element.scrollLeft <= 0 || element.scrollLeft >= maxScrollLeft) {
-    this.stopScrolling();
-    return;
-  }
-
-  this.scrollFrame = requestAnimationFrame((timestamp) => this.smoothScroll(timestamp));
-}
 
   private handleTicketUpdate(updatedTicket: TicketInput): void {
     if (this.boardDetails && this.boardDetails.lists) {
@@ -540,6 +549,16 @@ private smoothScroll(timestamp: number): void {
             };
             list.tickets.push(newTicket);
             console.log(`Ticket ${event.id} created in list ${event.listId}`);
+
+            // Scroll the list to the bottom
+            setTimeout(() => {
+              const listComponent = this.listComponents.find(
+                (comp) => comp.id === event.listId
+              );
+              if (listComponent) {
+                listComponent.scrollToBottom();
+              }
+            }, 0);
           }
         }
       },

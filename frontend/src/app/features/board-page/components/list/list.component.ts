@@ -8,6 +8,8 @@ import {
   OnChanges,
   ChangeDetectorRef,
   HostListener,
+  ElementRef,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -119,6 +121,8 @@ export class ListComponent implements OnInit, OnChanges {
   // Reintroducing the isDragging flag
   private isDragging: boolean = false;
 
+  @ViewChild('ticketListContainer') ticketListContainer!: ElementRef;
+
   ngOnInit(): void {
     // Set a unique cdkDropListId
     this.cdkDropListId = 'cdk-drop-list-' + this.id;
@@ -144,6 +148,17 @@ export class ListComponent implements OnInit, OnChanges {
   // Method to generate UUID for new tickets
   generateUUID(): string {
     return uuidv4();
+  }
+
+  scrollToBottom(): void {
+    if (this.ticketListContainer) {
+      try {
+        this.ticketListContainer.nativeElement.scrollTop =
+          this.ticketListContainer.nativeElement.scrollHeight;
+      } catch (err) {
+        console.error('Could not scroll to bottom:', err);
+      }
+    }
   }
 
   onTicketDragMoved(event: CdkDragMove<any>): void {
