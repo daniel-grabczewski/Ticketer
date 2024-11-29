@@ -36,15 +36,15 @@
   .list-title-textarea {
     @include no-highlight;
     width: 100%;
-    @include font-size-md;
+    @include font-size-lg;
     font-weight: bold;
     color: $secondary;
     border: none;
     background-color: transparent;
     cursor: pointer;
-    padding: 0;
+    padding: 0.2rem;
     padding-left: $list-title-padding-left;
-    margin: 0;
+    margin-bottom: 0.5rem;
     line-height: 1.2;
     box-sizing: border-box;
     border: 1px solid transparent;
