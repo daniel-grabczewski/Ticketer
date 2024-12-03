@@ -3,9 +3,11 @@ import { DashboardComponent } from './features/dashboard-page/dashboard/dashboar
 import { ProjectComponent } from './project/project.component';
 import { authGuardFn } from '@auth0/auth0-angular';
 import { MenuComponent } from './shared/components/menu/menu.component';
+import { WelcomePageComponent } from './features/welcome-page/welcome-page.component';
 
 export const routes: Routes = [
   { path: '', component: DashboardComponent }, // Public route
+  { path: 'welcome', component: WelcomePageComponent }, // Public route
   {
     path: 'dashboard',
     component: DashboardComponent,
