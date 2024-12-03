@@ -4,9 +4,9 @@
 .board-thumbnail {
   position: relative;
   max-width: 100%;
-  height: 5rem;
+  height: 4.5rem;
   border-radius: 0.5rem;
-  padding: 1rem 1rem;
+  padding: 1rem 0.6rem;
   color: $secondary; // White font color
   display: flex;
   flex-direction: column;
@@ -49,15 +49,18 @@
 
 .board-name-wrapper {
   width : 90%;
+  max-height : 90%;
 }
 
 .board-name {
   margin: 0;
   font-size: 1.1rem;
-  font-weight : 600;
-  word-wrap: break-word; /* Ensures words will wrap */
-  overflow-wrap: break-word; /* Modern alternative */
-  white-space: normal; /* Allows text to wrap onto multiple lines */
+  font-weight: 600;
+  display: -webkit-box; /* Enables the multiline ellipsis effect */
+  -webkit-line-clamp: 3; /* Limits the text to 3 lines (adjust as needed) */
+  -webkit-box-orient: vertical; /* Ensures the box is oriented vertically */
+  overflow: hidden; /* Clips the overflowing text */
+  text-overflow: ellipsis; /* Adds ellipsis to truncated text */
 }
 
 
@@ -66,7 +69,7 @@
   padding-right : 0.3rem;
   padding-left : 0.3rem;
   background : none;
-  margin-right : -0.5rem;
+  
   border: none;
   color: $secondary-darker;
   margin-top : -0.2rem;
