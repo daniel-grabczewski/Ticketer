@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
-import { firstValueFrom, Subject } from 'rxjs';
+import { firstValueFrom, Subject, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { GuestDataDialogComponent } from './shared/components/guest-data-dialog/guest-data-dialog.component';
 import { MaterialSharedModule } from './shared/material/material.shared';
@@ -32,6 +32,8 @@ export class AppComponent implements OnDestroy {
   isGuest: boolean = false;
   isMobileMenuOpen: boolean = false;
   private destroy$ = new Subject<void>();
+  isWelcomePage = false
+  private routerSubscription!: Subscription
 
   constructor(
     public auth0: Auth0Service,
@@ -105,6 +107,12 @@ export class AppComponent implements OnDestroy {
   }
 
   ngOnInit() : void {
+    this.routerSubscription = this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.isWelcomePage = event.urlAfterRedirects === '/welcome'
+      }
+    })
+    console.log(this.isWelcomePage)
     this.colorService.getAllColors().subscribe({
       next: (colors) => {
         console.log('Colors loaded and cached:', colors);
@@ -231,5 +239,6 @@ export class AppComponent implements OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+    this.routerSubscription.unsubscribe()
   }
 }
