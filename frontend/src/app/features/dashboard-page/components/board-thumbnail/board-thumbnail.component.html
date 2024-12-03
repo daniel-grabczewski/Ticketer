@@ -1,7 +1,9 @@
 <div class="board-thumbnail" [ngStyle]="getBackgroundStyle()" (click)="navigateToBoard()">
   <div class="hover-overlay"></div>
   <div class="board-content">
-    <h3 class="board-name">{{ name }}</h3>
+    <div class = "board-name-wrapper">
+    <span class="board-name">{{ name }}</span>
+  </div>
     <button class="menu-button" (click)="openMenuOverlay($event); $event.stopPropagation()">⋮</button>
   </div>
 </div>

@@ -4,7 +4,7 @@
 .board-thumbnail {
   position: relative;
   max-width: 100%;
-  min-width : 18rem;
+  min-width : 7rem;
   height: 7rem;
   border-radius: 0.5rem;
   padding: 1rem 1.5rem;
@@ -19,9 +19,11 @@
    /* Prevent the overlay from extending outside the thumbnail */
 
   @media (max-width : 380px) {
-    max-width : 18rem;
-    min-width : 10rem;
+    max-width : 80vw;
+    min-width : 80vw;
     padding: 0.7rem 1rem;
+    min-height: 7rem;
+    height : max-content;
   }
 
   .hover-overlay {
@@ -56,16 +58,25 @@
   align-items: center;
 }
 
+.board-name-wrapper {
+  width : 90%;
+}
+
 .board-name {
   margin: 0;
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   font-weight : 400;
-  max-width : 75%;
+  word-wrap: break-word; /* Ensures words will wrap */
+  overflow-wrap: break-word; /* Modern alternative */
+  white-space: normal; /* Allows text to wrap onto multiple lines */
+
 
   @media (max-width : 380px) {
     font-size : 1.8rem;
   }
 }
+
+
 
 .menu-button {
   padding-right : 0.3rem;
