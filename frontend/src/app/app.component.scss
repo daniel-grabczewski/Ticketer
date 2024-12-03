@@ -31,7 +31,7 @@ p, button {
   background: $background;
   display: flex;
   justify-content: center;
-  padding: 1.3rem 3rem;
+  padding: 1.3rem 1rem;
   position: relative; 
   top: 0; 
   left: 0;
@@ -43,7 +43,7 @@ p, button {
   display : flex;
   justify-content: space-between;
   align-items: center;
-  width : $page-max-width;
+  width : 100%;
 }
 
 .logo-container {
@@ -103,7 +103,7 @@ p, button {
     top: 0; 
     left: 0;
     right: 0;
-    padding: 1rem 2rem;
+    padding: 1rem 1rem;
     z-index: 1000; 
   }
 
