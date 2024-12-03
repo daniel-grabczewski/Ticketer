@@ -17,14 +17,6 @@
   transition: transform $button-transition-time ease; 
    /* Prevent the overlay from extending outside the thumbnail */
 
-  @media (max-width : 380px) {
-    max-width : 80vw;
-    min-width : 80vw;
-    padding: 0.7rem 1rem;
-    min-height: 7rem;
-    height : max-content;
-  }
-
   .hover-overlay {
     border-radius: 0.5rem;
     position: absolute;
@@ -46,8 +38,6 @@
     position: relative; /* Ensure content stays above the overlay */
     z-index: 2; /* Higher than the overlay */
   }
-
-
 }
 
 
@@ -68,11 +58,6 @@
   word-wrap: break-word; /* Ensures words will wrap */
   overflow-wrap: break-word; /* Modern alternative */
   white-space: normal; /* Allows text to wrap onto multiple lines */
-
-
-  @media (max-width : 380px) {
-    font-size : 1.8rem;
-  }
 }
 
 
@@ -91,10 +76,6 @@
   transition: color $button-transition-time;
   &:hover {
     color : $placeholder;
-  }
-
-  @media (max-width : 380px) {
-    margin-right : -0.2rem;
   }
 }
 

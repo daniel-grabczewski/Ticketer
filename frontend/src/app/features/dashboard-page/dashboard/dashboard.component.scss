@@ -9,11 +9,6 @@
     width : 900px;
     gap : 2rem;
     margin : auto;
-
-    @media (max-width : 500px) {
-      margin : 0 1.5rem;
-    }
-
   }
 
   .title {
@@ -32,22 +27,6 @@
     overflow-y: scroll;
     scrollbar-width: thin;
     scrollbar-color: $background-lighter $background;
-    
-
-  
-    /* Media query for screens smaller than 900px */
-    @media (max-width: 1140px) {
-      gap: 1rem;
-       /* Change to 2 columns */
-      max-height : 44rem;
-    }
-  
-    /* Media query for screens smaller than 600px */
-    @media (max-width: $tablet) {
-      gap: 1rem;
-      grid-template-columns: repeat(2, minmax(45%, 1fr));
-      max-height : 52rem;
-    }
   }
 
 
