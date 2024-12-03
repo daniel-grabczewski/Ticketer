@@ -4,10 +4,9 @@
 .board-thumbnail {
   position: relative;
   max-width: 100%;
-  min-width : 7rem;
-  height: 7rem;
+  height: 5rem;
   border-radius: 0.5rem;
-  padding: 1rem 1.5rem;
+  padding: 1rem 1rem;
   color: $secondary; // White font color
   display: flex;
   flex-direction: column;
@@ -55,7 +54,7 @@
 .board-content {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: start;
 }
 
 .board-name-wrapper {
@@ -64,8 +63,8 @@
 
 .board-name {
   margin: 0;
-  font-size: 1.2rem;
-  font-weight : 400;
+  font-size: 1.1rem;
+  font-weight : 600;
   word-wrap: break-word; /* Ensures words will wrap */
   overflow-wrap: break-word; /* Modern alternative */
   white-space: normal; /* Allows text to wrap onto multiple lines */
@@ -85,7 +84,8 @@
   margin-right : -0.5rem;
   border: none;
   color: $secondary-darker;
-  font-size: 2rem;
+  margin-top : -0.2rem;
+  font-size: 1.5rem;
   cursor: pointer;
   align-self: flex-start;
   transition: color $button-transition-time;

@@ -1,11 +1,5 @@
 @import '../../../assets/styles/main.scss';
 
-.dashboard {
-  display : flex;
-  justify-content : center;
-
-}  
-
   .dashboard-container {
     display: flex;
     flex-direction: column;
@@ -14,6 +8,7 @@
     margin : 0 3rem;
     width : 900px;
     gap : 2rem;
+    margin : auto;
 
     @media (max-width : 500px) {
       margin : 0 1.5rem;
@@ -24,26 +19,20 @@
   .title {
     align-self:flex-start;
     color : $secondary;
-    font-size : 4rem;
+    font-size : $font-size-xxxxl;
     font-weight : 400;
-
-    @media (max-width : 500px) {
-      font-size : 3.8rem;
-    }
-    @media (max-width : 380px) {
-      font-size : 3.2rem;
-    }
   }
 
   .board-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(30%, 1fr)); /* Default to 3 columns */
+    grid-template-columns: repeat(4, minmax(10%, 1fr)); /* Default to 3 columns */
     gap: 1rem;
     width: 100%;
     max-height : 34rem;
     overflow-y: scroll;
     scrollbar-width: thin;
     scrollbar-color: $background-lighter $background;
+    
 
   
     /* Media query for screens smaller than 900px */
