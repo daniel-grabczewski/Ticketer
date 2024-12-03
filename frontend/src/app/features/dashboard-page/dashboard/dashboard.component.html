@@ -1,4 +1,5 @@
 <div class="dashboard-container">
+  <div class="title-grid-wrapper">
     <h1 class="title">Your boards</h1>
     <div class="board-grid">
       <app-board-thumbnail
@@ -13,11 +14,21 @@
         (boardDuplicated)="onBoardDuplicated($event)"
       ></app-board-thumbnail>
     </div>
+  </div>
+  <div class="plus-button-wrapper">
     <app-plus-button
       (click)="openSubmenu($event)"
       [scale]="1"
       label="Create new board"
-      class="create-new-board-button"
+      class="create-new-board-button-smaller"
     ></app-plus-button>
+    <app-plus-button
+      (click)="openSubmenu($event)"
+      [scale]="1.5"
+      fontSize="1.5rem"
+      label="Create new board"
+      class="create-new-board-button-larger"
+    ></app-plus-button>
+  </div>
   </div>
 
