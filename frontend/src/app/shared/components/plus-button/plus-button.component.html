@@ -31,6 +31,6 @@
       />
     </svg>
     <!-- Display the label if provided -->
-    <span *ngIf="label" class="label-text">{{ label }}</span>
+    <span *ngIf="label" class="label-text" [style.fontSize]="fontSize !== '' ? fontSize : null">{{ label }}</span>
   </div>
 </button>

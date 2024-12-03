@@ -15,6 +15,7 @@ export class PlusButtonComponent {
   @Input() label?: string;
   @Input() isFullWidth?: boolean = false;
   @Input() height?: string = '';
+  @Input() fontSize? : string = '';
 
   getStrokeWidth(): number {
     return 5 * Math.sqrt(this.scale); // Adjust the scaling factor as needed
