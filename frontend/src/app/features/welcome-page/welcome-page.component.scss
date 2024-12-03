@@ -1,0 +1,35 @@
+@import '../../assets/styles/main.scss';
+
+.welcome-container {
+  margin : auto;
+  max-width : 350px;
+  margin-top : 20vh;
+  gap : 1.5rem;
+  display : flex;
+  align-items: center;
+  flex-direction: column;
+  width : 100%;
+  box-sizing: border-box;
+  padding: 0 1rem;
+}
+
+svg {
+  width: 100%;
+}
+
+.buttons-container {
+  display : flex;
+  flex-direction : row;
+  justify-content: space-between;
+  gap: 1rem;
+
+  @media (max-width : 330px) {
+    flex-direction : column;
+    gap : 0.5rem;
+    align-items: center;
+  }
+}
+
+button {
+  @include button( $min-width : 9rem, $scale: 1.1);
+}
