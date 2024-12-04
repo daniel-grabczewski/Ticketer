@@ -4,6 +4,7 @@ import { ProjectComponent } from './project/project.component';
 import { MenuComponent } from './shared/components/menu/menu.component';
 import { WelcomePageComponent } from './features/welcome-page/welcome-page.component';
 import { myAuthGuardFn } from './my-auth.guard';
+import { TempLoginPageComponent } from './features/temp-login-page/temp-login-page.component';
 
 export const routes: Routes = [
   { path: '', component: DashboardComponent,  canActivate: [myAuthGuardFn]}, // Public route
@@ -12,6 +13,10 @@ export const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [myAuthGuardFn], // Protected route
+  },
+  {
+    path: 'temp-login',
+    component: TempLoginPageComponent,
   },
   {
     path: 'project',
