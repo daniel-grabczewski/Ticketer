@@ -144,6 +144,7 @@ padding: 0;
   box-sizing: border-box;
   padding : 0.5rem;
   margin-top : 1rem;
+  font-size : 0.85rem;
 }
 
 //############################################### GOOGLE
@@ -207,6 +208,7 @@ padding: 0;
 }
 
 .gsi-material-button .gsi-material-button-contents {
+  line-height: 1.2 !important;
   -webkit-flex-grow: 1;
   flex-grow: 1;
   font-family: 'Roboto', arial, sans-serif;
