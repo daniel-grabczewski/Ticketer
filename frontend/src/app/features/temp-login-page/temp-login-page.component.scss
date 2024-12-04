@@ -1,5 +1,10 @@
 @import '../../assets/styles/main.scss';
 
+
+.input-error {
+  box-shadow: 0 0 0 1.5px $error;
+}
+
 .welcome-container {
   margin : auto;
   max-width : 350px;
