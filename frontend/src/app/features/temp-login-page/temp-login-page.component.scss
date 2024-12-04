@@ -3,7 +3,7 @@
 .welcome-container {
   margin : auto;
   max-width : 350px;
-  margin-top : 25vh;
+  margin-top : 10vh;
   gap : 1.5rem;
   display : flex;
   align-items: center;
@@ -135,7 +135,16 @@ padding: 0;
   display : none;
 }
 
-
+.error-message {
+  display : none;
+  background-color: $error-lighter;
+  color : $error-darker;
+  border-radius : $text-input-border-radius;
+  width : 100%;
+  box-sizing: border-box;
+  padding : 0.5rem;
+  margin-top : 1rem;
+}
 
 //############################################### GOOGLE
 .google-button-wrapper {

@@ -16,6 +16,8 @@
    <!-- <div id="error-message" class="alert alert-danger"></div>
     <div class="captcha-container form-group"></div> 
    -->
+
+   
 <body>
   <div class = "welcome-container">
     <svg class="logo" viewBox="0 0 606 146" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,48 +26,50 @@
       <rect x="568.057" y="44.0032" width="16.2612" height="47.6995" rx="8.13059" fill="#E0E0E0"/>
       <rect x="589.739" y="44.0032" width="16.2612" height="31.4383" rx="8.13059" fill="#E0E0E0"/>
       </svg>
-    <div >
-      <form onsubmit="return false;" method="post">
-        <div >
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            placeholder="Email">
-        </div>
-        <div class="form-group">
-          <input
-            type="password"
-            class="form-control"
-            id="password"
-            placeholder="Password">
-        </div>
-       <div class="buttons-container">
-        <button
-          type="submit"
-          id="btn-login"
-          class="regular-button login-button">
-            Log In
-        </button>
-        <button
-          type="button"
-          id="btn-signup"
-          class="regular-button signup-button">
-            Sign Up
-        </button>
-      </div>
-      <div class = "account-status-container">
-        <span class="no-account-span">Don't have an account?</span>
-        <span class="has-account-span">Already have an account?</span>
-        <button class="no-account-button">Sign up</button>
-        <button class="has-account-button">Log in</button>
-      </div>
-      <hr>
-      <div class="google-button-wrapper">
-      <button id="btn-google" class="gsi-material-button">
-        <div class="gsi-material-button-state"></div>
-        <div class="gsi-material-button-content-wrapper">
-          <div class="gsi-material-button-icon">
+      <div>
+        <form onsubmit="return false;" method="post">
+          <div>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              placeholder="Email">
+          </div>
+          <div class="form-group">
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              placeholder="Password">
+          </div>
+          <div class="buttons-container">
+            <button
+              type="submit"
+              id="btn-login"
+              class="regular-button login-button">
+                Log In
+            </button>
+            <button
+              type="button"
+              id="btn-signup"
+              class="regular-button signup-button">
+                Sign Up
+            </button>
+          </div>
+          <div class="account-status-container">
+            <span class="no-account-span">Don't have an account?</span>
+            <span class="has-account-span">Already have an account?</span>
+            <button class="no-account-button">Sign up</button>
+            <button class="has-account-button">Log in</button>
+          </div>
+          <div id="error-message" class="error-message"></div>
+          <div class="captcha-container form-group"></div>
+          <hr>
+          <div class="google-button-wrapper">
+            <button id="btn-google" class="gsi-material-button">
+              <div class="gsi-material-button-state"></div>
+              <div class="gsi-material-button-content-wrapper">
+                <div class="gsi-material-button-icon">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: block;">
               <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
               <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
@@ -73,17 +77,16 @@
               <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
               <path fill="none" d="M0 0h48v48H0z"></path>
             </svg>
+                </div>
+                <span class="gsi-material-button-contents">Sign in with Google</span>
+                <span style="display: none;">Sign in with Google</span>
+              </div>
+            </button>
           </div>
-          <span class="gsi-material-button-contents">Sign in with Google</span>
-          <span style="display: none;">Sign in with Google</span>
-        </div>
-      </button>
+        </form>
+      </div>
     </div>
-      </form>
-
-    </div>
-  </div>
-
+  
   <!--[if IE 8]>
   <script src="//cdnjs.cloudflare.com/ajax/libs/ie8/0.2.5/ie8.js"></script>
   <![endif]-->
@@ -93,137 +96,177 @@
   <script src="https://cdn.auth0.com/js/polyfills/1.0/es5-shim.min.js"></script>
   <![endif]-->
 
-  <script src="https://cdn.auth0.com/js/auth0/9.26/auth0.min.js"></script>
-  <script src="https://cdn.auth0.com/js/polyfills/1.0/object-assign.min.js"></script>
-  <script>
-    window.addEventListener('load', function() {
-
-      var config = JSON.parse(
-        decodeURIComponent(escape(window.atob('@@config@@')))
-      );
-
-      var leeway = config.internalOptions.leeway;
-      if (leeway) {
-        var convertedLeeway = parseInt(leeway);
-
-        if (!isNaN(convertedLeeway)) {
-          config.internalOptions.leeway = convertedLeeway;
-        }
-      }
-
-      var params =  {
-        overrides: {
-          __tenant: config.auth0Tenant,
-          __token_issuer: config.authorizationServer.issuer
-        },
-        domain: config.auth0Domain,
-        clientID: config.clientID,
-        redirectUri: config.callbackURL,
-        responseType: 'code',
-        scope: config.internalOptions.scope,
-        _csrf: config.internalOptions._csrf,
-        state: config.internalOptions.state,
-        _intstate: config.internalOptions._intstate
-      };
-
-      var triggerCaptcha = null;
-      var webAuth = new auth0.WebAuth(params);
-      var databaseConnection = 'Username-Password-Authentication';
-      var captcha = webAuth.renderCaptcha(
-        document.querySelector('.captcha-container'),
-        null,
-        (error, payload) => {
-          if (payload) {
-            triggerCaptcha = payload.triggerCaptcha;
+    <script src="https://cdn.auth0.com/js/auth0/9.26/auth0.min.js"></script>
+    <script src="https://cdn.auth0.com/js/polyfills/1.0/object-assign.min.js"></script>
+    <script>
+      window.addEventListener('load', function() {
+  
+        var config = JSON.parse(
+          decodeURIComponent(escape(window.atob('@@config@@')))
+        );
+  
+        var leeway = config.internalOptions.leeway;
+        if (leeway) {
+          var convertedLeeway = parseInt(leeway);
+  
+          if (!isNaN(convertedLeeway)) {
+            config.internalOptions.leeway = convertedLeeway;
           }
         }
-      );
-
-      function login(e) {
-        e.preventDefault();
-        var button = this;
-        var username = document.getElementById('email').value;
-        var password = document.getElementById('password').value;
-        button.disabled = true;
-        var request = () => {
-          webAuth.login({
-            realm: databaseConnection,
-            username: username,
-            password: password,
-            captcha: captcha.getValue()
-          }, function(err) {
-            if (err) displayError(err);
-            button.disabled = false;
-          });
+  
+        var params =  {
+          overrides: {
+            __tenant: config.auth0Tenant,
+            __token_issuer: config.authorizationServer.issuer
+          },
+          domain: config.auth0Domain,
+          clientID: config.clientID,
+          redirectUri: config.callbackURL,
+          responseType: 'code',
+          scope: config.internalOptions.scope,
+          _csrf: config.internalOptions._csrf,
+          state: config.internalOptions.state,
+          _intstate: config.internalOptions._intstate
         };
-        if (triggerCaptcha) {
-          triggerCaptcha(request);
-        } else {
-          request();
-        }
-      }
+  
+        var triggerCaptcha = null;
+        var webAuth = new auth0.WebAuth(params);
+        var databaseConnection = 'Username-Password-Authentication';
+        var captcha = webAuth.renderCaptcha(
+          document.querySelector('.captcha-container'),
+          null,
+          (error, payload) => {
+            if (payload) {
+              triggerCaptcha = payload.triggerCaptcha;
+            }
+          }
+        );
+  
+        function login(e) {
+  e.preventDefault();
+  var button = this;
+  var username = document.getElementById('email').value;
+  var password = document.getElementById('password').value;
 
-      function signup() {
-        var button = this;
-        var email = document.getElementById('email').value;
-        var password = document.getElementById('password').value;
-        button.disabled = true;
-        var request = () => {
-          webAuth.redirect.signupAndLogin({
-            connection: databaseConnection,
-            email: email,
-            password: password,
-            captcha: captcha.getValue()
-          }, function(err) {
-            if (err) displayError(err);
-            button.disabled = false;
-          });
-        };
-        if (triggerCaptcha) {
-          triggerCaptcha(request);
-        } else {
-          request();
-        }
-      }
+  // Hide the error message when starting a new login attempt
+  var errorMessage = document.getElementById('error-message');
+  errorMessage.style.display = 'none';
+  errorMessage.innerText = '';
 
-      function loginWithGoogle() {
-        webAuth.authorize({
-          connection: 'google-oauth2'
-        }, function(err) {
-          if (err) displayError(err);
-        });
-      }
-
-      function loginWithFacebook() {
-  webAuth.authorize({
-    connection: 'facebook'
-  }, function(err) {
-    if (err) displayError(err);
-  });
-}
-
-function loginWithLinkedIn() {
-  webAuth.authorize({
-    connection: 'linkedin'
-  }, function(err) {
-    if (err) displayError(err);
-  });
-}
-
-      function displayError(err) {
-        captcha.reload();
-        var errorMessage = document.getElementById('error-message');
-        errorMessage.innerText = err.policy || err.description;
-        errorMessage.style.display = 'block';
-      }
-
-      document.getElementById('btn-login').addEventListener('click', login);
-      document.getElementById('btn-google').addEventListener('click', loginWithGoogle);
-      document.getElementById('btn-facebook').addEventListener('click', loginWithFacebook);
-      document.getElementById('btn-linkedin').addEventListener('click', loginWithLinkedIn);
-
-      document.getElementById('btn-signup').addEventListener('click', signup);
+  button.disabled = true;
+  var request = () => {
+    webAuth.login({
+      realm: databaseConnection,
+      username: username,
+      password: password,
+      captcha: captcha.getValue()
+    }, function(err) {
+      if (err) displayError(err);
+      button.disabled = false;
     });
-  </script>
-</body>
-</html>
+  };
+  if (triggerCaptcha) {
+    triggerCaptcha(request);
+  } else {
+    request();
+  }
+}
+
+  
+function signup() {
+  var button = this;
+  var email = document.getElementById('email').value;
+  var password = document.getElementById('password').value;
+
+  // Hide the error message when starting a new signup attempt
+  var errorMessage = document.getElementById('error-message');
+  errorMessage.style.display = 'none';
+  errorMessage.innerText = '';
+
+  button.disabled = true;
+  var request = () => {
+    webAuth.redirect.signupAndLogin({
+      connection: databaseConnection,
+      email: email,
+      password: password,
+      captcha: captcha.getValue()
+    }, function(err) {
+      if (err) displayError(err);
+      button.disabled = false;
+    });
+  };
+  if (triggerCaptcha) {
+    triggerCaptcha(request);
+  } else {
+    request();
+  }
+}
+
+  
+        function loginWithGoogle() {
+          webAuth.authorize({
+            connection: 'google-oauth2'
+          }, function(err) {
+            if (err) displayError(err);
+          });
+        }
+  
+        function displayError(err) {
+          captcha.reload();
+          var errorMessage = document.getElementById('error-message');
+          errorMessage.innerText = err.policy || err.description;
+          errorMessage.style.display = 'block';
+        }
+  
+        function showSignup() {
+          // Hide 'btn-login'
+          document.getElementById('btn-login').style.display = 'none';
+          // Show 'btn-signup'
+          document.getElementById('btn-signup').style.display = 'block';
+
+            // Hide the error message when starting a new login attempt
+  var errorMessage = document.getElementById('error-message');
+  errorMessage.style.display = 'none';
+  errorMessage.innerText = '';
+  
+          // Hide 'no-account-span' and 'no-account-button'
+          document.querySelector('.no-account-span').style.display = 'none';
+          document.querySelector('.no-account-button').style.display = 'none';
+  
+          // Show 'has-account-span' and 'has-account-button'
+          document.querySelector('.has-account-span').style.display = 'block';
+          document.querySelector('.has-account-button').style.display = 'block';
+        }
+  
+        function showLogin() {
+          // Show 'btn-login'
+          document.getElementById('btn-login').style.display = 'block';
+          // Hide 'btn-signup'
+          document.getElementById('btn-signup').style.display = 'none';
+  
+
+            // Hide the error message when starting a new login attempt
+  var errorMessage = document.getElementById('error-message');
+  errorMessage.style.display = 'none';
+  errorMessage.innerText = '';
+
+          // Show 'no-account-span' and 'no-account-button'
+          document.querySelector('.no-account-span').style.display = 'block';
+          document.querySelector('.no-account-button').style.display = 'block';
+  
+          // Hide 'has-account-span' and 'has-account-button'
+          document.querySelector('.has-account-span').style.display = 'none';
+          document.querySelector('.has-account-button').style.display = 'none';
+        }
+  
+        document.getElementById('btn-login').addEventListener('click', login);
+        document.getElementById('btn-google').addEventListener('click', loginWithGoogle);
+  
+        document.getElementById('btn-signup').addEventListener('click', signup);
+  
+        document.querySelector('.no-account-button').addEventListener('click', showSignup);
+        document.querySelector('.has-account-button').addEventListener('click', showLogin);
+      });
+    </script>
+  </body>
+  </html>
