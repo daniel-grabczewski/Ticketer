@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Sign In with Auth0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Include Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<style>
+  
+  /* IMPORT CUSTOM CSS FILE FROM MY OWN PROJECT LATER */
+  
+  body, html {
+    height: 100%;
+    background-color: #1B2131;
+  }
+  
+  
+  .form-group {
+   max-width : 300px; 
+  }
+
+  .login-container {
+    position: relative;
+    height: 100%;
+  }
+
+  .login-box {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 15px;
+    background-color: #1B2131; /* Match background color */
+    color: #ffffff; /* White text */
+    box-shadow: none; /* Remove box shadow */
+    border-radius: 5px;
+    border: none; /* Remove border */
+  }
+
+  .login-header {
+    text-align: center;
+  }
+
+.login-header img {
+  width: 400px;
+  user-select: none; /* Prevent text selection */
+}
+
+  #error-message {
+    display: none;
+    white-space: break-spaces;
+    color: #ff6b6b; /* Error message color */
+  }
+
+  label {
+    color: #ffffff; /* White labels */
+  }
+
+  .form-control {
+    background-color: #E0E0E0; /* Slightly lighter background for inputs */
+    color: #000000; /* White input text */
+    border-color: #E0E0E0; /* Input border color */
+    border-radius: 10px;
+  }
+
+  .form-control:focus {
+    border-color: #5C6BC0; /* Focus border color */
+    box-shadow: none; /* Remove focus shadow */
+  }
+
+  /* Placeholder text color */
+  ::-webkit-input-placeholder {
+    color: #bbbbbb;
+  }
+  :-ms-input-placeholder {
+    color: #bbbbbb;
+  }
+  ::placeholder {
+    color: #bbbbbb;
+  }
+
+  /* Button styles */
+  .btn-primary {
+    background-color: #4A8FE7; /* Custom primary button color */
+    border-color: #4A8FE7;
+    color: #ffffff;
+    border-radius: 10px;
+  }
+
+  .btn-primary:hover,
+  .btn-primary:focus,
+  .btn-primary:active {
+    background-color: #3B4BA3; /* Darker shade on hover */
+    border-color: #3B4BA3;
+  }
+
+  .btn-default {
+    background-color: #2A2F3A; /* Match input background */
+    color: #ffffff;
+    border-color: #444a58;
+    border-radius: 10px;
+  }
+
+  .btn-default:hover,
+  .btn-default:focus,
+  .btn-default:active {
+    background-color: #1F232C;
+    border-color: #444a58;
+  }
+
+  .btn-danger {
+    background-color: #dd4b39; /* Google red */
+    border-color: #d73925;
+    color: #ffffff;
+  }
+
+  .btn-danger:hover,
+  .btn-danger:focus,
+  .btn-danger:active {
+    background-color: #c23321;
+    border-color: #b0281a;
+  }
+
+  hr {
+    border-top: 1px solid #444a58;
+  }
+
+  /* Adjust error message styles */
+  .alert-danger {
+    background-color: #8B0000;
+    color: #ffffff;
+    border-color: #8B0000;
+  }
+</style>
+<body>
+  <div class="login-container">
+    <div class="col-xs-12 col-sm-4 col-sm-offset-4 login-box">
+      <div class="login-header">
+        <img class="login-logo" draggable="false" src="https://raw.githubusercontent.com/daniel-grabczewski/Ticketer/refs/heads/main/frontend/public/logo-light.svg"/>
+      </div>
+      <div id="error-message" class="alert alert-danger"></div>
+      <form class="form-group" onsubmit="return false;" method="post">
+        <div >
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            placeholder="Email">
+        </div>
+        <div class="form-group">
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            placeholder="Password">
+        </div>
+        <div class="captcha-container form-group"></div>
+        <button
+          type="submit"
+          id="btn-login"
+          class="btn btn-primary btn-block">
+            Log In
+        </button>
+        <button
+          type="button"
+          id="btn-signup"
+          class="btn btn-default btn-block">
+            Sign Up
+        </button>
+        <hr>
+        <button
+          type="button"
+          id="btn-google"
+          class="btn btn-danger btn-block">
+            Log In with Google
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!--[if IE 8]>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/ie8/0.2.5/ie8.js"></script>
+  <![endif]-->
+
+  <!--[if lte IE 9]>
+  <script src="https://cdn.auth0.com/js/polyfills/1.0/base64.min.js"></script>
+  <script src="https://cdn.auth0.com/js/polyfills/1.0/es5-shim.min.js"></script>
+  <![endif]-->
+
+  <script src="https://cdn.auth0.com/js/auth0/9.26/auth0.min.js"></script>
+  <script src="https://cdn.auth0.com/js/polyfills/1.0/object-assign.min.js"></script>
+  <script>
+    window.addEventListener('load', function() {
+
+      var config = JSON.parse(
+        decodeURIComponent(escape(window.atob('@@config@@')))
+      );
+
+      var leeway = config.internalOptions.leeway;
+      if (leeway) {
+        var convertedLeeway = parseInt(leeway);
+
+        if (!isNaN(convertedLeeway)) {
+          config.internalOptions.leeway = convertedLeeway;
+        }
+      }
+
+      var params =  {
+        overrides: {
+          __tenant: config.auth0Tenant,
+          __token_issuer: config.authorizationServer.issuer
+        },
+        domain: config.auth0Domain,
+        clientID: config.clientID,
+        redirectUri: config.callbackURL,
+        responseType: 'code',
+        scope: config.internalOptions.scope,
+        _csrf: config.internalOptions._csrf,
+        state: config.internalOptions.state,
+        _intstate: config.internalOptions._intstate
+      };
+
+      var triggerCaptcha = null;
+      var webAuth = new auth0.WebAuth(params);
+      var databaseConnection = 'Username-Password-Authentication';
+      var captcha = webAuth.renderCaptcha(
+        document.querySelector('.captcha-container'),
+        null,
+        (error, payload) => {
+          if (payload) {
+            triggerCaptcha = payload.triggerCaptcha;
+          }
+        }
+      );
+
+      function login(e) {
+        e.preventDefault();
+        var button = this;
+        var username = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        button.disabled = true;
+        var request = () => {
+          webAuth.login({
+            realm: databaseConnection,
+            username: username,
+            password: password,
+            captcha: captcha.getValue()
+          }, function(err) {
+            if (err) displayError(err);
+            button.disabled = false;
+          });
+        };
+        if (triggerCaptcha) {
+          triggerCaptcha(request);
+        } else {
+          request();
+        }
+      }
+
+      function signup() {
+        var button = this;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        button.disabled = true;
+        var request = () => {
+          webAuth.redirect.signupAndLogin({
+            connection: databaseConnection,
+            email: email,
+            password: password,
+            captcha: captcha.getValue()
+          }, function(err) {
+            if (err) displayError(err);
+            button.disabled = false;
+          });
+        };
+        if (triggerCaptcha) {
+          triggerCaptcha(request);
+        } else {
+          request();
+        }
+      }
+
+      function loginWithGoogle() {
+        webAuth.authorize({
+          connection: 'google-oauth2'
+        }, function(err) {
+          if (err) displayError(err);
+        });
+      }
+
+      function displayError(err) {
+        captcha.reload();
+        var errorMessage = document.getElementById('error-message');
+        errorMessage.innerText = err.policy || err.description;
+        errorMessage.style.display = 'block';
+      }
+
+      document.getElementById('btn-login').addEventListener('click', login);
+      document.getElementById('btn-google').addEventListener('click', loginWithGoogle);
+      document.getElementById('btn-signup').addEventListener('click', signup);
+    });
+  </script>
+</body>
+</html>
