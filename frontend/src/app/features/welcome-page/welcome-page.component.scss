@@ -3,7 +3,7 @@
 .welcome-container {
   margin : auto;
   max-width : 350px;
-  margin-top : 20vh;
+  margin-top : 25vh;
   gap : 1.5rem;
   display : flex;
   align-items: center;
@@ -32,4 +32,7 @@ svg {
 
 button {
   @include button( $min-width : 9rem, $scale: 1.1);
+  user-select: none; /* Standard */
+  -webkit-user-select: none; /* For Webkit-based browsers (Chrome, Safari) */
+  -moz-user-select: none; /* For Firefox */
 }
