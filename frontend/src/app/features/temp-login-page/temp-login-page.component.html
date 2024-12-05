@@ -35,13 +35,27 @@
               id="email"
               placeholder="Email">
           </div>
-          <div class="form-group">
+          <div class="form-group password-container">
             <input
               type="password"
               class="form-control"
               id="password"
               placeholder="Password">
+            <span class="toggle-password">
+              <!-- Eye Open Icon -->
+              <svg id="eye-open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12.0001 4.5C7.50008 4.5 3.90008 7.1 1.90008 11.3C1.81391 11.5254 1.81391 11.7746 1.90008 12C3.90008 16.2 7.50008 18.8 12.0001 18.8C16.5001 18.8 20.1001 16.2 22.1001 12C22.1863 11.7746 22.1863 11.5254 22.1001 11.3C20.1001 7.1 16.5001 4.5 12.0001 4.5ZM12.0001 15.5C9.50008 15.5 7.50008 13.5 7.50008 11C7.50008 8.5 9.50008 6.5 12.0001 6.5C14.5001 6.5 16.5001 8.5 16.5001 11C16.5001 13.5 14.5001 15.5 12.0001 15.5Z"/>
+                <rect x="5.5" y="4.23" width="2" height="20" transform="rotate(-38 5 4.23)" fill="none" stroke="none"/>
+              </svg>
+              <!-- Eye Closed Icon -->
+              <svg id = "eye-closed" viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.0001 4.5C7.50008 4.5 3.90008 7.1 1.90008 11.3C1.81391 11.5254 1.81391 11.7746 1.90008 12C3.90008 16.2 7.50008 18.8 12.0001 18.8C16.5001 18.8 20.1001 16.2 22.1001 12C22.1863 11.7746 22.1863 11.5254 22.1001 11.3C20.1001 7.1 16.5001 4.5 12.0001 4.5ZM12.0001 15.5C9.50008 15.5 7.50008 13.5 7.50008 11C7.50008 8.5 9.50008 6.5 12.0001 6.5C14.5001 6.5 16.5001 8.5 16.5001 11C16.5001 13.5 14.5001 15.5 12.0001 15.5Z"/>
+                <rect x="5.5" y="4.23" width="2" height="20" transform="rotate(-38 5 4.23)"/>
+                </svg>
+                
+            </span>
           </div>
+          
           <div class="buttons-container">
             <button
               type="submit"
@@ -439,6 +453,30 @@ function checkPasswordRequirements() {
   
         document.querySelector('.no-account-button').addEventListener('click', showSignup);
         document.querySelector('.has-account-button').addEventListener('click', showLogin);
+
+        // Select elements
+var togglePassword = document.querySelector('.toggle-password');
+var passwordInput = document.getElementById('password');
+var eyeOpenIcon = document.getElementById('eye-open');
+var eyeClosedIcon = document.getElementById('eye-closed');
+
+// Add click event listener
+togglePassword.addEventListener('click', function () {
+  // Toggle the type attribute
+  var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+  passwordInput.setAttribute('type', type);
+
+  // Toggle the eye icons
+// Toggle the eye icons
+if (type === 'password') {
+  eyeOpenIcon.style.opacity = '1';
+  eyeClosedIcon.style.opacity = '0';
+} else {
+  eyeOpenIcon.style.opacity = '0';
+  eyeClosedIcon.style.opacity = '1';
+}
+
+});
       });
     </script>
   </body>
