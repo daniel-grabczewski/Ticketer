@@ -57,26 +57,24 @@
   }
 
   .board-grid {
-    flex-grow: 1; /* Allow it to expand within the available space */
-  flex-shrink: 1; /* Allow it to shrink when the container height decreases */
     display: grid;
-    grid-template-columns: repeat(4, 1fr); 
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1rem;
     width: 100%;
     max-width : 100%;
     max-height : 90vh;
     overflow-y: scroll;
-    grid-auto-rows: min-content;
+    //grid-auto-rows: min-content;
     scrollbar-width: thin;
     scrollbar-color: $background-lighter $background;
 
     @media (max-width :  $breakpoint-1) {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 0.65rem;
     }
 
     @media (max-width : $breakpoint-2) {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       max-height : 80vh;
     }
 
@@ -97,7 +95,7 @@
     }
 
     @media (max-width :   $breakpoint-3) {
-      grid-template-columns: repeat(1, 1fr);
+      grid-template-columns: repeat(1, minmax(0, 1fr));
     }
 
   }
