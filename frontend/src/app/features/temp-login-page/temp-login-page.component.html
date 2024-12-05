@@ -402,9 +402,6 @@ hr {
   opacity: 8%;
 }/*# sourceMappingURL=temp-login-page.component.css.map */
 </style>
-   <!-- <div id="error-message" class="alert alert-danger"></div>
-    <div class="captcha-container form-group"></div> 
-   -->
 
    
 <body>
@@ -466,7 +463,7 @@ hr {
             <button class="has-account-button">Log in</button>
           </div>
           <div id="error-message" class="error-message"></div>
-          <div class="captcha-container form-group"></div>
+          <!-- <div class="captcha-container form-group"></div> -->
           <hr>
           <div class="google-button-wrapper">
             <button id="btn-google" class="gsi-material-button">
@@ -532,9 +529,10 @@ hr {
           _intstate: config.internalOptions._intstate
         };
   
-        var triggerCaptcha = null;
+        //var triggerCaptcha = null;
         var webAuth = new auth0.WebAuth(params);
         var databaseConnection = 'Username-Password-Authentication';
+        /*
         var captcha = webAuth.renderCaptcha(
           document.querySelector('.captcha-container'),
           null,
@@ -544,6 +542,7 @@ hr {
             }
           }
         );
+        */
   
         function login(e) {
   e.preventDefault();
@@ -595,17 +594,19 @@ hr {
       realm: databaseConnection,
       username: username,
       password: password,
-      captcha: captcha.getValue()
+      //captcha: captcha.getValue()
     }, function(err) {
       if (err) displayError(err);
       button.disabled = false;
     });
   };
+  /*
   if (triggerCaptcha) {
     triggerCaptcha(request);
   } else {
+    */
     request();
-  }
+  //}
 }
 
 function removeErrorBorder() {
@@ -690,17 +691,19 @@ function signup() {
       connection: databaseConnection,
       email: email,
       password: password,
-      captcha: captcha.getValue()
+      //captcha: captcha.getValue()
     }, function(err) {
       if (err) displayError(err);
       button.disabled = false;
     });
   };
+  /*
   if (triggerCaptcha) {
     triggerCaptcha(request);
   } else {
+    */
     request();
-  }
+  //}
 }
 
 
@@ -714,7 +717,7 @@ function signup() {
         }
   
         function displayError(err) {
-  captcha.reload();
+  //captcha.reload();
   var errorMessage = document.getElementById('error-message');
 
   // Check if the error is related to password requirements
