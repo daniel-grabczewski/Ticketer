@@ -11,7 +11,396 @@
   <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  -->
 </head>
 <style>
+/* You can add global styles to this file, and also import other style files */
+:root {
+  --primary: #4A8FE7;
+  --primary-darker: #356BB6;
+  --secondary: #FFFFFF;
+  --secondary-darker: #E0E0E0;
+  --background: #1B2131;
+  --background-lighter: #2F3955;
+  --success: #00E061;
+  --success-lighter: #4FFF96;
+  --success-darker: #00B349;
+  --error: #EC3E1D;
+  --error-lighter: #FF6A4A;
+  --error-darker: #B22C14;
+  --neutral-lighter: #828A9A;
+  --neutral-darker: #4D566E;
+  --placeholder: #AAAAAA;
+}
 
+:root {
+  --gradient-default: #2F3955;
+  --gradient-1: linear-gradient(to right bottom, #126d4d, #1e7856, #28825e, #328d67, #3b9870, #42a278, #49ab81, #50b589, #57c093, #5ecb9d, #65d7a7, #6ce2b1);
+  --gradient-2: linear-gradient(to right bottom, #247424, #2c7c2c, #348334, #3c8b3b, #439343, #499b49, #4fa44f, #55ac55, #5bb75b, #60c260, #66ce66, #6cd96c);
+  --gradient-3: linear-gradient(to right bottom, #4a1a99, #5121a1, #5828aa, #5e2eb2, #6535bb, #6c3bc3, #7240cc, #7946d4, #814cde, #8952e7, #9259f1, #9a5ffb);
+  --gradient-4: linear-gradient(to right bottom, #b75d25, #bc622c, #c16832, #c66d39, #cb733f, #d17b46, #d7824e, #dd8a55, #e6965f, #eea169, #f7ad73, #ffb97e);
+  --gradient-5: linear-gradient(to right bottom, #a13174, #a9387c, #b13e84, #ba458d, #c24b95, #c9519b, #cf58a2, #d65ea8, #dd65ad, #e46db2, #eb74b7, #f27bbc);
+  --gradient-6: linear-gradient(to right bottom, #9c1c1c, #a72625, #b32f2d, #be3736, #ca403f, #ce4746, #d14d4c, #d55453, #d25a59, #ce5f5f, #cb6565, #c76a6a);
+}
+
+:root {
+  --primary: #4A8FE7;
+  --primary-darker: #356BB6;
+  --secondary: #FFFFFF;
+  --secondary-darker: #E0E0E0;
+  --background: #1B2131;
+  --background-lighter: #2F3955;
+  --success: #00E061;
+  --success-lighter: #4FFF96;
+  --success-darker: #00B349;
+  --error: #EC3E1D;
+  --error-lighter: #FF6A4A;
+  --error-darker: #B22C14;
+  --neutral-lighter: #828A9A;
+  --neutral-darker: #4D566E;
+  --placeholder: #AAAAAA;
+}
+
+html, body {
+  height: 100%;
+  overflow-x: auto;
+  background: #1B2131;
+}
+
+* {
+  font-family: "Lato", sans-serif !important;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
+
+:root {
+  --list-horizontal-padding: 0.75rem;
+}
+
+.dark-backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.transparent-backdrop {
+  background: transparent;
+}
+
+.input-error {
+  box-shadow: 0 0 0 1.5px #EC3E1D;
+}
+
+.welcome-container {
+  margin: auto;
+  max-width: 350px;
+  margin-top: 10vh;
+  gap: 1.5rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 1rem;
+}
+
+.logo {
+  width: 100%;
+}
+
+.icon {
+  height: 1.75rem;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 0.25rem;
+}
+
+.signup-button {
+  display: none;
+}
+
+.regular-button {
+  padding: 0.66rem 0.66rem 0.66rem 0.66rem;
+  text-align: center;
+  background-color: #4A8FE7;
+  color: #FFFFFF;
+  border-radius: 0.55rem;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9625rem;
+  transition: background-color 0.2s ease;
+  width: -moz-max-content;
+  width: max-content;
+  min-width: 100%;
+  max-width: -moz-max-content;
+  max-width: max-content;
+  margin-bottom: 0px;
+  user-select: none; /* Standard */
+  -webkit-user-select: none; /* For Webkit-based browsers (Chrome, Safari) */
+  -moz-user-select: none; /* For Firefox */
+}
+.regular-button:hover {
+  background-color: #356BB6;
+}
+.regular-button:disabled {
+  background-color: #828A9A;
+  cursor: not-allowed;
+}
+
+.powered-by-auth0 {
+  color: #E0E0E0;
+  font-size: 0.6rem;
+  font-weight: 300;
+}
+
+form {
+  width: 250px;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  background-color: #E0E0E0;
+  width: 100%;
+  border-radius: 0.5rem;
+  border: none;
+  padding: 0.5rem 0.5rem;
+  margin-bottom: 0.55rem;
+  font-size: 1.1rem;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.icon-buttons-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.icon-buttons-wrapper {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+hr {
+  margin-bottom: 1rem;
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1.5px solid #FFFFFF;
+  margin: 1em 0;
+  padding: 0;
+}
+
+.account-status-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.account-status-container span {
+  color: #E0E0E0;
+}
+.account-status-container button {
+  background: none;
+  color: #E0E0E0;
+  border: none;
+  cursor: pointer;
+}
+
+.has-account-span {
+  display: none;
+}
+
+.has-account-button {
+  display: none;
+}
+
+.error-message {
+  display: none;
+  background-color: #FF6A4A;
+  color: #B22C14;
+  border-radius: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.error-message ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.error-message li {
+  margin-left: 0;
+}
+
+.password-container {
+  position: relative;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 2.5rem; /* Add padding to make space for the icon */
+}
+
+.toggle-password {
+  position: absolute;
+  top: 40%;
+  right: 0.6rem; /* Adjust as needed */
+  transform: translateY(-50%);
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.toggle-password svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  fill: #AAAAAA;
+  stroke: #AAAAAA;
+  transition: opacity 0.2s; /* Smooth transition */
+}
+
+.toggle-password svg#eye-open {
+  opacity: 1;
+}
+
+.toggle-password svg#eye-closed {
+  opacity: 0;
+}
+
+.toggle-password:hover svg {
+  fill: black;
+  stroke: black;
+}
+
+.google-button-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.gsi-material-button {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -webkit-appearance: none;
+  background-color: #E0E0E0;
+  background-image: none;
+  border: none;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: #1f1f1f;
+  cursor: pointer;
+  font-family: "Roboto", arial, sans-serif;
+  font-size: 14px;
+  height: 40px;
+  letter-spacing: 0.25px;
+  outline: none;
+  overflow: hidden;
+  padding: 0 12px;
+  position: relative;
+  text-align: center;
+  transition: background-color 0.218s, border-color 0.218s, box-shadow 0.218s;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: -moz-min-content;
+  width: min-content;
+  max-width: 400px;
+  min-width: -moz-min-content;
+  min-width: min-content;
+}
+
+.gsi-material-button .gsi-material-button-icon {
+  height: 20px;
+  margin-right: 12px;
+  min-width: 20px;
+  width: 20px;
+}
+
+.gsi-material-button .gsi-material-button-content-wrapper {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: 100%;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+}
+
+.gsi-material-button .gsi-material-button-contents {
+  line-height: 1.2 !important;
+  flex-grow: 1;
+  font-family: "Roboto", arial, sans-serif;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}
+
+.gsi-material-button .gsi-material-button-state {
+  transition: opacity 0.218s;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.gsi-material-button:disabled {
+  cursor: default;
+  background-color: rgba(255, 255, 255, 0.3803921569);
+}
+
+.gsi-material-button:disabled .gsi-material-button-state {
+  background-color: rgba(31, 31, 31, 0.1215686275);
+}
+
+.gsi-material-button:disabled .gsi-material-button-contents {
+  opacity: 38%;
+}
+
+.gsi-material-button:disabled .gsi-material-button-icon {
+  opacity: 38%;
+}
+
+.gsi-material-button:not(:disabled):active .gsi-material-button-state,
+.gsi-material-button:not(:disabled):focus .gsi-material-button-state {
+  background-color: #001d35;
+  opacity: 12%;
+}
+
+.gsi-material-button:not(:disabled):hover {
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+}
+
+.gsi-material-button:not(:disabled):hover .gsi-material-button-state {
+  background-color: #001d35;
+  opacity: 8%;
+}/*# sourceMappingURL=temp-login-page.component.css.map */
 </style>
    <!-- <div id="error-message" class="alert alert-danger"></div>
     <div class="captcha-container form-group"></div> 
@@ -341,6 +730,9 @@ function signup() {
     // Add event listener to password input to check requirements on each input
     passwordInput.addEventListener('input', checkPasswordRequirements);
 
+    // Immediately check password requirements
+    checkPasswordRequirements.call(passwordInput);
+
   } else {
     // Handle other errors
     // Only update the error message if it's not already set
@@ -351,8 +743,10 @@ function signup() {
   }
 }
 
+
 function checkPasswordRequirements() {
-  var password = this.value;
+  var passwordInput = this;
+  var password = passwordInput.value;
   var requirementsList = document.getElementById('password-requirements').getElementsByTagName('li');
 
   // Requirement 1: At least 8 characters in length
@@ -390,8 +784,8 @@ function checkPasswordRequirements() {
   // Check if all requirements are satisfied
   if (requirement1 && requirement2) {
     // Remove red border
-    this.classList.remove('input-error');
-    this.removeEventListener('input', checkPasswordRequirements);
+    passwordInput.classList.remove('input-error');
+    passwordInput.removeEventListener('input', checkPasswordRequirements);
 
     // Hide the error message
     var errorMessage = document.getElementById('error-message');
@@ -399,6 +793,7 @@ function checkPasswordRequirements() {
     errorMessage.innerText = '';
   }
 }
+
 
 
         function showSignup() {
