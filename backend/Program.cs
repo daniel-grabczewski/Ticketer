@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,48 +32,41 @@ builder.Services.AddCors(options =>
 });
 
 // Add JWT Bearer authentication for Auth0
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.Authority = "https://dev-3l5ve3any1ptgo1l.us.auth0.com/";
-    options.Audience = "https://ticketer-api";
-    options.TokenValidationParameters = new TokenValidationParameters
+builder.Services
+    .AddAuthentication(options =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true
-    };
-
-    options.Events = new JwtBearerEvents
+        options.DefaultAuthenticateScheme = "Combined";
+        options.DefaultChallengeScheme = "Combined";
+    })
+    .AddPolicyScheme("Combined", "Combined Auth", options =>
     {
-        OnAuthenticationFailed = context =>
+        // If Authorization header is present, use JWT bearer; otherwise use guest cookie scheme
+        options.ForwardDefaultSelector = context =>
         {
-            // Do not fail the request; allow anonymous access
-            context.NoResult();
-            context.Response.StatusCode = 401;
-            context.Response.ContentType = "application/json";
-            return context.Response.WriteAsync("{\"error\":\"Authentication failed.\"}");
-        },
-        OnChallenge = context =>
-        {
-            // Skip the default challenge response
-            context.HandleResponse();
-            if (!context.Response.HasStarted)
+            var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
             {
-                context.Response.StatusCode = 401;
-                context.Response.ContentType = "application/json";
-                context.Response.WriteAsync("{\"error\":\"Unauthorized access.\"}");
+                return JwtBearerDefaults.AuthenticationScheme;
             }
-            return Task.CompletedTask;
-        }
-    };
-});
+            return "GuestCookie";
+        };
+    })
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+    {
+        options.Authority = "https://dev-3l5ve3any1ptgo1l.us.auth0.com/";
+        options.Audience = "https://ticketer-api";
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true
+        };
+        // Keep your JWT Bearer events if any
+    })
+    .AddScheme<AuthenticationSchemeOptions, GuestCookieAuthHandler>("GuestCookie", options => {});
 
-builder.Services.AddAuthorization(); // Add authorization services
+// Authorization
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 

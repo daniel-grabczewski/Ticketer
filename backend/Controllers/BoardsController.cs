@@ -24,7 +24,9 @@ namespace backend.Controllers
         [Authorize]
         public async Task<IActionResult> GetAllBoards()
         {
-            string userId = await GetUserIdAsync();
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            // Since [Authorize] is used, userId should never be null if authentication succeeded.
+            // If userId is somehow null, return Unauthorized.
             if (userId == null)
             {
                 return Unauthorized("User is not authenticated.");
@@ -54,7 +56,7 @@ namespace backend.Controllers
         [Authorize]
         public async Task<IActionResult> GetBoardById(string boardId)
         {
-            string userId = await GetUserIdAsync();
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
             {
                 return Unauthorized("User is not authenticated.");
@@ -83,7 +85,7 @@ namespace backend.Controllers
                     Id = l.Id,
                     Name = l.Name,
                     Position = l.Position,
-                    Tickets = l.Tickets.Select(t => new TicketDTO 
+                    Tickets = l.Tickets.Select(t => new TicketDTO
                     {
                         Id = t.Id,
                         Name = t.Name,
@@ -107,10 +109,17 @@ namespace backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            string userId = await GetUserIdAsync();
-            if (userId == null)
+            // Since this endpoint is [AllowAnonymous], we must check if user is authenticated
+            // via the combined scheme. If not, return Unauthorized.
+            if (!User.Identity.IsAuthenticated)
             {
                 return Unauthorized("User is not authenticated or guest ID is missing.");
+            }
+
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User is not authenticated.");
             }
 
             var currentTime = DateTime.UtcNow;
@@ -140,7 +149,7 @@ namespace backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            string userId = await GetUserIdAsync();
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
             {
                 return Unauthorized("User is not authenticated.");
@@ -210,7 +219,7 @@ namespace backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            string userId = await GetUserIdAsync();
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
             {
                 return Unauthorized("User is not authenticated.");
@@ -237,7 +246,7 @@ namespace backend.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteBoard(string boardId)
         {
-            string userId = await GetUserIdAsync();
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
             {
                 return Unauthorized("User is not authenticated.");
@@ -257,27 +266,6 @@ namespace backend.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new { Message = "Board deleted successfully!" });
-        }
-
-        private async Task<string> GetUserIdAsync()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            }
-            else
-            {
-                string guestId = Request.Cookies["GuestId"];
-                if (!string.IsNullOrEmpty(guestId))
-                {
-                    var guestUserExists = await _context.Users.AnyAsync(u => u.Id == guestId && u.IsGuest);
-                    if (guestUserExists)
-                    {
-                        return guestId;
-                    }
-                }
-            }
-            return null;
         }
     }
 }
