@@ -11,13 +11,34 @@ import { provideAuth0 } from '@auth0/auth0-angular';
 import { environment } from './environments/environment';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './app/auth-interceptor';
+import { provideAppInitializer, inject } from '@angular/core';
+import { AuthService } from './app/core/services/auth.service';
+
+export function initializeAuth(): Promise<void> {
+  console.log('[main.ts] initializeAuth started');
+  const authService = inject(AuthService);
+  return new Promise((resolve) => {
+    const guestCookieExists = document.cookie
+      .split(';')
+      .some((item) => item.trim().startsWith('GuestId='));
+
+    console.log('[main.ts] Guest cookie exists at init?', guestCookieExists);
+    console.log('[main.ts] Current isAuthenticatedSubject value:', authService.isAuthenticatedSubject.value);
+
+    if (guestCookieExists && !authService.isAuthenticatedSubject.value) {
+      console.log('[main.ts] Setting guest authenticated at startup.');
+      authService.setGuestAuthenticated();
+    }
+
+    console.log('[main.ts] initializeAuth complete');
+    resolve();
+  });
+}
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    provideHttpClient(
-      withInterceptorsFromDi() // Include interceptors provided via DI
-    ),
+    provideHttpClient(withInterceptorsFromDi()),
     provideAnimationsAsync(),
     provideAuth0({
       domain: environment.auth.domain,
@@ -29,12 +50,12 @@ bootstrapApplication(AppComponent, {
         redirect_uri: window.location.origin,
       },
     }),
-    // Provide the custom interceptor
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
     },
     provideAnimationsAsync(),
+    provideAppInitializer(initializeAuth),
   ],
 }).catch((err) => console.error(err));
