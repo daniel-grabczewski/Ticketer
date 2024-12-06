@@ -29,7 +29,7 @@ export class WelcomePageComponent {
       next: (response) => {
         console.log('Guest session initiated:', response);  
         if (response) {
-          //this.goToDashboard() Put this back in when the guest functoinality is fixed
+        this.goToDashboard()
         }
         
       },
