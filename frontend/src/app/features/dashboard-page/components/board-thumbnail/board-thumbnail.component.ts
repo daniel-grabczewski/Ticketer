@@ -23,11 +23,10 @@ import { generateBoardMenuConfig } from '../../../../shared/menuConfigs/boardThu
 import { OverlayService } from '../../../../core/services/overlay.service';
 
 @Component({
-  selector: 'app-board-thumbnail',
-  templateUrl: './board-thumbnail.component.html',
-  styleUrls: ['./board-thumbnail.component.scss'],
-  standalone: true,
-  imports: [CommonModule],
+    selector: 'app-board-thumbnail',
+    templateUrl: './board-thumbnail.component.html',
+    styleUrls: ['./board-thumbnail.component.scss'],
+    imports: [CommonModule]
 })
 export class BoardThumbnailComponent implements OnChanges {
   @Input() id: string = '';

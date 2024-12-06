@@ -4,11 +4,10 @@ import { ColorService } from '../../../core/services/color.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-color-selection-panel',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './color-selection-panel.component.html',
-  styleUrls: ['./color-selection-panel.component.scss'],
+    selector: 'app-color-selection-panel',
+    imports: [CommonModule],
+    templateUrl: './color-selection-panel.component.html',
+    styleUrls: ['./color-selection-panel.component.scss']
 })
 export class ColorSelectionPanelComponent implements OnInit {
   @Input() selectedColorId: number | null = null; // Initial selected color ID or null for no selection

@@ -4,11 +4,10 @@ import { ColorService } from '../../../core/services/color.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-background-selection-panel',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './background-selection-panel.component.html',
-  styleUrls: ['./background-selection-panel.component.scss'],
+    selector: 'app-background-selection-panel',
+    imports: [CommonModule],
+    templateUrl: './background-selection-panel.component.html',
+    styleUrls: ['./background-selection-panel.component.scss']
 })
 export class BackgroundSelectionPanelComponent implements OnInit {
   @Input() selectedColorId: number | null = null; // Initial selected color ID or null for no selection

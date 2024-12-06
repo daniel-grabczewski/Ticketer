@@ -2,11 +2,10 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-ticket',
-  templateUrl: './ticket.component.html',
-  styleUrls: ['./ticket.component.scss'],
-  standalone: true,
-  imports: [CommonModule],
+    selector: 'app-ticket',
+    templateUrl: './ticket.component.html',
+    styleUrls: ['./ticket.component.scss'],
+    imports: [CommonModule]
 })
 export class TicketComponent implements OnInit {
   @Input() id: string = '';

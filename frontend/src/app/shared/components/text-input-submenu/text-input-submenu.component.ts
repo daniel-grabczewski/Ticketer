@@ -9,11 +9,10 @@ import {
 import { XButtonComponent } from '../x-button/x-button.component';
 
 @Component({
-  selector: 'app-text-input-submenu',
-  templateUrl: './text-input-submenu.component.html',
-  styleUrls: ['./text-input-submenu.component.scss'],
-  standalone: true,
-  imports: [CommonModule, FormsModule, XButtonComponent],
+    selector: 'app-text-input-submenu',
+    templateUrl: './text-input-submenu.component.html',
+    styleUrls: ['./text-input-submenu.component.scss'],
+    imports: [CommonModule, FormsModule, XButtonComponent]
 })
 export class TextInputSubmenuComponent implements TextInputSubmenuInput {
   // Inputs based on TextInputSubmenuInput

@@ -45,18 +45,17 @@ import { DragStateService } from '../../../../core/services/drag-state.service';
 import { UtilsService } from '../../../../shared/utils/utils.service';
 
 @Component({
-  selector: 'app-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    DragDropModule,
-    TicketComponent,
-    CreateBoardItemSubmenuComponent,
-    PlusButtonComponent,
-  ],
+    selector: 'app-list',
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.scss'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        DragDropModule,
+        TicketComponent,
+        CreateBoardItemSubmenuComponent,
+        PlusButtonComponent,
+    ]
 })
 export class ListComponent implements OnInit, OnChanges {
   @Input() id: string = '';

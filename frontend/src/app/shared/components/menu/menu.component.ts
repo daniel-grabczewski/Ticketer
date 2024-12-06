@@ -20,19 +20,18 @@ import { ColorSelectionSubmenuComponent } from '../color-selection-submenu/color
 import { DropdownSubmenuComponent } from '../dropdown-submenu/dropdown-submenu.component';
 
 @Component({
-  selector: 'app-menu',
-  templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    TextInputSubmenuComponent,
-    ConfirmationSubmenuComponent,
-    BackgroundSelectionSubmenuComponent,
-    GenerateBoardSubmenuComponent,
-    ColorSelectionSubmenuComponent,
-    DropdownSubmenuComponent,
-  ],
+    selector: 'app-menu',
+    templateUrl: './menu.component.html',
+    styleUrls: ['./menu.component.scss'],
+    imports: [
+        CommonModule,
+        TextInputSubmenuComponent,
+        ConfirmationSubmenuComponent,
+        BackgroundSelectionSubmenuComponent,
+        GenerateBoardSubmenuComponent,
+        ColorSelectionSubmenuComponent,
+        DropdownSubmenuComponent,
+    ]
 })
 export class MenuComponent implements OnInit {
   @Input() menuConfig: MenuConfig = { title: '', submenus: [] };

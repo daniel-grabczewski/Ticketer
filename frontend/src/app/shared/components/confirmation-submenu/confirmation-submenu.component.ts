@@ -8,11 +8,10 @@ import { XButtonComponent } from '../x-button/x-button.component';
 import { X_SCALE_VALUE } from '@constants';
 
 @Component({
-  selector: 'app-confirmation-submenu',
-  templateUrl: './confirmation-submenu.component.html',
-  styleUrls: ['./confirmation-submenu.component.scss'],
-  standalone: true,
-  imports: [CommonModule, XButtonComponent],
+    selector: 'app-confirmation-submenu',
+    templateUrl: './confirmation-submenu.component.html',
+    styleUrls: ['./confirmation-submenu.component.scss'],
+    imports: [CommonModule, XButtonComponent]
 })
 export class ConfirmationSubmenuComponent implements ConfirmationSubmenuInput {
   // Inputs matching ConfirmationSubmenuInput

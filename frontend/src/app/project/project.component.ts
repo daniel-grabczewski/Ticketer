@@ -4,11 +4,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'project',
-  standalone: true,
-  imports: [MatMenuModule, MatButtonModule, CommonModule],
-  templateUrl: './project.component.html',
-  styleUrls: ['./project.component.scss']
+    selector: 'project',
+    imports: [MatMenuModule, MatButtonModule, CommonModule],
+    templateUrl: './project.component.html',
+    styleUrls: ['./project.component.scss']
 })
 export class ProjectComponent {
   showOverlay = false;

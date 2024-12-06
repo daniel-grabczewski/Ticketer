@@ -14,18 +14,17 @@ import { takeUntil } from 'rxjs/operators';
 import { ColorService } from './core/services/color.service';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    MaterialSharedModule,
-    CommonModule,
-    GuestDataDialogComponent,
-    XButtonComponent,
-    HamburgerButtonComponent,
-  ],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+    selector: 'app-root',
+    imports: [
+        RouterOutlet,
+        MaterialSharedModule,
+        CommonModule,
+        GuestDataDialogComponent,
+        XButtonComponent,
+        HamburgerButtonComponent,
+    ],
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnDestroy {
   title = 'frontend';

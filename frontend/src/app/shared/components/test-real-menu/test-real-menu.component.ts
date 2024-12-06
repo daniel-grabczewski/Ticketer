@@ -34,20 +34,19 @@ import { XButtonComponent } from '../x-button/x-button.component';
 import { X_SCALE_VALUE } from '@constants';
 
 @Component({
-  selector: 'app-test-real-menu',
-  templateUrl: './test-real-menu.component.html',
-  styleUrls: ['./test-real-menu.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    TextInputSubmenuComponent,
-    ConfirmationSubmenuComponent,
-    BackgroundSelectionSubmenuComponent,
-    GenerateBoardSubmenuComponent,
-    ColorSelectionSubmenuComponent,
-    DropdownSubmenuComponent,
-    XButtonComponent,
-  ],
+    selector: 'app-test-real-menu',
+    templateUrl: './test-real-menu.component.html',
+    styleUrls: ['./test-real-menu.component.scss'],
+    imports: [
+        CommonModule,
+        TextInputSubmenuComponent,
+        ConfirmationSubmenuComponent,
+        BackgroundSelectionSubmenuComponent,
+        GenerateBoardSubmenuComponent,
+        ColorSelectionSubmenuComponent,
+        DropdownSubmenuComponent,
+        XButtonComponent,
+    ]
 })
 export class TestRealMenuComponent implements OnInit {
   @Input() menuConfig: MenuConfig = { title: '', submenus: [] };

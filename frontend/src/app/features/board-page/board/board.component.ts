@@ -60,21 +60,20 @@ import { UtilsService } from '../../../shared/utils/utils.service';
 import { CogButtonComponent } from '../../../shared/components/cog-button/cog-button.component';
 
 @Component({
-  selector: 'app-board',
-  templateUrl: './board.component.html',
-  styleUrls: ['./board.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    DragDropModule,
-    ListComponent,
-    CreateBoardItemSubmenuComponent,
-    RouterModule,
-    PlusButtonComponent,
-    CdkScrollableModule,
-    CogButtonComponent,
-  ],
+    selector: 'app-board',
+    templateUrl: './board.component.html',
+    styleUrls: ['./board.component.scss'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        DragDropModule,
+        ListComponent,
+        CreateBoardItemSubmenuComponent,
+        RouterModule,
+        PlusButtonComponent,
+        CdkScrollableModule,
+        CogButtonComponent,
+    ]
 })
 export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   boardDetails: GetBoardFullDetailsResponse | null = null;

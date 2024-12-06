@@ -9,11 +9,10 @@ import { XButtonComponent } from '../x-button/x-button.component';
 import { X_SCALE_VALUE } from '@constants';
 
 @Component({
-  selector: 'app-color-selection-submenu',
-  templateUrl: './color-selection-submenu.component.html',
-  styleUrls: ['./color-selection-submenu.component.scss'],
-  standalone: true,
-  imports: [CommonModule, ColorSelectionPanelComponent, XButtonComponent],
+    selector: 'app-color-selection-submenu',
+    templateUrl: './color-selection-submenu.component.html',
+    styleUrls: ['./color-selection-submenu.component.scss'],
+    imports: [CommonModule, ColorSelectionPanelComponent, XButtonComponent]
 })
 export class ColorSelectionSubmenuComponent
   implements ColorSelectionSubmenuInput

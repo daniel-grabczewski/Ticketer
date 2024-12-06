@@ -10,16 +10,15 @@ import { XButtonComponent } from '../x-button/x-button.component';
 import { X_SCALE_VALUE } from '@constants';
 
 @Component({
-  selector: 'app-generate-board-submenu',
-  templateUrl: './generate-board-submenu.component.html',
-  styleUrls: ['./generate-board-submenu.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    BackgroundSelectionPanelComponent,
-    XButtonComponent,
-  ],
+    selector: 'app-generate-board-submenu',
+    templateUrl: './generate-board-submenu.component.html',
+    styleUrls: ['./generate-board-submenu.component.scss'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        BackgroundSelectionPanelComponent,
+        XButtonComponent,
+    ]
 })
 export class GenerateBoardSubmenuComponent
   implements GenerateBoardSubmenuInput

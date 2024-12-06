@@ -9,11 +9,10 @@ import { XButtonComponent } from '../x-button/x-button.component';
 import { X_SCALE_VALUE } from '@constants';
 
 @Component({
-  selector: 'app-dropdown-submenu',
-  templateUrl: './dropdown-submenu.component.html',
-  styleUrls: ['./dropdown-submenu.component.scss'],
-  standalone: true,
-  imports: [CommonModule, FormsModule, XButtonComponent],
+    selector: 'app-dropdown-submenu',
+    templateUrl: './dropdown-submenu.component.html',
+    styleUrls: ['./dropdown-submenu.component.scss'],
+    imports: [CommonModule, FormsModule, XButtonComponent]
 })
 export class DropdownSubmenuComponent implements DropdownSubmenuInput {
   // Inputs matching DropdownSubmenuInput

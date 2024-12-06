@@ -2,11 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-plus-button',
-  templateUrl: './plus-button.component.html',
-  styleUrls: ['./plus-button.component.scss'],
-  standalone: true,
-  imports: [CommonModule],
+    selector: 'app-plus-button',
+    templateUrl: './plus-button.component.html',
+    styleUrls: ['./plus-button.component.scss'],
+    imports: [CommonModule]
 })
 export class PlusButtonComponent {
   @Input() scale: number = 1; // Default scale

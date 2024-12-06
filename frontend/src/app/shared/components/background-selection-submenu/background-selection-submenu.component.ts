@@ -10,11 +10,10 @@ import { X_SCALE_VALUE } from '@constants';
 
 
 @Component({
-  selector: 'app-background-selection-submenu',
-  templateUrl: './background-selection-submenu.component.html',
-  styleUrls: ['./background-selection-submenu.component.scss'],
-  standalone: true,
-  imports: [CommonModule, BackgroundSelectionPanelComponent, XButtonComponent],
+    selector: 'app-background-selection-submenu',
+    templateUrl: './background-selection-submenu.component.html',
+    styleUrls: ['./background-selection-submenu.component.scss'],
+    imports: [CommonModule, BackgroundSelectionPanelComponent, XButtonComponent]
 })
 export class BackgroundSelectionSubmenuComponent
   implements BackgroundSelectionSubmenuInput

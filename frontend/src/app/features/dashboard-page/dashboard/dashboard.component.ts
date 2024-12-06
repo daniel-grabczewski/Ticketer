@@ -15,11 +15,10 @@ import { PlusButtonComponent } from '../../../shared/components/plus-button/plus
 import { OverlayService } from '../../../core/services/overlay.service';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
-  standalone: true,
-  imports: [CommonModule, BoardThumbnailComponent, PlusButtonComponent],
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.scss'],
+    imports: [CommonModule, BoardThumbnailComponent, PlusButtonComponent]
 })
 export class DashboardComponent implements OnInit {
   submenuTitle = 'Generate Board';
