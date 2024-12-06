@@ -10,17 +10,21 @@ export const myAuthGuardFn: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
+  console.log('[myAuthGuardFn] Checking route:', state.url);
+
   return combineLatest([
     auth0.isAuthenticated$,
     authService.isAuthenticated$,
   ]).pipe(
     take(1),
     map(([isAuth0Authenticated, isGuestAuthenticated]) => {
+      console.log('[myAuthGuardFn] isAuth0Authenticated:', isAuth0Authenticated, 'isGuestAuthenticated:', isGuestAuthenticated);
+
       if (isAuth0Authenticated || isGuestAuthenticated) {
-        // User is authenticated via Auth0 or as a guest; allow access
+        console.log('[myAuthGuardFn] Access granted to:', state.url);
         return true;
       } else {
-        // User is not authenticated; redirect to /welcome
+        console.log('[myAuthGuardFn] Access denied. Redirecting to /welcome.');
         router.navigate(['/welcome']);
         return false;
       }
