@@ -45,81 +45,77 @@ export class AppComponent implements OnDestroy {
     // Subscribe to cached and real-time authentication status from AuthService
 
     this.authService.isAuthenticated$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(async (isAuthenticated) => {
-        if (isAuthenticated) {
-          this.isGuest = false;
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(async (isAuthenticated) => {
+      console.log('[app.component.ts] isAuthenticated$ changed:', isAuthenticated);
+      const isAuth0Authenticated = await firstValueFrom(this.auth0.isAuthenticated$);
+      console.log('[app.component.ts] Auth0 isAuthenticated$:', isAuth0Authenticated);
+      const isGuestUser = isAuthenticated && !isAuth0Authenticated;
+      const isAuth0User = isAuth0Authenticated; 
 
-          try {
-            // Trigger a check or get the current registration status from UserService
-            const isRegistered = await firstValueFrom(
-              this.userService.isRegistered()
-            );
-
-            // Check if GuestId cookie exists
-            const guestCookieExists = this.checkGuestCookie();
-
-            console.log('isRegistered status:', isRegistered);
-            console.log('Guest cookie exists:', guestCookieExists);
-
-            if (guestCookieExists) {
-              // Check if there is guest data associated with the GuestId
-              console.log('Calling hasGuestData endpoint...');
-              const hasGuestDataResponse = await firstValueFrom(
-                this.authService.hasGuestData()
-              );
-              console.log('HasGuestData response:', hasGuestDataResponse);
-              const hasGuestData = hasGuestDataResponse.hasGuestData;
-
-              if (!isRegistered && hasGuestData) {
-                // Show dialog to transfer guest data
-                console.log('Opening dialog...');
-                this.openGuestDataDialog();
-              } else if (isRegistered && hasGuestData) {
-                // User is registered, delete guest data without prompting
-                console.log('Deleting guest data...');
-                await this.deleteGuestDataForRegisteredUser();
-              } else {
-                // No guest data to handle
-                if (!isRegistered) {
-                  // Register the user
-                  console.log('Registering user with guest cookie');
-                  await this.registerUser();
-                }
-              }
+      console.log('[app.component.ts] Evaluating user type. isGuestUser:', isGuestUser, 'isAuth0User:', isAuth0User);
+  
+      if (isAuth0User) {
+        this.isGuest = false;
+        try {
+          const isRegistered = await firstValueFrom(this.userService.isRegistered());
+          const guestCookieExists = this.checkGuestCookie();
+  
+          console.log('isRegistered status:', isRegistered);
+          console.log('Guest cookie exists:', guestCookieExists);
+  
+          if (guestCookieExists) {
+            console.log('Calling hasGuestData endpoint...');
+            const hasGuestDataResponse = await firstValueFrom(this.authService.hasGuestData());
+            console.log('HasGuestData response:', hasGuestDataResponse);
+            const hasGuestData = hasGuestDataResponse.hasGuestData;
+  
+            if (!isRegistered && hasGuestData) {
+              console.log('Opening dialog...');
+              this.openGuestDataDialog();
+            } else if (isRegistered && hasGuestData) {
+              console.log('Deleting guest data...');
+              await this.deleteGuestDataForRegisteredUser();
             } else {
-              // No GuestId cookie, but if user is not registered, register them
               if (!isRegistered) {
-                console.log('Registering user without cookie');
+                console.log('Registering user with guest cookie');
                 await this.registerUser();
               }
             }
-          } catch (error) {
-            console.error('Error during authentication handling:', error);
+          } else {
+            if (!isRegistered) {
+              console.log('Registering user without cookie');
+              await this.registerUser();
+            }
           }
-        } else {
-          // Check if GuestId cookie exists for guest users
-          this.isGuest = this.checkGuestCookie();
-          console.log('Guest status:', this.isGuest);
+        } catch (error) {
+          console.error('Error during authentication handling:', error);
         }
-      });
-  }
-
-  ngOnInit() : void {
-    this.routerSubscription = this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.isWelcomePage = event.urlAfterRedirects === '/welcome'
-      }
-    })
-    console.log(this.isWelcomePage)
-    this.colorService.getAllColors().subscribe({
-      next: (colors) => {
-        console.log('Colors loaded and cached:', colors);
-      },
-      error: (error) => {
-        console.error('Failed to load and cache colors:', error);
+      } else if (isGuestUser) {
+        // The user is a guest. Do NOT try to register or transfer data here.
+        // Just set this.isGuest = true and let them use the app.
+        this.isGuest = true;
+        console.log('[app.component.ts] Authenticated as guest user. No Auth0 token present.');
+      } else {
+        // Not authenticated at all
+        this.isGuest = this.checkGuestCookie();
+        console.log('[app.component.ts] Not authenticated. Guest status:', this.isGuest);
       }
     });
+  }
+
+  ngOnInit(): void {
+    this.routerSubscription = this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.isWelcomePage = event.urlAfterRedirects === '/welcome';
+      }
+    });
+  
+    this.colorService.getAllColors().subscribe({
+      next: (colors) => console.log('Colors loaded and cached:', colors),
+      error: (error) => console.error('Failed to load and cache colors:', error),
+    });
+  
   }
 
   toggleMobileMenu() {
