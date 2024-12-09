@@ -51,37 +51,94 @@ namespace backend.Controllers
         }
 
         // GET: api/auth/hasGuestData
-        [HttpGet("hasGuestData")]
-        [Authorize]
-        public async Task<IActionResult> HasGuestData()
+       [HttpGet("hasGuestData")]
+[Authorize]
+public async Task<IActionResult> HasGuestData()
+{
+    Console.WriteLine("HasGuestData endpoint called.");
+
+    // Check Auth0 user ID from the token
+    string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    Console.WriteLine($"Auth0 user ID from token: {auth0UserId}");
+
+    // Check if GuestId cookie exists
+    string guestId = Request.Cookies["GuestId"];
+    Console.WriteLine($"GuestId from cookie: {guestId}");
+
+    // If we have an Auth0 user ID, determine if that user is registered
+    User authUser = null;
+    if (!string.IsNullOrEmpty(auth0UserId))
+    {
+        authUser = await _context.Users.FindAsync(auth0UserId);
+    }
+
+    // Logic:
+    // 1) If Auth0 user is registered, they should have no need for guest data.
+    //    Return false because we won't be transferring guest data now.
+    // 2) If Auth0 user is not registered, check if guest data exists.
+    //    This means we should look up by GuestId cookie if present.
+    // 3) If no Auth0 user ID (somehow), fallback to guest logic.
+
+    if (!string.IsNullOrEmpty(auth0UserId))
+    {
+        if (authUser != null)
         {
-            Console.WriteLine("HasGuestData endpoint called.");
-
-            // Check if GuestId cookie exists
-            string guestId = Request.Cookies["GuestId"];
-            Console.WriteLine($"GuestId from cookie: {guestId}");
-
+            // Auth0 user is registered, no guest data needed
+            Console.WriteLine("Auth0 user is registered. No guest data transfer needed.");
+            return Ok(new { HasGuestData = false });
+        }
+        else
+        {
+            // Auth0 user not registered yet. Possibly want to transfer guest data.
+            // Check GuestId cookie and guest user data.
             if (string.IsNullOrEmpty(guestId))
             {
+                Console.WriteLine("Auth0 user not registered and no GuestId cookie. No guest data.");
                 return Ok(new { HasGuestData = false });
             }
 
-            // Retrieve guest user and check for associated boards
             var guestUser = await _context.Users
                 .Include(u => u.Boards)
                 .FirstOrDefaultAsync(u => u.Id == guestId && u.IsGuest);
 
             if (guestUser == null)
             {
+                Console.WriteLine("No guest user found even though cookie exists. No guest data.");
                 return Ok(new { HasGuestData = false });
             }
 
             bool hasGuestData = guestUser.Boards.Any();
-
-            Console.WriteLine($"Has guest data: {hasGuestData}");
-
+            Console.WriteLine($"Auth0 user not registered, guest user found. Has guest data: {hasGuestData}");
             return Ok(new { HasGuestData = hasGuestData });
         }
+    }
+    else
+    {
+        // No Auth0 user ID found (unusual since [Authorize] is present),
+        // fallback to original guest logic.
+        Console.WriteLine("No Auth0 user ID found. Fallback to guest logic.");
+
+        if (string.IsNullOrEmpty(guestId))
+        {
+            return Ok(new { HasGuestData = false });
+        }
+
+        var guestUser = await _context.Users
+            .Include(u => u.Boards)
+            .FirstOrDefaultAsync(u => u.Id == guestId && u.IsGuest);
+
+        if (guestUser == null)
+        {
+            return Ok(new { HasGuestData = false });
+        }
+
+        bool hasGuestData = guestUser.Boards.Any();
+        Console.WriteLine($"Has guest data (guest fallback): {hasGuestData}");
+
+        return Ok(new { HasGuestData = hasGuestData });
+    }
+}
+
 
         // POST: api/auth/transferGuestData
         [HttpPost("transferGuestData")]
