@@ -1,4 +1,3 @@
-// src/app/auth-interceptor.ts
 import { Injectable } from '@angular/core';
 import {
   HttpInterceptor,
@@ -10,6 +9,7 @@ import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { Observable, from } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 import { AuthService } from './core/services/auth.service';
+import { firstValueFrom } from 'rxjs'; // Import firstValueFrom
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -23,39 +23,59 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const isAuthenticated = this.localAuthService.isAuthenticatedSubject.value;
-    console.log('[AuthInterceptor] Start intercepting. isAuthenticated:', isAuthenticated, 'URL:', req.url);
+    console.log(
+      '[AuthInterceptor] Start intercepting. isAuthenticated:',
+      isAuthenticated,
+      'URL:',
+      req.url
+    );
 
-    if (isAuthenticated) {
-      console.log('[AuthInterceptor] User is authenticated. Attempting to get Auth0 token. URL:', req.url);
-      return from(this.auth0.getAccessTokenSilently()).pipe(
-        switchMap((token) => {
-          // If we got a token successfully, proceed to send the request
-          const authReq = req.clone({
-            setHeaders: { Authorization: `Bearer ${token}` },
-            withCredentials: true,
-          });
-          return next.handle(authReq).pipe(
-            // If the request itself fails after we got a token, do not fallback to guest.
-            // Just rethrow the error so the error-handling.service can handle it.
+    // Check if Auth0 user is authenticated
+    return from(firstValueFrom(this.auth0.isAuthenticated$)).pipe(
+      switchMap((isAuth0Authenticated) => {
+        console.log(
+          '[AuthInterceptor] Auth0 isAuthenticated:',
+          isAuth0Authenticated
+        );
+
+        if (isAuth0Authenticated) {
+          // Auth0 user: get token
+          console.log(
+            '[AuthInterceptor] Auth0 user detected. Getting token...'
+          );
+          return from(firstValueFrom(this.auth0.getAccessTokenSilently())).pipe(
+            switchMap((token) => {
+              console.log(
+                '[AuthInterceptor] Got Auth0 token. Sending request with bearer token.'
+              );
+              const authReq = req.clone({
+                setHeaders: { Authorization: `Bearer ${token}` },
+                withCredentials: false,
+              });
+              return next.handle(authReq);
+            }),
             catchError((error) => {
-              console.warn('[AuthInterceptor] Request failed after token retrieval. Not falling back to guest mode. Re-throwing error:', error);
-              throw error; // Re-throw the error to be handled by your global error handler
+              console.warn(
+                '[AuthInterceptor] Failed to get token for Auth0 user. No fallback as this should not happen normally:',
+                error
+              );
+              throw error;
             })
           );
-        }),
-        catchError((tokenError) => {
-          // This catchError only triggers if getAccessTokenSilently() itself fails
-          console.warn('[AuthInterceptor] Token retrieval failed. Falling back to guest mode.', tokenError);
+        } else if (isAuthenticated && !isAuth0Authenticated) {
+          // Guest user: do NOT try to get token
+          console.log(
+            '[AuthInterceptor] Guest user detected. Sending request as guest.'
+          );
           const guestReq = req.clone({ withCredentials: true });
           return next.handle(guestReq);
-        })
-      );
-    } else {
-      console.log('[AuthInterceptor] User not authenticated. Sending request as guest with credentials. URL:', req.url);
-      const guestReq = req.clone({
-        withCredentials: true,
-      });
-      return next.handle(guestReq);
-    }
+        } else {
+          // Not authenticated at all
+          console.log('[AuthInterceptor] Not authenticated. Sending as guest.');
+          const guestReq = req.clone({ withCredentials: true });
+          return next.handle(guestReq);
+        }
+      })
+    );
   }
 }
