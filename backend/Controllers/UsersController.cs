@@ -56,7 +56,7 @@ namespace backend.Controllers
 
             // Check if the user exists in the Users table
             bool isRegistered = await _context.Users.AnyAsync(u => u.Id == auth0UserId);
-
+            
             return Ok(new { IsRegistered = isRegistered });
         }
 
@@ -64,11 +64,14 @@ namespace backend.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser()
         {
+            Console.WriteLine("RegisterUser endpoint called.");
             // Get the Auth0 user ID from the claims
-            string auth0UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var auth0UserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            Console.WriteLine("auth0UserId: " + auth0UserId);
 
             if (string.IsNullOrEmpty(auth0UserId))
             {
+                Console.WriteLine("No auth0UserId, returning Unauthorized.");
                 return Unauthorized();
             }
 
@@ -77,9 +80,11 @@ namespace backend.Controllers
 
             // Check if the user already exists
             bool exists = await _context.Users.AnyAsync(u => u.Id == auth0UserId);
+            Console.WriteLine("User exists in DB? " + exists);
 
             if (exists)
             {
+                Console.WriteLine("User already registered, returning BadRequest.");
                 return BadRequest("User is already registered.");
             }
 
