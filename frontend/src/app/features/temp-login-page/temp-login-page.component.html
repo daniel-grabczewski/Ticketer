@@ -799,50 +799,61 @@ function checkPasswordRequirements() {
 
 
 
-        function showSignup() {
-          // Hide 'btn-login'
-          document.getElementById('btn-login').style.display = 'none';
-          // Show 'btn-signup'
-          document.getElementById('btn-signup').style.display = 'block';
+function showSignup() {
+  // Hide 'btn-login'
+  const btnLogin = document.getElementById('btn-login');
+  const btnSignup = document.getElementById('btn-signup');
+  
+  btnLogin.style.display = 'none';
+  btnSignup.style.display = 'block';
+  
+  // Change button types
+  btnLogin.setAttribute('type', 'button'); // Non-submit
+  btnSignup.setAttribute('type', 'submit'); // Submit
 
-            // Hide the error message when starting a new login attempt
+  // Hide the error message when starting a new signup attempt
   var errorMessage = document.getElementById('error-message');
   errorMessage.style.display = 'none';
   errorMessage.innerText = '';
   
-          // Hide 'no-account-span' and 'no-account-button'
-          document.querySelector('.no-account-span').style.display = 'none';
-          document.querySelector('.no-account-button').style.display = 'none';
+  // Hide 'no-account-span' and 'no-account-button'
+  document.querySelector('.no-account-span').style.display = 'none';
+  document.querySelector('.no-account-button').style.display = 'none';
   
-          // Show 'has-account-span' and 'has-account-button'
-          document.querySelector('.has-account-span').style.display = 'block';
-          document.querySelector('.has-account-button').style.display = 'block';
+  // Show 'has-account-span' and 'has-account-button'
+  document.querySelector('.has-account-span').style.display = 'block';
+  document.querySelector('.has-account-button').style.display = 'block';
 
-          removeAllInputBorders()
-        }
+  removeAllInputBorders();
+}
   
-        function showLogin() {
-          // Show 'btn-login'
-          document.getElementById('btn-login').style.display = 'block';
-          // Hide 'btn-signup'
-          document.getElementById('btn-signup').style.display = 'none';
+function showLogin() {
+  // Show 'btn-login'
+  const btnLogin = document.getElementById('btn-login');
+  const btnSignup = document.getElementById('btn-signup');
   
+  btnLogin.style.display = 'block';
+  btnSignup.style.display = 'none';
+  
+  // Change button types
+  btnLogin.setAttribute('type', 'submit'); // Submit
+  btnSignup.setAttribute('type', 'button'); // Non-submit
 
-            // Hide the error message when starting a new login attempt
+  // Hide the error message when starting a new login attempt
   var errorMessage = document.getElementById('error-message');
   errorMessage.style.display = 'none';
   errorMessage.innerText = '';
 
-          // Show 'no-account-span' and 'no-account-button'
-          document.querySelector('.no-account-span').style.display = 'block';
-          document.querySelector('.no-account-button').style.display = 'block';
+  // Show 'no-account-span' and 'no-account-button'
+  document.querySelector('.no-account-span').style.display = 'block';
+  document.querySelector('.no-account-button').style.display = 'block';
   
-          // Hide 'has-account-span' and 'has-account-button'
-          document.querySelector('.has-account-span').style.display = 'none';
-          document.querySelector('.has-account-button').style.display = 'none';
+  // Hide 'has-account-span' and 'has-account-button'
+  document.querySelector('.has-account-span').style.display = 'none';
+  document.querySelector('.has-account-button').style.display = 'none';
 
-          removeAllInputBorders()
-        }
+  removeAllInputBorders();
+}
   
         document.getElementById('btn-login').addEventListener('click', login);
         document.getElementById('btn-google').addEventListener('click', loginWithGoogle);
