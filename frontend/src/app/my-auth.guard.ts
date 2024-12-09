@@ -18,16 +18,47 @@ export const myAuthGuardFn: CanActivateFn = (route, state) => {
   ]).pipe(
     take(1),
     map(([isAuth0Authenticated, isGuestAuthenticated]) => {
-      console.log('[myAuthGuardFn] isAuth0Authenticated:', isAuth0Authenticated, 'isGuestAuthenticated:', isGuestAuthenticated);
+      console.log(
+        '[myAuthGuardFn] isAuth0Authenticated:',
+        isAuth0Authenticated,
+        'isGuestAuthenticated:',
+        isGuestAuthenticated
+      );
 
+      // Block access to /welcome if user is authenticated or a guest
+      if (
+        state.url === '/welcome' &&
+        (isAuth0Authenticated || isGuestAuthenticated)
+      ) {
+        console.log(
+          '[myAuthGuardFn] Redirecting to dashboard because /welcome is not accessible for authenticated/guest users.'
+        );
+        router.navigate(['']); // Redirect to the dashboard
+        return false;
+      }
+
+      // Allow unauthenticated users to access /welcome
+      if (
+        state.url === '/welcome' &&
+        !isAuth0Authenticated &&
+        !isGuestAuthenticated
+      ) {
+        console.log(
+          '[myAuthGuardFn] Allowing unauthenticated user to access /welcome.'
+        );
+        return true;
+      }
+
+      // Allow access to all other routes if authenticated or guest
       if (isAuth0Authenticated || isGuestAuthenticated) {
         console.log('[myAuthGuardFn] Access granted to:', state.url);
         return true;
-      } else {
-        console.log('[myAuthGuardFn] Access denied. Redirecting to /welcome.');
-        router.navigate(['/welcome']);
-        return false;
       }
+
+      // Redirect unauthenticated users to /welcome
+      console.log('[myAuthGuardFn] Access denied. Redirecting to /welcome.');
+      router.navigate(['/welcome']);
+      return false;
     })
   );
 };

@@ -8,7 +8,7 @@ import { TempLoginPageComponent } from './features/temp-login-page/temp-login-pa
 
 export const routes: Routes = [
   { path: '', component: DashboardComponent,  canActivate: [myAuthGuardFn]}, // Public route
-  { path: 'welcome', component: WelcomePageComponent }, // Public route
+  { path: 'welcome', component: WelcomePageComponent, canActivate: [myAuthGuardFn] }, // Public route
   {
     path: 'dashboard',
     component: DashboardComponent,
