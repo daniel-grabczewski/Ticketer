@@ -90,6 +90,23 @@ p, button {
   display: none;
 }
 
+.navbar.mobile-navbar {
+  position: relative;
+  z-index: 1002; /* Above overlay and mobile-menu */
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark */
+  z-index: 1000; /* Below mobile-menu */
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
 /* Media query for smaller screens */
 @media (max-width: 600px) {
   .desktop-navbar {
@@ -132,22 +149,21 @@ p, button {
     position: fixed;
     right: 0;
     width: 9rem; /* Fixed width */
-    height: 9rem; /* Full height for a sidebar effect */
+    height: max-content; /* Full height for a sidebar effect */
     box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
     padding: 2rem 1rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 1rem;
-    opacity: 0;
     transform: translateX(100%);
     transition: opacity $button-transition-time ease, transform $button-transition-time ease;
-    margin-top : 2.4rem;
-    z-index: 1000; /* Ensure it's above other content */
+    margin-top : -1rem;
+    z-index: 1001; /* Ensure it's above other content */
+    
   }
 
-  .mobile-menu.show {
-    opacity: 1;
+  .show {
     transform: translateX(0);
   }
 
@@ -156,9 +172,13 @@ p, button {
     border: none;
     color: $secondary;
     text-align: left;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     cursor: pointer;
     padding: 0.5rem 0;
+  }
+
+  .nav-button-container {
+    padding : 1.5rem 0;
   }
 
   .nav-button:hover {

@@ -46,49 +46,54 @@
 
 
 <!-- Mobile Navbar -->
-  <div *ngIf="!isWelcomePage" class="navbar mobile-navbar">
+<!-- Mobile Navbar -->
+<div *ngIf="!isWelcomePage" class="navbar mobile-navbar">
 
   <div class="mobile-navbar-container">
     <div class="logo-container">
-      <img class = "logo"  src="images/logo-light.svg" alt="Logo">
+      <img class="logo" src="images/logo-light.svg" alt="Logo">
     </div>
-  <app-hamburger-button [scale]="2" class="open-menu" (click)="toggleMobileMenu()"></app-hamburger-button>
-</div>
-  <div *ngIf="isMobileMenuOpen" class="mobile-menu show">
+    <app-hamburger-button [scale]="2" class="open-menu" (click)="toggleMobileMenu()"></app-hamburger-button>
+  </div>
+  
+  <!-- Overlay Div -->
+  <div *ngIf="isMobileMenuOpen" class="overlay" (click)="toggleMobileMenu()"></div>
+  
+  <!-- Mobile Menu Dropdown -->
+  <div *ngIf="isMobileMenuOpen" class="mobile-menu show" (click)="$event.stopPropagation()">
     <app-x-button class="close-menu" (click)="toggleMobileMenu()"></app-x-button>
     <!-- Mobile menu content -->
-     <div>
-      
+    <div class="nav-button-container">
+      <div>
+        <button class="nav-button" (click)="goToDashboard()" (click)="toggleMobileMenu()">dashboard</button>
+      </div>
+      <!-- Logout button for registered users -->
+      <div *ngIf="(authService.isAuthenticated$ | async) && !isGuest">
+        <button class="nav-button" (click)="logout()" (click)="toggleMobileMenu()">sign out</button>
+      </div>
+      <div *ngIf="isGuest">
+        <!-- Login button for non-registered users (guests) -->
+        <button class="nav-button" (click)="login()" (click)="toggleMobileMenu()">sign in</button>
+      </div>
+
+      <!-- Not authenticated and not guest -->
+      <div *ngIf="!(authService.isAuthenticated$ | async) && !isGuest">
+        <button class="nav-button" (click)="login()" (click)="toggleMobileMenu()">sign in</button>
+      </div>
+
+      <div *ngIf="!(authService.isAuthenticated$ | async) && !isGuest">
+        <button class="nav-button" (click)="continueAsGuest()" (click)="toggleMobileMenu()">continue as guest</button>
+      </div>
+    </div>
     <div>
-      <button class = "nav-button" (click)="goToDashboard()" >dashboard</button>
-  </div>
-  <!-- Logout button for registered users -->
-    <div *ngIf="(authService.isAuthenticated$ | async) && !isGuest">
-      <button class = "nav-button" (click)="logout()">sign out</button>
+      <div class="user-status-section">
+        <p *ngIf="isGuest">guest</p>
+        <p *ngIf="(authService.isAuthenticated$ | async) && !isGuest">signed in as user</p>
+      </div>
     </div>
-    <div *ngIf="isGuest">
-      <!-- Login button for non-registered users (guests) -->
-      <button class = "nav-button" (click)="login()">sign in</button>
-    </div>
-
-  <!-- Not authenticated and not guest -->
-  <div *ngIf="!(authService.isAuthenticated$ | async) && !isGuest">
-    <button class = "nav-button" (click)="login()">sign in</button>
-  </div>
-
-  <div *ngIf="!(authService.isAuthenticated$ | async) && !isGuest">
-    <button class = "nav-button" (click)="continueAsGuest()">continue as guest</button>
   </div>
 </div>
-<div>
-  <div class="user-status-section">
-    <p *ngIf="isGuest">guest</p>
-    <p *ngIf="(authService.isAuthenticated$ | async) && !isGuest">signed in as user</p>
-  </div>
-</div>
-  
-  </div>
-  </div>
+
 
   <div class ="router-wrapper">
     <router-outlet></router-outlet>
