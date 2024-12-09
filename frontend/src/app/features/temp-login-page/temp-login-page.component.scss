@@ -325,3 +325,10 @@ padding: 0;
   background-color: #001d35;
   opacity: 8%;
 }
+
+
+//###############
+//Prevent MS Edge from adding their own 'hide'/'show' password button
+::-ms-reveal {
+  display: none;
+}

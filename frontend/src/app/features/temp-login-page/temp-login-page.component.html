@@ -400,7 +400,12 @@ hr {
 .gsi-material-button:not(:disabled):hover .gsi-material-button-state {
   background-color: #001d35;
   opacity: 8%;
-}/*# sourceMappingURL=temp-login-page.component.css.map */
+}
+::-ms-reveal {
+  display: none;
+}
+
+/*# sourceMappingURL=temp-login-page.component.css.map */
 </style>
 
    
@@ -419,14 +424,19 @@ hr {
               type="email"
               class="form-control"
               id="email"
-              placeholder="Email">
+              placeholder="Email"
+              autocomplete="username"
+              >
+              
           </div>
           <div class="form-group password-container">
             <input
               type="password"
               class="form-control"
               id="password"
-              placeholder="Password">
+              placeholder="Password"
+              autocomplete="new-password"
+              >
             <span class="toggle-password">
               <!-- Eye Open Icon -->
               <svg id="eye-open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
