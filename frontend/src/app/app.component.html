@@ -1,5 +1,5 @@
 <div class ="ticketer-app">
-  <div [style.display] = "isWelcomePage == true ? 'none' : 'null'" class="desktop-navbar">
+  <div *ngIf="!isWelcomePage" class="desktop-navbar">
   <div class="desktop-navbar-container">
 <div class="left-navbar-container">
   <div class="logo-container">
@@ -46,7 +46,7 @@
 
 
 <!-- Mobile Navbar -->
-  <div [style.display] = "isWelcomePage == true ? 'none' : 'null'" class="navbar mobile-navbar">
+  <div *ngIf="!isWelcomePage" class="navbar mobile-navbar">
 
   <div class="mobile-navbar-container">
     <div class="logo-container">
