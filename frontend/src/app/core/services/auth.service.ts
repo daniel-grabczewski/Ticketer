@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
-import { catchError, distinctUntilChanged } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { ErrorHandlingService } from './error-handling.service';
 
@@ -11,10 +11,7 @@ import { ErrorHandlingService } from './error-handling.service';
 })
 export class AuthService {
   private baseUrl = `${environment.baseURL}/auth`;
-  private readonly authKey = 'isAuthenticated';
-  public isAuthenticatedSubject = new BehaviorSubject<boolean>(
-    this.getCachedIsAuthenticated()
-  );
+  public isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
   constructor(
@@ -22,89 +19,72 @@ export class AuthService {
     private auth0: Auth0Service,
     private errorHandlingService: ErrorHandlingService
   ) {
-    // Check for GuestId cookie at startup
-    const guestCookieExists = document.cookie
-      .split(';')
-      .some((item) => item.trim().startsWith('GuestId='));
-  
-    // If guest cookie exists and we're not authenticated yet, set as authenticated
-    if (guestCookieExists && !this.isAuthenticatedSubject.value) {
-      this.updateAuthenticationStatus(true);
-      console.log('[AuthService] GuestId cookie found at startup. Setting isAuthenticated to true.');
-    }
-  
-    // Keep BehaviorSubject and localStorage synced with Auth0's authentication status
-    this.auth0.isAuthenticated$
-  .pipe(distinctUntilChanged())
-  .subscribe((auth0IsAuthenticated) => {
-    console.log('[AuthService] Auth0 isAuthenticated$ changed:', auth0IsAuthenticated);
-
-    const guestCookieExists = document.cookie
-      .split(';')
-      .some((item) => item.trim().startsWith('GuestId='));
-
-    // If Auth0 says authenticated is true, we always trust that and set isAuthenticated to true.
-    if (auth0IsAuthenticated) {
-      console.log('[AuthService] Auth0 says we are authenticated. Setting isAuthenticated = true.');
-      this.updateAuthenticationStatus(true);
-    } else {
-      // Auth0 says false. If we have a guest cookie, we remain authenticated as a guest.
-      // If no guest cookie, then we are not authenticated.
-      if (guestCookieExists) {
-        console.log('[AuthService] Auth0 is false, but we have a guest cookie. Keeping isAuthenticated = true (guest mode).');
-        // Do not call updateAuthenticationStatus(false) here, just do nothing.
-      } else {
-        console.log('[AuthService] Auth0 is false and no guest cookie. Setting isAuthenticated = false.');
-        this.updateAuthenticationStatus(false);
-      }
-    }
-  });
+    console.log('[AuthService] Constructor running.');
+    this.initializeAuthenticationState();
   }
-  
+
+  /**
+   * Initializes authentication state based on Auth0 and guest cookie.
+   */
+  private initializeAuthenticationState(): void {
+    const guestCookieExists = document.cookie
+      .split(';')
+      .some((item) => item.trim().startsWith('GuestId='));
+
+    if (guestCookieExists) {
+      console.log('[AuthService] GuestId cookie found at startup. Setting isAuthenticated to true.');
+      this.isAuthenticatedSubject.next(true);
+    }
+
+    this.auth0.isAuthenticated$
+      .pipe(distinctUntilChanged())
+      .subscribe((auth0IsAuthenticated) => {
+        console.log('[AuthService] Auth0 isAuthenticated$ changed:', auth0IsAuthenticated);
+
+        const guestCookie = document.cookie
+          .split(';')
+          .some((item) => item.trim().startsWith('GuestId='));
+
+        if (auth0IsAuthenticated) {
+          console.log('[AuthService] Auth0 says we are authenticated. Setting isAuthenticated = true.');
+          this.isAuthenticatedSubject.next(true);
+        } else {
+          // Auth0 says false. If we have a guest cookie, remain authenticated as a guest.
+          if (guestCookie) {
+            console.log('[AuthService] Auth0 is false, but guest cookie exists. Keeping isAuthenticated = true (guest mode).');
+            // Do nothing, remain true since guest mode is valid
+          } else {
+            console.log('[AuthService] Auth0 is false and no guest cookie. Setting isAuthenticated = false.');
+            this.isAuthenticatedSubject.next(false);
+          }
+        }
+      });
+  }
 
   public setGuestAuthenticated(): void {
     console.log('[AuthService] setGuestAuthenticated called.');
-    this.updateAuthenticationStatus(true);
+    this.isAuthenticatedSubject.next(true);
   }
-
-
-
-  /**
-   * Updates authentication status in BehaviorSubject and localStorage.
-   * @param isAuthenticated - The current authentication status from Auth0.
-   */
-  private updateAuthenticationStatus(isAuthenticated: boolean) {
-    const currentStatus = this.isAuthenticatedSubject.value;
-    if (currentStatus !== isAuthenticated) {
-      console.log('[AuthService] Updating isAuthenticated from', currentStatus, 'to', isAuthenticated);
-      this.isAuthenticatedSubject.next(isAuthenticated);
-      localStorage.setItem(this.authKey, JSON.stringify(isAuthenticated));
-    } else {
-      console.log('[AuthService] updateAuthenticationStatus called but status unchanged:', isAuthenticated);
-    }
-  }
-
-  /**
-   * Retrieves the cached isAuthenticated value from localStorage.
-   * Returns false if no value is found.
-   */
-  private getCachedIsAuthenticated(): boolean {
-    const cached = localStorage.getItem(this.authKey);
-    return cached !== null ? JSON.parse(cached) : false;
-  }
-
-  // Guest data related methods:
 
   /**
    * Generates a Guest ID and sets the cookie.
-   * @returns An Observable of any (adjust based on backend response if necessary).
+   * @returns An Observable of any.
    */
   generateGuestId(): Observable<any> {
-    this.updateAuthenticationStatus(true)
+    console.log('[AuthService] generateGuestId called.');
     const url = `${this.baseUrl}/generateGuestId`;
     return this.http
       .get<any>(url, { withCredentials: true })
-      .pipe(catchError(this.errorHandlingService.handleError));
+      .pipe(
+        tap(() => {
+          console.log('[AuthService] generateGuestId successful. Setting isAuthenticated = true (guest).');
+          this.isAuthenticatedSubject.next(true);
+        }),
+        catchError((err) => {
+          console.error('[AuthService] generateGuestId failed:', err);
+          return this.errorHandlingService.handleError(err);
+        })
+      );
   }
 
   /**
@@ -112,10 +92,17 @@ export class AuthService {
    * @returns An Observable of { hasGuestData: boolean }.
    */
   hasGuestData(): Observable<{ hasGuestData: boolean }> {
+    console.log('[AuthService] hasGuestData called.');
     const url = `${this.baseUrl}/hasGuestData`;
     return this.http
       .get<{ hasGuestData: boolean }>(url, { withCredentials: true })
-      .pipe(catchError(this.errorHandlingService.handleError));
+      .pipe(
+        tap((res) => console.log('[AuthService] hasGuestData response:', res)),
+        catchError((err) => {
+          console.error('[AuthService] hasGuestData failed:', err);
+          return this.errorHandlingService.handleError(err);
+        })
+      );
   }
 
   /**
@@ -123,10 +110,17 @@ export class AuthService {
    * @returns An Observable of void.
    */
   transferGuestData(): Observable<void> {
+    console.log('[AuthService] transferGuestData called.');
     const url = `${this.baseUrl}/transferGuestData`;
     return this.http
       .post<void>(url, {}, { withCredentials: true })
-      .pipe(catchError(this.errorHandlingService.handleError));
+      .pipe(
+        tap(() => console.log('[AuthService] transferGuestData successful.')),
+        catchError((err) => {
+          console.error('[AuthService] transferGuestData failed:', err);
+          return this.errorHandlingService.handleError(err);
+        })
+      );
   }
 
   /**
@@ -134,10 +128,17 @@ export class AuthService {
    * @returns An Observable of void.
    */
   deleteGuestData(): Observable<void> {
+    console.log('[AuthService] deleteGuestData called.');
     const url = `${this.baseUrl}/deleteGuestData`;
     return this.http
       .post<void>(url, {}, { withCredentials: true })
-      .pipe(catchError(this.errorHandlingService.handleError));
+      .pipe(
+        tap(() => console.log('[AuthService] deleteGuestData successful.')),
+        catchError((err) => {
+          console.error('[AuthService] deleteGuestData failed:', err);
+          return this.errorHandlingService.handleError(err);
+        })
+      );
   }
 
   /**
@@ -145,9 +146,16 @@ export class AuthService {
    * @returns An Observable of void.
    */
   deleteGuestDataForRegisteredUser(): Observable<void> {
+    console.log('[AuthService] deleteGuestDataForRegisteredUser called.');
     const url = `${this.baseUrl}/deleteGuestDataForRegisteredUser`;
     return this.http
       .post<void>(url, {}, { withCredentials: true })
-      .pipe(catchError(this.errorHandlingService.handleError));
+      .pipe(
+        tap(() => console.log('[AuthService] deleteGuestDataForRegisteredUser successful.')),
+        catchError((err) => {
+          console.error('[AuthService] deleteGuestDataForRegisteredUser failed:', err);
+          return this.errorHandlingService.handleError(err);
+        })
+      );
   }
 }

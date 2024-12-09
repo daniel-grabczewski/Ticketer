@@ -1,21 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ErrorHandlingService } from './error-handling.service';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private baseUrl = `${environment.baseURL}/users`;
-  private readonly registrationKey = 'isRegistered';
-  private isRegisteredSubject = new BehaviorSubject<boolean>(
-    this.getCachedIsRegistered()
-  );
-
-  // Public observable for components to subscribe to
+  private isRegisteredSubject = new BehaviorSubject<boolean>(false);
   isRegistered$ = this.isRegisteredSubject.asObservable();
 
   constructor(
@@ -28,49 +23,32 @@ export class UserService {
    * @returns An Observable of string.
    */
   getUsername(): Observable<string> {
-    return this.http
-      .get<string>(this.baseUrl)
-      .pipe(catchError(this.errorHandlingService.handleError));
+    console.log('[UserService] getUsername called.');
+    return this.http.get<string>(this.baseUrl).pipe(
+      tap(() => console.log('[UserService] getUsername successful.')),
+      catchError((err) => {
+        console.error('[UserService] getUsername failed:', err);
+        return this.errorHandlingService.handleError(err);
+      })
+    );
   }
 
   /**
-   * Checks if the user is registered.
+   * Checks if the user is registered by querying the backend directly.
    * @returns An Observable of boolean indicating registration status.
    */
   isRegistered(): Observable<boolean> {
-    const cachedValue = this.getCachedIsRegistered();
-    if (cachedValue !== null) {
-      this.isRegisteredSubject.next(cachedValue);
-    }
-
-    // Perform background HTTP check to validate isRegistered status from the backend
     const url = `${this.baseUrl}/isRegistered`;
-    this.http
+    return this.http
       .get<{ isRegistered: boolean }>(url, { withCredentials: true })
       .pipe(
-        tap((response) => {
-          if (response.isRegistered !== cachedValue) {
-            localStorage.setItem(
-              this.registrationKey,
-              JSON.stringify(response.isRegistered)
-            );
-            this.isRegisteredSubject.next(response.isRegistered);
-          }
+        // Map the response to extract the boolean value
+        map((response) => response.isRegistered),
+        tap((isRegistered) => {
+          this.isRegisteredSubject.next(isRegistered);
         }),
-        catchError(this.errorHandlingService.handleError)
-      )
-      .subscribe();
-
-    return this.isRegistered$;
-  }
-
-  /**
-   * Retrieves the cached isRegistered value from localStorage.
-   * Returns false if no value is found.
-   */
-  private getCachedIsRegistered(): boolean {
-    const cached = localStorage.getItem(this.registrationKey);
-    return cached !== null ? JSON.parse(cached) : false;
+        catchError((err) => this.errorHandlingService.handleError(err))
+      );
   }
 
   /**
@@ -79,8 +57,13 @@ export class UserService {
    */
   registerUser(): Observable<void> {
     const url = `${this.baseUrl}/register`;
-    return this.http
-      .post<void>(url, {})
-      .pipe(catchError(this.errorHandlingService.handleError));
+    console.log('[UserService] registerUser called: sending POST to', url);
+    return this.http.post<void>(url, {}).pipe(
+      tap(() => console.log('[UserService] registerUser successful.')),
+      catchError((err) => {
+        console.error('[UserService] registerUser failed:', err);
+        return this.errorHandlingService.handleError(err);
+      })
+    );
   }
 }

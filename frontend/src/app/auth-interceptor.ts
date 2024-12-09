@@ -29,15 +29,23 @@ export class AuthInterceptor implements HttpInterceptor {
       console.log('[AuthInterceptor] User is authenticated. Attempting to get Auth0 token. URL:', req.url);
       return from(this.auth0.getAccessTokenSilently()).pipe(
         switchMap((token) => {
-          console.log('[AuthInterceptor] Successfully got token. Adding Bearer header. URL:', req.url);
+          // If we got a token successfully, proceed to send the request
           const authReq = req.clone({
             setHeaders: { Authorization: `Bearer ${token}` },
-            withCredentials: false,
+            withCredentials: true,
           });
-          return next.handle(authReq);
+          return next.handle(authReq).pipe(
+            // If the request itself fails after we got a token, do not fallback to guest.
+            // Just rethrow the error so the error-handling.service can handle it.
+            catchError((error) => {
+              console.warn('[AuthInterceptor] Request failed after token retrieval. Not falling back to guest mode. Re-throwing error:', error);
+              throw error; // Re-throw the error to be handled by your global error handler
+            })
+          );
         }),
-        catchError((error) => {
-          console.warn('[AuthInterceptor] Failed to retrieve token. Falling back to guest mode. URL:', req.url, 'Error:', error);
+        catchError((tokenError) => {
+          // This catchError only triggers if getAccessTokenSilently() itself fails
+          console.warn('[AuthInterceptor] Token retrieval failed. Falling back to guest mode.', tokenError);
           const guestReq = req.clone({ withCredentials: true });
           return next.handle(guestReq);
         })
