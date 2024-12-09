@@ -55,7 +55,6 @@ bootstrapApplication(AppComponent, {
       useClass: AuthInterceptor,
       multi: true,
     },
-    provideAnimationsAsync(),
     provideAppInitializer(initializeAuth),
   ],
 }).catch((err) => console.error(err));
