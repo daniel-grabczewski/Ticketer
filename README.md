@@ -51,3 +51,12 @@ How do you generate a token for your account to test the APIs?
 - Scroll down the network requests and click on `isRegistered`
 - Scroll down the headers inside `isRegistered` to find `authorization`
 - Copy and paste the token beneath `bearer`
+
+## How do you test the production build of Ticketer?
+- Install the `serve` package with `npm install -g serve`
+- Create the production build with `ng build`
+- Navigate to the `\dist\frontend\browser`
+- Run `serve -s . -l 8080`
+- Navigate to `http://localhost:8080` in your browser
+- Done!
+- NOTE: Make sure to add `http://localhost:8080` as origins accepted by Auth0 in your Auth0 dashboard.
