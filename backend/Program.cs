@@ -24,7 +24,7 @@ builder.Services.AddCors(options =>
 {
      options.AddPolicy("AllowAllOrigins", policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "https://daniel.ngrok.app", "http://localhost:8080") // Allow both localhost and ngrok
+        policy.WithOrigins("http://localhost:4200", "https://daniel.ngrok.app", "http://localhost:8080", "http://20.11.17.231", "https://ticketer.zapto.org", "https://ticketer.zapto.org") // Allow both localhost and ngrok
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
