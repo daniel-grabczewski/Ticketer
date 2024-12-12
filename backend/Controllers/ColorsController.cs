@@ -66,5 +66,19 @@ namespace backend.Controllers
 
             return Ok(color.HexCode);
         }
+              // New GET: api/colors/test
+        [HttpGet("test")]
+        [AllowAnonymous]
+        public IActionResult GetTestColors()
+        {
+            var testColors = new List<GetColorsResponseDTO>
+            {
+                new GetColorsResponseDTO { Id = 1, HexCode = "#FF5733" },
+                new GetColorsResponseDTO { Id = 2, HexCode = "#33FF57" },
+                new GetColorsResponseDTO { Id = 3, HexCode = "#3357FF" }
+            };
+
+            return Ok(testColors);
+        }
     }
 }
