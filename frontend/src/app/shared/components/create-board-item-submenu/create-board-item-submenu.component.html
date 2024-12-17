@@ -7,6 +7,7 @@
       type="text"
       [(ngModel)]="textInputValue"
       [placeholder]="placeholder"
+      (keyup.enter)="onActionClicked()"
     />
   </div>
 
