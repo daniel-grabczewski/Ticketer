@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './features/dashboard-page/dashboard/dashboard.component';
 import { ProjectComponent } from './project/project.component';
-import { MenuComponent } from './shared/components/menu/menu.component';
 import { WelcomePageComponent } from './features/welcome-page/welcome-page.component';
 import { myAuthGuardFn } from './my-auth.guard';
 import { TempLoginPageComponent } from './features/temp-login-page/temp-login-page.component';
