@@ -26,7 +26,7 @@ $gap-between-lists: 1rem;
   gap: $gap-between-lists;
   padding-left: $gap-between-lists;
   padding-right: $gap-between-lists;
-  overflow-x: scroll; // Ensure horizontal scrolling
+  overflow-x: auto;
 }
 
 $board-name-padding : 0.35rem;
