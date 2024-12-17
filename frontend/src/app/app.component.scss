@@ -36,7 +36,7 @@ p, button {
   top: 0; 
   left: 0;
   right: 0;
-  z-index: 1000; 
+  z-index: 990; 
 }
 
 .desktop-navbar-container {
@@ -92,7 +92,7 @@ p, button {
 
 .navbar.mobile-navbar {
   position: relative;
-  z-index: 1002; /* Above overlay and mobile-menu */
+  z-index: 992; /* Above overlay and mobile-menu */
 }
 
 .overlay {
@@ -102,7 +102,7 @@ p, button {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark */
-  z-index: 1000; /* Below mobile-menu */
+  z-index: 990; /* Below mobile-menu */
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
 }
@@ -121,7 +121,7 @@ p, button {
     left: 0;
     right: 0;
     padding: 1rem 1rem;
-    z-index: 1000; 
+    z-index: 990; 
   }
 
   .logo {
@@ -159,7 +159,7 @@ p, button {
     transform: translateX(100%);
     transition: opacity $button-transition-time ease, transform $button-transition-time ease;
     margin-top : -1rem;
-    z-index: 1001; /* Ensure it's above other content */
+    z-index: 991; /* Ensure it's above other content */
     
   }
 
