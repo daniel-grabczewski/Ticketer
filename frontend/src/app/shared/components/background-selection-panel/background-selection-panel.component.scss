@@ -1,7 +1,7 @@
 @import '../../../assets/styles/main.scss';
 
 .colors-container {
-  @include colors-container;
+  @include colors-container($menu-mobile-scale : 1.1);
 }
 
 .color-box {

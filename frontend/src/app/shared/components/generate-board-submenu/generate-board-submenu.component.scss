@@ -1,15 +1,15 @@
 @import '../../../assets/styles/main.scss';
 
 .menu-container {
-@include menu-container;
+@include menu-container($menu-mobile-scale : 1.1);
 }
 
 .menu-header {
-@include menu-header;
+@include menu-header($menu-mobile-scale : 1.5);
 }
 
 .input-group {
-  @include input-group;
+  @include input-group($menu-mobile-scale : 1.3);
 }
 
 .background-selection-header {

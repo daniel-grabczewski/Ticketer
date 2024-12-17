@@ -1,13 +1,13 @@
 @import '../../../assets/styles/main.scss';
 
 .menu-container {
-  @include menu-container;
+  @include menu-container($menu-mobile-scale : 1.1);
 }
 
 .menu-header {
-  @include menu-header;
+  @include menu-header($menu-mobile-scale : 1.6);
 }
 
 button {
-  @include submenu-button;
+  @include submenu-button($menu-mobile-scale : 1.6);
 }

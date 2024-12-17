@@ -1,17 +1,17 @@
 @import '../../../assets/styles/main.scss';
 
 .menu-container {
-@include menu-container;
+@include menu-container($menu-mobile-scale : 1.1);
 }
 
 .menu-header {
-@include menu-header;
+@include menu-header($menu-mobile-scale : 1.4);
 }
 
 .confirmation-message {
-  @include confirmation-message;
+  @include confirmation-message($menu-mobile-scale : 1.2);
 }
 
 button {
-  @include submenu-confirmation-button;
+  @include submenu-confirmation-button($menu-mobile-scale : 1.4);
 }
