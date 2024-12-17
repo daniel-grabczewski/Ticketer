@@ -15,6 +15,7 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 // Menu container
 
 @mixin menu-container-base($scale : 1) {
+  z-index: 1005 !important;
   background-color: $menu-background-color;
   border-radius: #{0.5 * $scale}rem;
   padding: #{1 * $scale}rem;
@@ -40,6 +41,7 @@ $menu-box-shadow : 0 0 20px 10px rgba(0, 0, 0, 0.3);
 }
 
 @mixin menu-container {
+  
   @media (max-width: $breakpoint-mobile) {
     @include menu-container-base($menu-mobile-scale)
   }
