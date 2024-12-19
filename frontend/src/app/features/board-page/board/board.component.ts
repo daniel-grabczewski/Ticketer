@@ -329,7 +329,11 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (existingTicketIndex !== -1) {
           // Update the existing ticket
-          targetList.tickets[existingTicketIndex] = updatedTicket;
+          targetList.tickets = [
+            ...targetList.tickets.slice(0, existingTicketIndex),
+            { ...updatedTicket },
+            ...targetList.tickets.slice(existingTicketIndex + 1)
+          ]
         } else {
           // Add the ticket to the target list
           targetList.tickets.unshift(updatedTicket);
