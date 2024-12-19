@@ -104,7 +104,7 @@
   .ticket-list {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 10px;
     overflow-y: auto; /* Enable vertical scrolling */
     flex-grow: 1; /* Allow the ticket list to grow and fill available space */
     scrollbar-width: thin;
