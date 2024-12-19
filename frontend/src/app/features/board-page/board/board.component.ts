@@ -60,20 +60,20 @@ import { UtilsService } from '../../../shared/utils/utils.service';
 import { CogButtonComponent } from '../../../shared/components/cog-button/cog-button.component';
 
 @Component({
-    selector: 'app-board',
-    templateUrl: './board.component.html',
-    styleUrls: ['./board.component.scss'],
-    imports: [
-        CommonModule,
-        FormsModule,
-        DragDropModule,
-        ListComponent,
-        CreateBoardItemSubmenuComponent,
-        RouterModule,
-        PlusButtonComponent,
-        CdkScrollableModule,
-        CogButtonComponent,
-    ]
+  selector: 'app-board',
+  templateUrl: './board.component.html',
+  styleUrls: ['./board.component.scss'],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DragDropModule,
+    ListComponent,
+    CreateBoardItemSubmenuComponent,
+    RouterModule,
+    PlusButtonComponent,
+    CdkScrollableModule,
+    CogButtonComponent,
+  ],
 })
 export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   boardDetails: GetBoardFullDetailsResponse | null = null;
@@ -294,14 +294,18 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private handleTicketUpdate(updatedTicket: TicketInput): void {
+
     if (this.boardDetails && this.boardDetails.lists) {
       // Find the list containing the ticket
       const listContainingTicket = this.boardDetails.lists.find((list) =>
         list.tickets.some((ticket) => ticket.id === updatedTicket.id)
       );
 
-      // Remove the ticket from its current list if necessary
-      if (listContainingTicket) {
+      // Only remove the ticket if it's actually moving to a different list
+      if (
+        listContainingTicket &&
+        listContainingTicket.id !== updatedTicket.listId
+      ) {
         listContainingTicket.tickets = listContainingTicket.tickets.filter(
           (ticket) => ticket.id !== updatedTicket.id
         );
@@ -328,7 +332,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
           targetList.tickets[existingTicketIndex] = updatedTicket;
         } else {
           // Add the ticket to the target list
-          targetList.tickets.push(updatedTicket);
+          targetList.tickets.unshift(updatedTicket);
         }
       }
     }
