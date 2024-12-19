@@ -19,36 +19,37 @@ namespace backend.Controllers
         }
 
         // GET: api/auth/generateGuestId
-        [HttpGet("generateGuestId")]
-        public async Task<IActionResult> GenerateGuestId()
-        {
-            string guestId = Guid.NewGuid().ToString(); // Generate unique guest ID
+      [HttpGet("generateGuestId")]
+      public async Task<IActionResult> GenerateGuestId()
+      {
+          string guestId = Guid.NewGuid().ToString(); 
 
-            // Create a guest user in the database
-            var guestUser = new User
-            {
-                Id = guestId,
-                UserName = "Guest", // You can generate a unique guest username if needed
-                IsGuest = true
-            };
+          var guestUser = new User
+          {
+              Id = guestId,
+              UserName = "Guest",
+              IsGuest = true
+          };
 
-            await _context.Users.AddAsync(guestUser);
-            await _context.SaveChangesAsync();
+          await _context.Users.AddAsync(guestUser);
+          await _context.SaveChangesAsync();
 
-            CookieOptions options = new CookieOptions
-            {
-                Expires = DateTime.Now.AddDays(30), // 30-day expiry
-                HttpOnly = false, // Set to false if you need JavaScript access
-                Secure = false,   // Should be true in production with HTTPS
-                //SameSite = SameSiteMode.None, // Uncomment if necessary
-                //Domain = "localhost", // Uncomment if necessary
-                Path = "/", // Ensure the cookie is available to all paths
-            };
+          // Call the separate method to seed the board
+          var boardId = await BoardSeeder.SeedGuestBoardAsync(_context, guestId);
 
-            Response.Cookies.Append("GuestId", guestId, options); // Store guest ID in a cookie
+          CookieOptions options = new CookieOptions
+          {
+              Expires = DateTime.Now.AddDays(30),
+              HttpOnly = false,
+              Secure = false,
+              Path = "/",
+          };
 
-            return Ok(new { GuestId = guestId });
-        }
+          Response.Cookies.Append("GuestId", guestId, options);
+
+          return Ok(new { GuestId = guestId, BoardId = boardId });
+      }
+
 
         // GET: api/auth/hasGuestData
        [HttpGet("hasGuestData")]
