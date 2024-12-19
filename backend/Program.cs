@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.HttpOverrides; // Add this namespace
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,7 @@ builder.Services.AddCors(options =>
 {
      options.AddPolicy("AllowAllOrigins", policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "https://daniel.ngrok.app", "http://localhost:8080", "http://20.11.17.231", "https://ticketer.zapto.org", "https://ticketer.zapto.org") // Allow both localhost and ngrok
+        policy.WithOrigins("http://localhost:4200", "http://localhost:8080", "http://20.11.17.231", "https://ticketerapp.com", "https://www.ticketerapp.com")
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
@@ -84,6 +85,12 @@ else
     app.UseHsts();
     app.UseHttpsRedirection(); // Use HTTPS redirection in production
 }
+
+// **Add Forwarded Headers Middleware**
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 app.UseRouting();
 
