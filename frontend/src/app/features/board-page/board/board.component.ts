@@ -296,10 +296,21 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   private handleTicketUpdate(updatedTicket: TicketInput): void {
 
     if (this.boardDetails && this.boardDetails.lists) {
+
+
+
       // Find the list containing the ticket
       const listContainingTicket = this.boardDetails.lists.find((list) =>
         list.tickets.some((ticket) => ticket.id === updatedTicket.id)
       );
+
+      // Delete ticket should updatedTicket.deleted be true
+      if (updatedTicket.deleted && listContainingTicket) {
+        listContainingTicket.tickets = listContainingTicket.tickets.filter(
+          (ticket) => ticket.id !== updatedTicket.id
+        );
+        return;
+      }
 
       // Only remove the ticket if it's actually moving to a different list
       if (
@@ -311,10 +322,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
         );
       }
 
-      if (updatedTicket.deleted) {
-        // Ticket was deleted, no need to add it back
-        return;
-      }
+
 
       // Find the new list and add or update the ticket
       const targetList = this.boardDetails.lists.find(
