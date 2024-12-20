@@ -687,6 +687,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
         // Update local boardDetails
         this.boardDetails!.name = updatedData.name;
         this.boardDetails!.colorId = updatedData.colorId;
+        this.newBoardName = updatedData.name;
         // Update menu config
         this.menuConfig = generateBoardActionsMenuConfig(
           this.boardDetails!.name,
