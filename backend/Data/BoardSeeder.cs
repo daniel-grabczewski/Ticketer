@@ -698,5 +698,386 @@ public static async Task<string> SeedCommunityFairBoardAsync(ApplicationDbContex
     return boardId;
 }
 
+public static async Task<string> SeedWeeklyChoresBoardAsync(ApplicationDbContext context, string userId)
+{
+    string boardId = Guid.NewGuid().ToString();
+
+    // 9 lists: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, Done, Backlog
+    string mondayId = Guid.NewGuid().ToString();
+    string tuesdayId = Guid.NewGuid().ToString();
+    string wednesdayId = Guid.NewGuid().ToString();
+    string thursdayId = Guid.NewGuid().ToString();
+    string fridayId = Guid.NewGuid().ToString();
+    string saturdayId = Guid.NewGuid().ToString();
+    string sundayId = Guid.NewGuid().ToString();
+    string doneId = Guid.NewGuid().ToString();
+    string backlogId = Guid.NewGuid().ToString();
+
+    var board = new Board
+    {
+        Id = boardId,
+        Name = "Weekly Chores (Example)",
+        ColorId = 5,
+        UserId = userId,
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow
+    };
+
+    var lists = new[]
+    {
+        new List { Id = mondayId, Name = "Monday - DONE!", BoardId = boardId, Position = 1 },
+        new List { Id = tuesdayId, Name = "Tuesday", BoardId = boardId, Position = 2 },
+        new List { Id = wednesdayId, Name = "Wednesday", BoardId = boardId, Position = 3 },
+        new List { Id = thursdayId, Name = "Thursday", BoardId = boardId, Position = 4 },
+        new List { Id = fridayId, Name = "Friday", BoardId = boardId, Position = 5 },
+        new List { Id = saturdayId, Name = "Saturday", BoardId = boardId, Position = 6 },
+        new List { Id = sundayId, Name = "Sunday", BoardId = boardId, Position = 7 },
+        new List { Id = doneId, Name = "Completed chores", BoardId = boardId, Position = 8 },
+        new List { Id = backlogId, Name = "Backlog", BoardId = boardId, Position = 9 }
+    };
+
+    // Color coding suggestion:
+    // 1 = Food-related (e.g. grocery shopping)
+    // 2 = Pet-related (dog walking, feeding)
+    // 3 = Cleaning (vacuuming, dusting)
+    // 4 = Errands (post office, returns)
+    // 5 = Laundry/Clothing
+    // 6 = Maintenance tasks
+
+    var tickets = new[]
+    {
+      // Monday (empty)
+      // No tickets for Monday
+
+      // Tuesday (5 tickets)
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Grocery Shopping",
+        ListId = tuesdayId,
+        Description = "Buy fresh vegetables, fruits, and dairy for the week. Check discounts on produce and ensure quality. Keep the list handy to avoid impulse buys and stay within the planned budget.",
+        ColorId = 1,
+        Position = 1
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Walk the Dog",
+        ListId = tuesdayId,
+        Description = "Take the dog for a brisk walk around the neighborhood. Let it explore safely, sniff around, and stretch its legs. Aim for a thirty-minute stroll that keeps the pet energized.",
+        ColorId = 2,
+        Position = 2
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Vacuum Living Room",
+        ListId = tuesdayId,
+        Description = "Use the vacuum to remove dust and small debris from carpets and sofas. Move light furniture if needed. Focus on corners and under tables to maintain a clean environment.",
+        ColorId = 3,
+        Position = 3
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Mail Package",
+        ListId = tuesdayId,
+        Description = "Visit the post office and send a small parcel to a friend. Confirm proper postage, address details, and ensure fragile items are well-protected. Keep the receipt for tracking purposes.",
+        ColorId = 4,
+        Position = 4
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Wash Towels",
+        ListId = tuesdayId,
+        Description = "Gather used towels from the bathroom and kitchen. Wash them on a warm cycle with gentle detergent. Dry them thoroughly so they remain soft, fresh-smelling, and ready for reuse.",
+        ColorId = 5,
+        Position = 5
+      },
+
+      // Wednesday (3 tickets)
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Feed the Cat",
+        ListId = wednesdayId,
+        Description = "Refill the cat’s bowl with dry food and refresh its water. Check for any spills and clean around the feeding area. Keep feeding schedule consistent to maintain proper nutrition.",
+        ColorId = 2,
+        Position = 1
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Dust Bookshelves",
+        ListId = wednesdayId,
+        Description = "Gently wipe shelves with a microfiber cloth. Remove books temporarily to clean underneath. Return them neatly, keeping titles organized. Regular dusting preserves book quality and ensures a tidy display.",
+        ColorId = 3,
+        Position = 2
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Repair Drawer Handle",
+        ListId = wednesdayId,
+        Description = "Tighten loose screws on the kitchen drawer handle. Use a screwdriver and ensure everything fits snugly. A stable handle makes daily tasks smoother and prevents future wear or damage.",
+        ColorId = 6,
+        Position = 3
+      },
+
+      // Thursday (6 tickets)
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Pick Up Dry Cleaning",
+        ListId = thursdayId,
+        Description = "Collect professionally cleaned garments from the local dry cleaner. Inspect items to confirm no damage or missed spots. Store clothes properly to keep them fresh and wrinkle-free.",
+        ColorId = 5,
+        Position = 1
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Refill Dog Treats",
+        ListId = thursdayId,
+        Description = "Buy a new pack of healthy dog treats from the pet store. Ensure ingredients are natural and beneficial. Rewarding good behavior helps maintain a happy, well-trained companion.",
+        ColorId = 2,
+        Position = 2
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Organize Kitchen Drawer",
+        ListId = thursdayId,
+        Description = "Sort utensils and gadgets. Discard broken items, place frequently used tools upfront, and ensure everything is easily accessible. A neat drawer saves time and reduces kitchen clutter.",
+        ColorId = 3,
+        Position = 3
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Buy Bread and Eggs",
+        ListId = thursdayId,
+        Description = "Stop by the bakery and pick up fresh bread and eggs. Check expiration dates and select items that look appealing and fit meal plans for the upcoming days.",
+        ColorId = 1,
+        Position = 4
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Drop Off Recyclables",
+        ListId = thursdayId,
+        Description = "Take collected paper, plastic, and glass to the nearest recycling bin. Ensure materials are clean and properly sorted. Regular recycling reduces waste and supports environmental responsibility.",
+        ColorId = 4,
+        Position = 5
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Clean Shower Tile",
+        ListId = thursdayId,
+        Description = "Use a mild cleaning solution and scrub brush to remove soap scum and mildew. Rinse thoroughly and dry surfaces. A clean shower area promotes hygiene and daily comfort.",
+        ColorId = 3,
+        Position = 6
+      },
+
+      // Friday (4 tickets)
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Walk Dog in Park",
+        ListId = fridayId,
+        Description = "Take the dog for a walk in the local park. Let it enjoy green spaces, fresh air, and safe socialization with other pets. A fun outing boosts its mood.",
+        ColorId = 2,
+        Position = 1
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Bank Deposit",
+        ListId = fridayId,
+        Description = "Visit the bank and deposit checks. Confirm amounts, request a receipt, and ensure account balances update correctly. Completing financial errands on time avoids unnecessary stress.",
+        ColorId = 4,
+        Position = 2
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Wipe Kitchen Counters",
+        ListId = fridayId,
+        Description = "Clean countertops using a damp cloth and mild spray. Remove crumbs and sticky spots. Keeping surfaces pristine encourages healthy meal preparation and deters unwanted pests.",
+        ColorId = 3,
+        Position = 3
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Wash Pillowcases",
+        ListId = fridayId,
+        Description = "Launder pillowcases on a gentle cycle with hypoallergenic detergent. Dry them thoroughly to maintain softness. Fresh linens improve sleep quality and prolong fabric lifespan.",
+        ColorId = 5,
+        Position = 4
+      },
+
+      // Saturday (3 tickets)
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Check Mailbox",
+        ListId = saturdayId,
+        Description = "Retrieve letters, flyers, and packages. Sort them immediately, discarding junk mail and organizing important documents. Regular checks prevent missed deadlines and forgotten correspondence.",
+        ColorId = 4,
+        Position = 1
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Refill Bird Feeder",
+        ListId = saturdayId,
+        Description = "Add fresh birdseed to the outdoor feeder. Clean off old residue and ensure it’s placed securely. Supporting local wildlife brings pleasant melodies and natural balance.",
+        ColorId = 2,
+        Position = 2
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Spot-Clean Entry Rug",
+        ListId = saturdayId,
+        Description = "Use a stain remover and soft cloth to address spills or footprints at the entrance. A tidy entryway creates a welcoming atmosphere and prolongs rug life.",
+        ColorId = 3,
+        Position = 3
+      },
+
+      // Sunday (5 tickets)
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Buy Fruits",
+        ListId = sundayId,
+        Description = "Pick up assorted fruits like apples, bananas, and berries. Choose ripe, fresh produce that complements upcoming breakfasts and snacks. Good fruits maintain energy throughout busy weeks.",
+        ColorId = 1,
+        Position = 1
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Replace Light Bulb",
+        ListId = sundayId,
+        Description = "Change the burned-out bulb in the hallway. Use a proper wattage replacement and ensure the fixture is switched off for safety. Bright lighting improves overall home ambiance.",
+        ColorId = 6,
+        Position = 2
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Brush Dog",
+        ListId = sundayId,
+        Description = "Gently groom the dog’s fur with a soft brush, removing loose hair and tangles. Offering treats afterward reinforces calm behavior and keeps the pet’s coat healthy.",
+        ColorId = 2,
+        Position = 3
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Rinse Coffee Maker",
+        ListId = sundayId,
+        Description = "Run hot water through the coffee machine without grounds. Wipe the exterior and ensure filters are clean. A fresh coffee maker guarantees better-tasting morning brews.",
+        ColorId = 3,
+        Position = 4
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Fold Laundry",
+        ListId = sundayId,
+        Description = "Neatly fold dried clothes, grouping similar items together. Store them properly in drawers or closets. Organized clothing makes dressing easier and feels more put-together daily.",
+        ColorId = 5,
+        Position = 5
+      },
+
+      // Done (3 tickets)
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Fix Kitchen Faucet",
+        ListId = doneId,
+        Description = "Earlier this morning, tightened the faucet’s loose part using a wrench. Water now flows smoothly without leaks. Prompt maintenance spared future hassle and expense.",
+        ColorId = 6,
+        Position = 1
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Wipe Windows",
+        ListId = doneId,
+        Description = "Cleaned window glass yesterday, removing smudges and fingerprints. Clear windows let in more natural light, improving ambiance. Crisp views uplift everyone’s mood at home.",
+        ColorId = 3,
+        Position = 2
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Refill Pet Water Bowl",
+        ListId = doneId,
+        Description = "Refreshed the pet’s water supply last night. Ensured bowl was clean, providing the animal with safe, cool hydration. Routine care keeps beloved companions healthy.",
+        ColorId = 2,
+        Position = 3
+      },
+
+      // Backlog (5 tickets) - Some were meant for Monday but not done
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Buy Milk and Cheese",
+        ListId = backlogId,
+        Description = "Originally planned for Monday, this grocery errand got postponed. Need fresh dairy for upcoming meals. Ensure quality products and proper storage to maintain taste.",
+        ColorId = 1,
+        Position = 1
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Walk Neighbor’s Dog",
+        ListId = backlogId,
+        Description = "Offered to help a neighbor, but didn’t manage on Monday. Provide a short, comfortable walk around the block. Builds trust and maintains friendly relations.",
+        ColorId = 2,
+        Position = 2
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Mop Kitchen Floor",
+        ListId = backlogId,
+        Description = "A task left undone from Monday’s schedule. Quickly mop to remove spills and stains, improving kitchen cleanliness and reducing slip hazards.",
+        ColorId = 3,
+        Position = 3
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Return Library Books",
+        ListId = backlogId,
+        Description = "Monday’s intended errand. Take overdue books back to the library. Avoid late fees and free up borrowing space for new reading material.",
+        ColorId = 4,
+        Position = 4
+      },
+      new Ticket
+      {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Wash Workout Gear",
+        ListId = backlogId,
+        Description = "Didn’t complete on Monday. Launder gym clothes to remove sweat and odors. Fresh workout gear encourages consistent exercise habits.",
+        ColorId = 5,
+        Position = 5
+      },
+    };
+
+    context.Boards.Add(board);
+    context.Lists.AddRange(lists);
+    context.Tickets.AddRange(tickets);
+    await context.SaveChangesAsync();
+
+    return boardId;
+}
 
 }
