@@ -35,7 +35,9 @@ namespace backend.Controllers
           await _context.SaveChangesAsync();
 
           // Call the separate method to seed the board
-          var boardId = await BoardSeeder.SeedGuestBoardAsync(_context, guestId);
+          await BoardSeeder.SeedMarketingCampaignBoardAsync(_context, guestId);
+          await BoardSeeder.SeedCommunityFairBoardAsync(_context, guestId);
+          await BoardSeeder.SeedWeeklyChoresBoardAsync(_context, guestId);
 
           CookieOptions options = new CookieOptions
           {
@@ -47,7 +49,7 @@ namespace backend.Controllers
 
           Response.Cookies.Append("GuestId", guestId, options);
 
-          return Ok(new { GuestId = guestId, BoardId = boardId });
+          return Ok(new { GuestId = guestId });
       }
 
 
