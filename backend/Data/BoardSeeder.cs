@@ -5,7 +5,7 @@ using YourProject.Models;
 public static class BoardSeeder
 {
   
-public static async Task<string> SeedGuestBoardAsync(ApplicationDbContext context, string userId)
+public static async Task<string> SeedMarketingCampaignBoardAsync(ApplicationDbContext context, string userId)
 {
     string boardId = Guid.NewGuid().ToString();
     string list1Id = Guid.NewGuid().ToString(); // Idea Generation & Research
@@ -21,7 +21,7 @@ public static async Task<string> SeedGuestBoardAsync(ApplicationDbContext contex
     var board = new Board
     {
         Id = boardId,
-        Name = "Marketing Campaign Planning (Example)",
+        Name = "Marketing Campaign (Example)",
         ColorId = 1,
         UserId = userId,
         CreatedAt = DateTime.UtcNow,
@@ -370,5 +370,333 @@ new Ticket {
 
     return boardId;
 }
+
+public static async Task<string> SeedCommunityFairBoardAsync(ApplicationDbContext context, string userId)
+{
+    string boardId = Guid.NewGuid().ToString();
+
+    // 6 Lists representing different planning stages for a community fair
+    string list1Id = Guid.NewGuid().ToString(); // Ideas & Brainstorm (4 tickets)
+    string list2Id = Guid.NewGuid().ToString(); // Outreach & Vendor Coordination (9 tickets)
+    string list3Id = Guid.NewGuid().ToString(); // Logistics & Setup (2 tickets)
+    string list4Id = Guid.NewGuid().ToString(); // Promotion & Advertising (6 tickets)
+    string list5Id = Guid.NewGuid().ToString(); // Day-Of Operations (3 tickets)
+    string list6Id = Guid.NewGuid().ToString(); // Post-Event Review & Follow-Up (10 tickets)
+
+    var board = new Board
+    {
+        Id = boardId,
+        Name = "Community Fair Planning (Example)",
+        ColorId = 3,
+        UserId = userId,
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow,
+    };
+
+    var lists = new[]
+    {
+        new List { Id = list1Id, Name = "Ideas & Brainstorm", BoardId = boardId, Position = 1 },
+        new List { Id = list2Id, Name = "Outreach & Vendor Coordination", BoardId = boardId, Position = 2 },
+        new List { Id = list3Id, Name = "Logistics & Setup", BoardId = boardId, Position = 3 },
+        new List { Id = list4Id, Name = "Promotion & Advertising", BoardId = boardId, Position = 4 },
+        new List { Id = list5Id, Name = "Day-Of Operations", BoardId = boardId, Position = 5 },
+        new List { Id = list6Id, Name = "Post-Event Review & Follow-Up", BoardId = boardId, Position = 6 }
+    };
+
+    var tickets = new[]
+    {
+        // LIST 1: IDEAS & BRAINSTORM (4 tickets)
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Initial Theme Discussion",
+            ListId = list1Id,
+            Description = "Convene a small working group to brainstorm overarching themes that reflect the community’s identity and seasonal charm. Encourage free-flowing discussion, inviting everyone to propose bold, creative concepts. Consider aspects like cultural traditions, local history, or sustainability-focused messaging. After gathering ideas, narrow them down to a few compelling directions that can unify vendors, entertain families, and appeal to diverse interests. Document all suggestions for future reference, ensuring that final decisions align with the fair’s inclusive spirit and long-term community goals.",
+            ColorId = null,
+            Position = 1
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Activity Wishlist",
+            ListId = list1Id,
+            Description = "Compile an extensive list of potential attractions, games, and interactive experiences suitable for all ages. Include options like live music, storytelling tents, nature-inspired crafts, educational exhibits, and family-friendly competitions. Consider engaging workshops, from simple culinary demonstrations to intro-level art classes, ensuring that each proposed activity provides entertainment and learning opportunities. This wishlist will later be refined based on budget, available space, and community feedback, ultimately forming a vibrant tapestry of offerings that make the fair both memorable and meaningful.",
+            ColorId = 1,
+            Position = 2
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Venue Possibilities",
+            ListId = list1Id,
+            Description = "Research various potential venues, including public parks, school fields, and community center lawns. Evaluate each location for accessibility, restroom facilities, parking options, and natural shade. Look at the surrounding environment and determine if it can safely and comfortably accommodate expected crowds. Document pros and cons, including potential permit requirements, noise regulations, or restricted operating hours. Once a short list is established, consult local authorities and stakeholders, ensuring that the final chosen venue aligns with our vision and logistical constraints.",
+            ColorId = null,
+            Position = 3
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Eco-Friendly Ideas",
+            ListId = list1Id,
+            Description = "Develop a list of environmentally conscious initiatives that reduce waste and support local ecosystems. Consider composting stations, sturdy reusable tableware rentals, and on-site educational posters highlighting regional plants and wildlife. Explore partnerships with green nonprofits to offer eco-themed workshops and engage visitors in sustainable living practices. Incorporate bike racks, encourage carpooling, and promote a plastic-free environment. By integrating eco-friendly ideas, the fair can help inspire responsible behavior, demonstrating that community events can be both fun and environmentally sound.",
+            ColorId = 1,
+            Position = 4
+        },
+
+        // LIST 2: OUTREACH & VENDOR COORDINATION (9 tickets)
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Contact Local Artisans",
+            ListId = list2Id,
+            Description = "Reach out to a diverse array of skilled craftspeople, from potters and weavers to metalworkers and jewelers. Introduce the fair’s theme and projected attendance figures, ensuring artisans feel confident about potential foot traffic. Discuss booth rental details, promotional opportunities, and special offers for early sign-ups. Emphasize the event’s emphasis on supporting small businesses and nurturing creativity. By securing quality artisans, we guarantee unique, handmade items that captivate visitors and elevate the overall fair experience with authentic craftsmanship.",
+            ColorId = 2,
+            Position = 1
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Invite Food Trucks",
+            ListId = list2Id,
+            Description = "Curate a lineup of food trucks offering dishes that reflect the community’s cultural tapestry and evolving culinary trends. Include options for vegetarians, vegans, and those with dietary restrictions, ensuring broad appeal. Contact popular operators well in advance, explaining the expected crowd size, brand exposure, and potential revenue. Encourage participation through discounted vendor fees or by highlighting promotional benefits. A varied, high-quality culinary selection transforms the fair into a food lover’s destination, enticing visitors to stay longer and savor the experience.",
+            ColorId = 3,
+            Position = 2
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Non-Profit Booth Invitations",
+            ListId = list2Id,
+            Description = "Identify local nonprofits focused on community welfare, environmental advocacy, or educational initiatives. Offer them complimentary booth space to share their mission, recruit volunteers, and build public awareness. Provide guidance on display strategies, ensuring that each organization’s message aligns with the fair’s inclusive and uplifting atmosphere. Encouraging nonprofit participation adds depth and purpose, allowing visitors to engage with meaningful causes. Ultimately, these partnerships help foster a sense of unity and social responsibility that resonates long after the event concludes.",
+            ColorId = 2,
+            Position = 3
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Cultural Performance Acts",
+            ListId = list2Id,
+            Description = "Reach out to performers who can showcase the community’s rich cultural heritage. Consider traditional dance troupes, storytelling sessions celebrating local folklore, and musical ensembles representing different backgrounds. Discuss scheduling, technical requirements, and promotional support for each act. Emphasize the fair’s goal of celebrating diversity, providing a stage for vibrant artistic expressions. Curating a balanced roster of performances ensures continuous entertainment that captivates audiences, broadens cultural understanding, and encourages attendees to appreciate the unique mosaic of their neighborhood’s traditions.",
+            ColorId = 3,
+            Position = 4
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Children’s Activity Providers",
+            ListId = list2Id,
+            Description = "Invite professionals who specialize in child-centric entertainment, such as face painters, balloon sculptors, puppet masters, or nature guides. Offer them prime locations near family seating areas and simple, safe setups. Highlight the fair’s family-oriented atmosphere and potential for steady foot traffic throughout the day. When children are happily engaged, parents can also enjoy browsing vendors and enjoying performances. By investing in diverse, quality children’s activities, the fair becomes an inclusive event where all ages feel welcomed and excited.",
+            ColorId = 2,
+            Position = 5
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Local Farm & Produce Stalls",
+            ListId = list2Id,
+            Description = "Approach nearby farmers and growers to host produce stands featuring seasonal fruits, vegetables, honey, and artisanal preserves. Emphasize the event’s celebration of local resources, healthy eating, and sustainable agriculture. Encourage them to offer taste tests, cooking tips, or recipe cards to educate attendees. Fresh, high-quality produce not only satisfies shoppers but also reinforces the fair’s commitment to community well-being. By spotlighting regional farms, we strengthen local food networks, supporting responsible consumption and fostering pride in shared agricultural heritage.",
+            ColorId = 3,
+            Position = 6
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Fitness & Wellness Partners",
+            ListId = list2Id,
+            Description = "Contact yoga instructors, fitness trainers, or wellness coaches who can run mini-sessions or demonstrations. Whether it’s a short stretching class, a guided meditation, or basic strength exercises, these activities inspire healthier lifestyles. Stress the benefits of connecting with a receptive audience and building brand recognition. Offering fitness-related programming adds another dimension to the fair, encouraging visitors to incorporate physical activity into their routines. The resulting synergy of fun, education, and well-being fosters a more holistic community experience.",
+            ColorId = 2,
+            Position = 7
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Animal Rescue & Pet Adoption Info",
+            ListId = list2Id,
+            Description = "Invite a local animal shelter or rescue group to host an informational booth. They can display photos of adoptable pets, provide details on fostering, and educate visitors about responsible pet ownership. Encourage them to share uplifting success stories and highlight volunteer opportunities. Showcasing animal welfare efforts reinforces the fair’s compassionate ethos. Attendees may be inspired to adopt or donate, strengthening the bond between community members and the vulnerable animals who benefit from collective care and advocacy.",
+            ColorId = 3,
+            Position = 8
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Sponsor Partnership Inquiries",
+            ListId = list2Id,
+            Description = "Reach out to regional businesses, banks, and service providers for potential sponsorships. Offer tiers with varying benefits, such as prominent signage, brand mentions in promotional materials, or dedicated vendor spots. Emphasize the fair’s community reach and goodwill, ensuring sponsors see tangible returns on their investment. By securing financial and in-kind support, we can enhance key attractions, keep fees manageable, and ultimately deliver a more robust event. Satisfied sponsors are likely to return, reinforcing the fair’s financial stability.",
+            ColorId = 2,
+            Position = 9
+        },
+
+        // LIST 3: LOGISTICS & SETUP (2 tickets)
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Layout & Booth Assignments",
+            ListId = list3Id,
+            Description = "Develop a comprehensive site map detailing where vendors, activity areas, performance stages, and seating zones will be located. Consider crowd flow, emergency exits, and accessibility requirements. Assign booths strategically, mixing diverse vendors to maintain visitor interest throughout the fairgrounds. A thoughtful layout prevents congestion, ensures good visibility for each participant, and creates a natural ‘discovery path.’ By finalizing these assignments early, vendors can prepare displays accordingly, and staff can coordinate smoother operations on the day of the event.",
+            ColorId = 4,
+            Position = 1
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Utility & Restroom Facilities",
+            ListId = list3Id,
+            Description = "Coordinate portable toilets, handwashing stations, and ample waste and recycling bins. Check local regulations for placement and maintenance, ensuring convenience for attendees. Arrange for backup generators, adequate lighting, and, if needed, water supply points. Confirm that vendors have reliable access to electricity if required. Proper utilities and sanitation contribute to a positive experience, reducing wait times and complaints. By addressing these basic logistical needs, we keep guests comfortable, maintain cleanliness, and safeguard the event’s reputation for quality.",
+            ColorId = 5,
+            Position = 2
+        },
+
+        // LIST 4: PROMOTION & ADVERTISING (6 tickets)
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Social Media Countdown",
+            ListId = list4Id,
+            Description = "Create a posting schedule counting down to the fair’s opening day. Each post can highlight a new vendor, performer, or family activity, building anticipation and encouraging followers to mark their calendars. Use vibrant visuals, engaging captions, and relevant hashtags. Respond to comments and messages promptly, fostering community engagement online. By maintaining a steady drumbeat of excitement on social platforms, we can amplify word-of-mouth promotion, attract curious newcomers, and ensure that interest peaks just as the fair begins.",
+            ColorId = 3,
+            Position = 1
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Local Radio Announcement",
+            ListId = list4Id,
+            Description = "Draft a concise yet informative script highlighting the fair’s theme, star attractions, and inclusivity. Contact a well-known local radio host to read the announcement several times during peak listenership hours. Emphasize family appeal, community spirit, and unique offerings that listeners won’t want to miss. Radio can reach demographics less active on social media, broadening the event’s publicity. With a memorable radio spot, we tap into the nostalgic charm of traditional media, adding credibility and curiosity to the fair’s profile.",
+            ColorId = 5,
+            Position = 2
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Flyer Distribution at Schools",
+            ListId = list4Id,
+            Description = "Design colorful, eye-catching flyers with clear event details, attractive visuals, and a simple map. Seek permission from school administrators to place flyers in common areas or send them home with students. Emphasize family-friendly activities that parents and children can enjoy together. By placing materials in educational settings, we reach households directly, encouraging discussions that lead to planning a weekend outing. This approach connects with busy families who may not regularly check community calendars, ensuring the fair’s message resonates through personal channels like the parent-child relationship.",
+            ColorId = 3,
+            Position = 3
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Feature in Local Newsletter",
+            ListId = list4Id,
+            Description = "Write a short, engaging article for a community newsletter or bulletin. Include a brief history of the fair’s inspiration, highlights of expected attractions, and a call-to-action inviting readers to attend. Provide relevant dates, times, and ticketing information if applicable. Local newsletters often cater to residents who value detailed updates about their area’s events. Being featured in these outlets lends authenticity and trustworthiness to the fair, ensuring residents know it’s a safe, well-organized gathering worth attending and sharing with neighbors and friends.",
+            ColorId = 5,
+            Position = 4
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Hashtag Creation & Contest",
+            ListId = list4Id,
+            Description = "Develop a unique, memorable hashtag that captures the fair’s spirit. Announce a photo contest encouraging attendees to post pictures under this hashtag. Offer a small prize, like a gift card or special merchandise, to the best submission. User-generated content can spread organically as people share their experiences online. This strategy creates a dynamic feedback loop: the more engaging the content, the more curiosity it generates, ultimately drawing in additional attendees and fostering a sense of shared participation within the community.",
+            ColorId = 3,
+            Position = 5
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Influencer Outreach",
+            ListId = list4Id,
+            Description = "Identify local influencers known for highlighting community events, family activities, or unique cultural experiences. Invite them to attend and share candid impressions on their platforms. Offer backstage peeks, interviews with vendors, or exclusive previews of performances. Influencer endorsements can reach niche audiences and lend credibility to the fair, sparking interest among followers who trust their recommendations. By partnering with these content creators, we can amplify our outreach, ensuring that people who might otherwise never hear about the fair become enthusiastic attendees.",
+            ColorId = 5,
+            Position = 6
+        },
+
+        // LIST 5: DAY-OF OPERATIONS (3 tickets)
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Volunteer Briefing",
+            ListId = list5Id,
+            Description = "Gather all volunteers before gates open to deliver a concise orientation. Outline roles, from assisting vendors and directing guests to maintaining cleanliness and answering questions. Encourage volunteers to be proactive, friendly, and adaptable. Provide guidelines on handling lost children, addressing minor complaints, or contacting organizers for urgent matters. Confident, well-prepared volunteers help ensure seamless operations. Their positive attitude and willingness to help can transform a fun event into a warm, welcoming experience that leaves attendees feeling cared for and supported.",
+            ColorId = 2,
+            Position = 1
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Performance Schedule Monitoring",
+            ListId = list5Id,
+            Description = "Assign a dedicated staff member to oversee the performance timeline. They will confirm each act’s arrival, handle last-minute adjustments, and ensure smooth transitions between stages. Regularly update signage or digital displays if changes occur. By maintaining punctuality, we reduce idle time, keeping attendees engaged throughout the day. Proper coordination also reassures performers that their needs are met, creating a professional atmosphere. When the entertainment runs like clockwork, the entire fair feels well-managed, memorable, and worth recommending to friends and family.",
+            ColorId = 4,
+            Position = 2
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Real-Time Social Updates",
+            ListId = list5Id,
+            Description = "Empower a social media volunteer to roam the fair, capturing spontaneous moments: a child’s laughter near a puppet show, a delighted vendor after a big sale, a group of neighbors savoring local treats. Post these snapshots and short video clips with brief captions, inviting followers to join in on the fun. Real-time updates provide a virtual window for those still deciding whether to attend. As excitement builds online, more locals may choose to drop by, enriching the event’s atmosphere and sense of community.",
+            ColorId = 3,
+            Position = 3
+        },
+
+        // LIST 6: POST-EVENT REVIEW & FOLLOW-UP (10 tickets)
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Attendee Feedback Survey",
+            ListId = list6Id,
+            Description = "Shortly after the fair, email a simple survey to attendees who signed up for notifications or purchased tickets online. Ask about their favorite attractions, any issues faced, and suggestions for improvement. Keep it user-friendly and mobile-accessible. By listening closely to the community’s voice, we gain valuable insights into what resonates and what to refine next time. Demonstrating that their opinions matter fosters goodwill, encouraging attendees not only to return, but to trust that their feedback genuinely influences future planning.",
+            ColorId = 1,
+            Position = 1
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Vendor Appreciation Emails",
+            ListId = list6Id,
+            Description = "Send personalized, appreciative messages to each participating vendor, thanking them for their contributions. Mention estimated foot traffic, highlight positive feedback from visitors, and invite them to share suggestions for next year. Consider including photos of their booths in action. This small gesture helps vendors feel valued, reinforcing that the fair is a worthwhile, vendor-friendly event. Strong vendor relationships often lead to repeat participation, broader offerings, and a reputation as a supportive platform for local entrepreneurs, artisans, and culinary innovators.",
+            ColorId = null,
+            Position = 2
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Performance Acts Feedback",
+            ListId = list6Id,
+            Description = "Reach out to all performers for their honest impressions. Inquire whether sound systems, staging conditions, and audience engagement met their expectations. Ask if they have suggestions for scheduling improvements or stage layout adjustments. Constructive feedback empowers us to enhance the performer experience. Satisfied acts are more likely to return, share positive testimonials, or recommend us to fellow entertainers. By treating performers as partners rather than just hired talent, we build professional bonds that raise the event’s artistic standards and appeal.",
+            ColorId = 1,
+            Position = 3
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Budget Reconciliation",
+            ListId = list6Id,
+            Description = "Review all financial transactions, including sponsorship contributions, vendor fees, and event-related expenses like marketing, rentals, and utilities. Confirm that income and costs align with initial projections. Identify areas of overspending or unexpected savings, noting these for future reference. Sharing a summarized financial report with key stakeholders promotes transparency and trust. A clear understanding of the budget’s final state helps refine next year’s cost estimates, allocate funds more strategically, and possibly re-invest surplus into additional enhancements that keep the fair evolving.",
+            ColorId = null,
+            Position = 4
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Social Media Engagement Analysis",
+            ListId = list6Id,
+            Description = "Examine social platform metrics collected before, during, and after the event. Track hashtag usage, post likes, comments, shares, and follower growth. Identify which content types resonated most—vendor spotlights, live videos, or family selfies. Data-driven insights can guide future promotional tactics, focusing on the channels and messages that deliver the strongest response. Understanding the online audience’s preferences helps refine digital outreach strategies, ensuring that future fairs better capture attention and maintain momentum, both virtually and in-person, strengthening the event’s community presence.",
+            ColorId = 1,
+            Position = 5
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Photo & Video Archiving",
+            ListId = list6Id,
+            Description = "Organize all visual media gathered from staff photographers, volunteer submissions, and social posts. Categorize images by vendors, performances, activities, and crowd interactions. This curated library serves as a valuable resource for future marketing campaigns, press releases, and promotional materials. Beautiful, authentic imagery reinforces the fair’s unique character and can rekindle enthusiasm long after the event ends. Maintaining a well-structured visual archive makes it easier to celebrate past successes, compare growth over time, and recall memorable moments when planning future fairs.",
+            ColorId = null,
+            Position = 6
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Lessons Learned Document",
+            ListId = list6Id,
+            Description = "Compile a comprehensive report summarizing successes, challenges, and unexpected insights from all aspects of the fair. Include input from staff, volunteers, vendors, and attendees. Identify what elements ran smoothly, what logistics need refinement, and which attractions drew the most interest. This document becomes a living blueprint, guiding future planning decisions. By reflecting honestly and openly, we ensure that each subsequent fair builds on past accomplishments and corrects previous missteps. Constant improvement fosters a tradition of excellence, ensuring long-term community value.",
+            ColorId = 1,
+            Position = 7
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Highlight Reel Creation",
+            ListId = list6Id,
+            Description = "Select the most visually striking and emotionally resonant moments captured on video. Edit a short highlight reel that tells the story of the event: smiling families, dynamic performances, engaging vendors, and cozy communal gatherings. Add upbeat background music, brief captions, or voiceovers for context. Share the final reel on social media, newsletters, and the event’s website to keep the excitement alive. This curated snapshot of the fair’s best moments encourages nostalgic reminiscing, attracts newcomers, and underscores the positive impact on the community.",
+            ColorId = null,
+            Position = 8
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Sponsor Follow-Up Meetings",
+            ListId = list6Id,
+            Description = "Arrange brief follow-up calls or coffee sessions with sponsors to review outcomes and discuss their impressions. Present engagement metrics, highlight any direct mentions or signage visibility, and gather suggestions for increasing sponsorship value next year. Showcasing a genuine interest in their perspective strengthens corporate relationships, making them more likely to renew their support or introduce us to additional partners. These connections bolster the fair’s sustainability and allow for incremental improvements, ensuring a win-win situation for both sponsors and the community.",
+            ColorId = 1,
+            Position = 9
+        },
+        new Ticket {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Next Year’s Early Brainstorm",
+            ListId = list6Id,
+            Description = "Document emerging ideas for upcoming fairs, capturing new themes, proposed collaborations, and innovative attractions. Reflect on which vendor categories or activities merited expansion, which promotions delivered meaningful engagement, and what logistical adjustments could simplify operations. Holding onto these early inklings ensures we maintain momentum and never start from scratch. By fostering a forward-looking mindset, we encourage continuous growth. This proactive planning approach lays the foundation for even more successful, vibrant events that keep the community’s enthusiasm alive year after year.",
+            ColorId = null,
+            Position = 10
+        }
+    };
+
+    context.Boards.Add(board);
+    context.Lists.AddRange(lists);
+    context.Tickets.AddRange(tickets);
+    await context.SaveChangesAsync();
+
+    return boardId;
+}
+
 
 }
