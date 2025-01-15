@@ -782,6 +782,11 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+@HostListener('document:touchend', ['$event'])
+onTouchEnd(event: TouchEvent) {
+  this.stopScrolling();
+}
+
   // Method to get background style based on colorId
   getBackgroundStyle(): { [key: string]: string } {
     const colorId = this.boardDetails?.colorId;
