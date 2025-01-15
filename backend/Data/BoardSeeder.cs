@@ -21,7 +21,7 @@ public static async Task<string> SeedMarketingCampaignBoardAsync(ApplicationDbCo
     var board = new Board
     {
         Id = boardId,
-        Name = "Marketing Campaign (Example)",
+        Name = "Marketing Campaign",
         ColorId = 1,
         UserId = userId,
         CreatedAt = DateTime.UtcNow,
@@ -386,7 +386,7 @@ public static async Task<string> SeedCommunityFairBoardAsync(ApplicationDbContex
     var board = new Board
     {
         Id = boardId,
-        Name = "Community Fair Planning (Example)",
+        Name = "Community Fair Planning",
         ColorId = 3,
         UserId = userId,
         CreatedAt = DateTime.UtcNow,
@@ -716,7 +716,7 @@ public static async Task<string> SeedWeeklyChoresBoardAsync(ApplicationDbContext
     var board = new Board
     {
         Id = boardId,
-        Name = "Weekly Chores (Example)",
+        Name = "Weekly Chores",
         ColorId = 5,
         UserId = userId,
         CreatedAt = DateTime.UtcNow,
