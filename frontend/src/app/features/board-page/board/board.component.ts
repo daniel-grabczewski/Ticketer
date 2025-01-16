@@ -58,6 +58,7 @@ import { CdkScrollable, CdkScrollableModule } from '@angular/cdk/scrolling';
 import { DragStateService } from '../../../core/services/drag-state.service';
 import { UtilsService } from '../../../shared/utils/utils.service';
 import { CogButtonComponent } from '../../../shared/components/cog-button/cog-button.component';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-board',
@@ -93,7 +94,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   backgroundColor: string = 'var(--background)';
   private scrollSpeed = 0;
   private originalName: string = '';
-
+  isMobile: boolean = false;
+  private breakpointSubscription!: Subscription;
   // Boolean to keep track of whether dragging list should be disabled
   isListDraggingDisabled: boolean = false;
 
@@ -108,7 +110,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     private ticketUpdateService: TicketUpdateService,
     private overlayService: OverlayService,
     private dragStateService: DragStateService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private breakpointObserver: BreakpointObserver
   ) {}
 
   // ViewChild to get the ElementRef of the scrollable container
@@ -126,6 +129,12 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.breakpointSubscription = this.breakpointObserver
+    .observe(['(max-width: 790px)'])
+    .subscribe(result => {
+      // Update `isMobile` whenever the screen size changes
+      this.isMobile = result.matches;
+    });
     this.routeSub = this.route.paramMap.subscribe((params: ParamMap) => {
       const boardId = params.get('boardId');
       this.boardNameSlug = params.get('boardNameSlug');

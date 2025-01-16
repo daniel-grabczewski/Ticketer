@@ -35,6 +35,7 @@
     cdkScrollable
     *ngIf="boardDetails"
     class="lists-container"
+    
       cdkDropList
       cdkDropListOrientation="horizontal"
       [cdkDropListData]="boardDetails.lists"
@@ -45,6 +46,7 @@
       <app-list
       *ngFor="let list of boardDetails.lists; let i = index"
       cdkDrag
+      [cdkDragStartDelay]="isMobile ? 400 : 0"
       class="board-list-container"
       [cdkDragDisabled]="isListDraggingDisabled"
       (cdkDragStarted)="onDragStarted()"
