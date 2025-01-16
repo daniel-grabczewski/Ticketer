@@ -45,6 +45,7 @@
       <div
         cdkDrag
         [cdkDragData]="ticket"
+        [cdkDragStartDelay]="isMobile ? 400 : 0"
         class="ticket-wrapper"
         (cdkDragStarted)="onDragStarted($event)"
         (cdkDragEnded)="onDragEnded()"

@@ -43,6 +43,8 @@ import { SubmenuInputTransfer } from '../../../../shared/models/menu.model';
 import { PlusButtonComponent } from '../../../../shared/components/plus-button/plus-button.component';
 import { DragStateService } from '../../../../core/services/drag-state.service';
 import { UtilsService } from '../../../../shared/utils/utils.service';
+import { Subscription } from 'rxjs';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
     selector: 'app-list',
@@ -54,7 +56,7 @@ import { UtilsService } from '../../../../shared/utils/utils.service';
         DragDropModule,
         TicketComponent,
         CreateBoardItemSubmenuComponent,
-        PlusButtonComponent,
+        PlusButtonComponent
     ]
 })
 export class ListComponent implements OnInit, OnChanges {
@@ -107,6 +109,8 @@ export class ListComponent implements OnInit, OnChanges {
   isRenamingList: boolean = false;
   newListName: string = '';
   private originalName: string = '';
+  isMobile: boolean = false;
+  private breakpointSubscription!: Subscription;
 
   constructor(
     private ticketService: TicketService,
@@ -114,7 +118,8 @@ export class ListComponent implements OnInit, OnChanges {
     private router: Router,
     private overlayService: OverlayService,
     private cdr: ChangeDetectorRef,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+     private breakpointObserver: BreakpointObserver,
   ) {}
   draggedTicketHeight: number = 0;
   // Reintroducing the isDragging flag
@@ -124,6 +129,12 @@ export class ListComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     // Set a unique cdkDropListId
+    this.breakpointSubscription = this.breakpointObserver
+    .observe(['(max-width: 790px)'])
+    .subscribe(result => {
+      // Update `isMobile` whenever the screen size changes
+      this.isMobile = result.matches;
+    });
     this.cdkDropListId = 'cdk-drop-list-' + this.id;
     this.menuConfig = generateListActionsMenuConfig(this.name);
 
