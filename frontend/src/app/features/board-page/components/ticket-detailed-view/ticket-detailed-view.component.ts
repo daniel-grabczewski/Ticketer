@@ -198,7 +198,7 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
       const rem = parseFloat(
         getComputedStyle(document.documentElement).fontSize || '16'
       );
-      const maxHeight = 10 * rem; // Max height of 10rem
+      const maxHeight = 6 * rem; // Max height of 10rem
       textarea.style.height = Math.min(scrollHeight, maxHeight) + 'px';
     }
   }
