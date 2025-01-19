@@ -75,23 +75,36 @@
     
   </div>
   <!-- Add Ticket Section -->
-  <div class="add-ticket-section">
-    <ng-container *ngIf="!showCreateTicketSubmenu">
-      <div class="plus-button-wrapper">
-      <app-plus-button label="Add a ticket" [color]="plusButtonColor" [hoverColor]="plusButtonHoverColor" (click)="onAddTicketButtonClick()"
-      [isFullWidth]="true" height="2.5rem" [scale]="0.75"
-      class="plus-button"
+<!-- Add Ticket Section -->
+<div class="add-ticket-section" style="position: relative;">
+  <ng-container *ngIf="!showCreateTicketSubmenu">
+    <div class="plus-button-wrapper">
+      <app-plus-button 
+        label="Add a ticket" 
+        [color]="plusButtonColor" 
+        [hoverColor]="plusButtonHoverColor" 
+        (click)="onAddTicketButtonClick()"
+        [isFullWidth]="true" 
+        height="2.5rem" 
+        [scale]="0.75"
+        class="plus-button"
       ></app-plus-button>
     </div>
-    </ng-container>
-    <ng-container *ngIf="showCreateTicketSubmenu">
-      <app-create-board-item-submenu
-        [placeholder]="'Enter ticket name...'"
-        [buttonText]="'Add ticket'"
-        (menuAction)="onCreateTicketSubmenuAction($event)"
-        (close)="onCreateTicketSubmenuClose()"
-        (isHoldingNonListItem)="onIsHoldingNonListItem($event)"
-      ></app-create-board-item-submenu>
-    </ng-container>
-  </div>
+    
+    <!-- Invisible overlay to intercept mobile drag/touch interactions -->
+    <div class="add-ticket-overlay" 
+         *ngIf="isMobile"
+         (click)="onAddTicketButtonClick()">
+    </div>
+  </ng-container>
+  <ng-container *ngIf="showCreateTicketSubmenu">
+    <app-create-board-item-submenu
+      [placeholder]="'Enter ticket name...'"
+      [buttonText]="'Add ticket'"
+      (menuAction)="onCreateTicketSubmenuAction($event)"
+      (close)="onCreateTicketSubmenuClose()"
+      (isHoldingNonListItem)="onIsHoldingNonListItem($event)"
+    ></app-create-board-item-submenu>
+  </ng-container>
+</div>
 </div>
