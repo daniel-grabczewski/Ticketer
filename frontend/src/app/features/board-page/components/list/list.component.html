@@ -1,7 +1,7 @@
 <div class="list-container">
   <!-- List Header -->
 <!-- List Header -->
-<div class="list-header">
+<div class="list-header" style="position: relative;">
   <textarea
     autocomplete="off"
     id="list-name-textarea-{{ id }}"
@@ -16,6 +16,13 @@
     (keydown.escape)="cancelNameEditing()"
     rows="1"
   ></textarea>
+  
+  <!-- Invisible overlay to intercept mobile drag/touch interactions -->
+  <div class="list-title-overlay"
+       *ngIf="!isRenamingList && isMobile"
+       (click)="onListNameClick($event)">
+  </div>
+  
   <button
     class="menu-button"
     (click)="openMenuOverlay($event); $event.stopPropagation()"
