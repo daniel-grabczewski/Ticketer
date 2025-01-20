@@ -1,4 +1,13 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  HostListener,
+  ElementRef,
+  ViewChild,
+  AfterViewInit
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -9,12 +18,12 @@ import { XButtonComponent } from '../x-button/x-button.component';
 import { X_SCALE_VALUE } from '@constants';
 
 @Component({
-    selector: 'app-dropdown-submenu',
-    templateUrl: './dropdown-submenu.component.html',
-    styleUrls: ['./dropdown-submenu.component.scss'],
-    imports: [CommonModule, FormsModule, XButtonComponent]
+  selector: 'app-dropdown-submenu',
+  templateUrl: './dropdown-submenu.component.html',
+  styleUrls: ['./dropdown-submenu.component.scss'],
+  imports: [CommonModule, FormsModule, XButtonComponent]
 })
-export class DropdownSubmenuComponent implements DropdownSubmenuInput {
+export class DropdownSubmenuComponent implements DropdownSubmenuInput, AfterViewInit {
   // Inputs matching DropdownSubmenuInput
   @Input() title: string = '';
   @Input() dropdownInputLabel: string = '';
@@ -31,9 +40,13 @@ export class DropdownSubmenuComponent implements DropdownSubmenuInput {
   // Component State
   selectedOption: { id: string; name: string } | null = null;
 
-  // Max character limit for option in dropdown menu
+  // Maximum character limit for option names.
   private readonly MAX_CHAR_LIMIT = 30;
 
+  // Reference to the container element (for focusing).
+  @ViewChild('menuContainer') menuContainer!: ElementRef<HTMLElement>;
+
+  // Process a string to limit its characters.
   processString(value: string): string {
     if (!value) return '';
     if (value.length > this.MAX_CHAR_LIMIT) {
@@ -42,18 +55,33 @@ export class DropdownSubmenuComponent implements DropdownSubmenuInput {
     return value;
   }
 
-  // Handle action button click
-  onActionClicked() {
-    if (this.selectedOption) {
-      // Emit the menu action with the specified structure
-      this.menuAction.emit(this.selectedOption);
+  // After view initialization, focus the container to capture key events.
+  ngAfterViewInit() {
+    if (this.menuContainer) {
+      this.menuContainer.nativeElement.focus();
     }
-    // Close the submenu
+  }
+
+  // Handle action button (or Enter key) click.
+  onActionClicked() {
+    // Only perform the action if an option is selected.
+    if (!this.selectedOption) {
+      return;
+    }
+    this.menuAction.emit(this.selectedOption);
     this.close.emit();
   }
 
-  // Handle close button click
+  // Handle close button click.
   onCloseClicked() {
     this.close.emit();
+  }
+
+  // Listen for document keydown events. If Escape is pressed, close the submenu.
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      this.onCloseClicked();
+    }
   }
 }

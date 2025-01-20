@@ -1,4 +1,9 @@
-<div class="menu-container">
+<div
+  class="menu-container"
+  #menuContainer
+  tabindex="0"
+  (keydown.enter)="onActionClicked()"
+>
   <!-- Header with title and close button -->
   <div class="menu-header">
     <h3>{{ title }}</h3>
@@ -14,12 +19,16 @@
       [ngModelOptions]="{ standalone: true }"
     >
       <option value="" disabled>{{ dropdownPlaceholder }}</option>
-      <option class="test" *ngFor="let option of dropdownItems" [ngValue]="option">
+      <option
+        *ngFor="let option of dropdownItems"
+        [ngValue]="option"
+      >
         {{ processString(option.name) }}
       </option>
     </select>
   </div>
 
+  <!-- Action button (disabled if no option is selected) -->
   <button [disabled]="!selectedOption" (click)="onActionClicked()">
     {{ buttonText }}
   </button>
