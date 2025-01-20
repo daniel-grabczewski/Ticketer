@@ -61,6 +61,7 @@
   -webkit-box-orient: vertical; /* Ensures the box is oriented vertically */
   overflow: hidden; /* Clips the overflowing text */
   text-overflow: ellipsis; /* Adds ellipsis to truncated text */
+  padding-bottom : 2px;
 }
 
 
