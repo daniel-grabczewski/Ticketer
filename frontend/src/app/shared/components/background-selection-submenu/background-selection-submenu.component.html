@@ -1,4 +1,4 @@
-<div class="menu-container">
+<div class="menu-container" #menuContainer tabindex="0" (keydown.enter)="onActionClicked()">
   <!-- Header with title and close button -->
   <div class="menu-header">
     <h3>{{ title }}</h3>
@@ -16,7 +16,8 @@
     (colorSelected)="onColorSelected($event)"
   ></app-background-selection-panel>
 
-    <button (click)="onActionClicked()">
-      {{ buttonText }}
-    </button>
+  <!-- Action button -->
+  <button (click)="onActionClicked()">
+    {{ buttonText }}
+  </button>
 </div>
