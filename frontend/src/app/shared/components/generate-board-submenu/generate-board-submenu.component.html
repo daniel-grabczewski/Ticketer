@@ -1,4 +1,9 @@
-<div class="menu-container">
+<div
+  class="menu-container"
+  #menuContainer
+  tabindex="0"
+  (keydown.enter)="onCreateClicked()"
+>
   <!-- Header with title and close button -->
   <div class="menu-header">
     <h3>{{ title }}</h3>
@@ -9,6 +14,7 @@
   <div class="input-group">
     <label for="nameInput">{{ textInputLabel }}</label>
     <input
+      #inputField
       autocomplete="off"
       id="nameInput"
       type="text"
@@ -17,21 +23,19 @@
     />
   </div>
 
-    <!-- Color selection header -->
-    <div class="background-selection-header">
-      <span>{{ colorSelectionHeader }}</span>
-    </div>
+  <!-- Color selection header -->
+  <div class="background-selection-header">
+    <span>{{ colorSelectionHeader }}</span>
+  </div>
 
-    <app-background-selection-panel
-      [selectedColorId]="selectedColorId"
-      (colorSelected)="onColorSelected($event)"
-    ></app-background-selection-panel>
+  <!-- Background selection panel -->
+  <app-background-selection-panel
+    [selectedColorId]="selectedColorId"
+    (colorSelected)="onColorSelected($event)"
+  ></app-background-selection-panel>
 
-
-    <button
-      [disabled]="nameInput.trim().length === 0"
-      (click)="onCreateClicked()"
-    >
-      {{ buttonText }}
-    </button>
+  <!-- Action button (disabled when nameInput is empty) -->
+  <button [disabled]="nameInput.trim().length === 0" (click)="onCreateClicked()">
+    {{ buttonText }}
+  </button>
 </div>
