@@ -20,6 +20,7 @@
   <!-- Invisible overlay to intercept mobile drag/touch interactions -->
   <div class="list-title-overlay"
        *ngIf="!isRenamingList && isMobile"
+       #listTitleOverlay
        (click)="onListNameClick($event)">
   </div>
   
@@ -93,6 +94,7 @@
     
     <!-- Invisible overlay to intercept mobile drag/touch interactions -->
     <div class="add-ticket-overlay" 
+          #addTicketOverlay
          *ngIf="isMobile"
          (click)="onAddTicketButtonClick()">
     </div>
