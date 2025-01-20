@@ -1,4 +1,9 @@
-<div class="menu-container">
+<div
+  class="menu-container"
+  #menuContainer
+  tabindex="0"
+  (keydown.enter)="onActionClicked()"
+>
   <!-- Header with title and close button -->
   <div class="menu-header">
     <h3>{{ title }}</h3>
@@ -10,12 +15,12 @@
     <p>{{ confirmationMessage }}</p>
   </div>
 
-  <!-- Action button -->
-   <div class="buttons-container">
+  <!-- Action buttons -->
+  <div class="buttons-container">
     <button (click)="onActionClicked()">
       {{ buttonText }}
     </button>
-    <button class = "cancel-button" (click)="onCloseClicked()">
+    <button class="cancel-button" (click)="onCloseClicked()">
       Cancel
     </button>
   </div>
