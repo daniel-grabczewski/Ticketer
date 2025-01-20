@@ -8,12 +8,12 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
     styleUrls: ['./guest-data-dialog.component.scss'],
     template: `
     <h1 mat-dialog-title>Transfer Guest Data</h1>
-    <div mat-dialog-content>
-      <p>Do you want to transfer your guest data to your new account?</p>
+    <div mat-dialog-content style="padding-bottom: 2px !important;">
+      <p style="font-size : 16px !important;">Do you want to transfer your guest data to your new account?</p>
     </div>
     <div mat-dialog-actions>
-      <button mat-button (click)="onNoClick()">No</button>
       <button mat-button color="primary" (click)="onYesClick()">Yes</button>
+      <button mat-button (click)="onNoClick()">No</button>
     </div>
   `
 })
