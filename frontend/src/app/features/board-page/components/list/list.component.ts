@@ -94,9 +94,6 @@ export class ListComponent implements OnInit, OnChanges {
   @Output() isHoldingNonListItem = new EventEmitter<boolean>();
   @Output() dragMoved = new EventEmitter<CdkDragMove<any>>();
 
-  @ViewChild('listTitleOverlay') listTitleOverlay!: ElementRef;
-  @ViewChild('addTicketOverlay') addTicketOverlay!: ElementRef;
-
   plusButtonHoverColor: string = 'var(--secondary-darker)';
   plusButtonColor: string = 'var(--neutral-lighter)';
 
@@ -122,7 +119,7 @@ export class ListComponent implements OnInit, OnChanges {
     private overlayService: OverlayService,
     private cdr: ChangeDetectorRef,
     private utilsService: UtilsService,
-     private breakpointObserver: BreakpointObserver,  
+     private breakpointObserver: BreakpointObserver,
   ) {}
   draggedTicketHeight: number = 0;
   // Reintroducing the isDragging flag
@@ -157,36 +154,6 @@ export class ListComponent implements OnInit, OnChanges {
       this.menuConfig = generateListActionsMenuConfig(this.name);
     }
   }
-
-  ngAfterViewInit(): void {
-    // Add a custom touchstart listener to the list title overlay.
-    if (this.listTitleOverlay && this.listTitleOverlay.nativeElement) {
-      this.listTitleOverlay.nativeElement.addEventListener(
-        'touchstart',
-        (event: TouchEvent) => {
-           event.preventDefault();
-           console.log('List title overlay touchstart', event);
-        },
-        { passive: false }
-      );
-    }
-
-    // Similarly, add a custom listener for the add ticket overlay.
-    if (this.addTicketOverlay && this.addTicketOverlay.nativeElement) {
-      this.addTicketOverlay.nativeElement.addEventListener(
-        'touchstart',
-        (event: TouchEvent) => {
-          event.preventDefault();
-          console.log('Add ticket overlay touchstart', event);
-        },
-        { passive: false }
-      );
-    }
-
-    // Trigger change detection to ensure the ViewChild elements are up-to-date.
-    this.cdr.detectChanges();
-  }
-
 
   // Method to generate UUID for new tickets
   generateUUID(): string {
