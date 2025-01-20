@@ -207,7 +207,23 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
     const keyboardEvent = event as KeyboardEvent;
     if (keyboardEvent.key === 'Enter' && !keyboardEvent.shiftKey) {
       keyboardEvent.preventDefault();
+  
+      // Save the title
       this.saveTicketName();
+  
+      // Blur the input so the focus border is removed
+      const target = event.target as HTMLTextAreaElement;
+      if (target && typeof target.blur === 'function') {
+        target.blur();
+      }
+  
+      // Clear any text selection to ensure nothing remains highlighted
+      if (window.getSelection) {
+        const selection = window.getSelection();
+        if (selection) {
+          selection.removeAllRanges();
+        }
+      }
     }
   }
 
@@ -261,6 +277,34 @@ export class TicketDetailedViewComponent implements OnInit, OnDestroy {
       }
 
       textarea.style.height = newHeight + 'px';
+    }
+  }
+
+  handleEscape(event: Event, field: 'name' | 'description'): void {
+    const keyboardEvent = event as KeyboardEvent;
+    // Prevent default behavior and stop propagation.
+    keyboardEvent.preventDefault();
+    keyboardEvent.stopPropagation();
+  
+    // Blur the active element (should be the textarea/input that received escape)
+    const target = keyboardEvent.target as HTMLInputElement | HTMLTextAreaElement;
+    if (target && typeof target.blur === 'function') {
+      target.blur();
+    }
+  
+    // Clear any text selections from the window
+    if (window.getSelection) {
+      const selection = window.getSelection();
+      if (selection) {
+        selection.removeAllRanges();
+      }
+    }
+  
+    // Now call your existing cancel method depending on which field it is.
+    if (field === 'name') {
+      this.cancelNameEditing();
+    } else if (field === 'description') {
+      this.cancelDescriptionEditing();
     }
   }
 

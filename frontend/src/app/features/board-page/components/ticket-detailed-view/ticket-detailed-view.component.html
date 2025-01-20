@@ -32,7 +32,7 @@
     (blur)="saveTicketName()"
     (input)="adjustTitleTextareaHeight()"
     (keydown.enter)="handleTitleEnter($event)"
-    (keydown.escape)="cancelNameEditing()"
+    (keydown.escape)="handleEscape($event, 'name')"
   ></textarea>
 </div>
 
@@ -53,7 +53,7 @@
     [readonly]="!isEditingDescription"
     [ngClass]="{ 'editing': isEditingDescription }"
     (click)="onDescriptionClick($event)"
-    (keydown.escape)="cancelDescriptionEditing()"
+    (keydown.escape)="handleEscape($event, 'description')"
     (input)="adjustTextareaHeight()"
     placeholder="Click to add a description..."
   ></textarea>
