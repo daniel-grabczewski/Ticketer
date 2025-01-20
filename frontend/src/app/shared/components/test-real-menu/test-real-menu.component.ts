@@ -5,6 +5,7 @@ import {
   EventEmitter,
   ElementRef,
   OnInit,
+  HostListener,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -34,19 +35,19 @@ import { XButtonComponent } from '../x-button/x-button.component';
 import { X_SCALE_VALUE } from '@constants';
 
 @Component({
-    selector: 'app-test-real-menu',
-    templateUrl: './test-real-menu.component.html',
-    styleUrls: ['./test-real-menu.component.scss'],
-    imports: [
-        CommonModule,
-        TextInputSubmenuComponent,
-        ConfirmationSubmenuComponent,
-        BackgroundSelectionSubmenuComponent,
-        GenerateBoardSubmenuComponent,
-        ColorSelectionSubmenuComponent,
-        DropdownSubmenuComponent,
-        XButtonComponent,
-    ]
+  selector: 'app-test-real-menu',
+  templateUrl: './test-real-menu.component.html',
+  styleUrls: ['./test-real-menu.component.scss'],
+  imports: [
+    CommonModule,
+    TextInputSubmenuComponent,
+    ConfirmationSubmenuComponent,
+    BackgroundSelectionSubmenuComponent,
+    GenerateBoardSubmenuComponent,
+    ColorSelectionSubmenuComponent,
+    DropdownSubmenuComponent,
+    XButtonComponent,
+  ],
 })
 export class TestRealMenuComponent implements OnInit {
   @Input() menuConfig: MenuConfig = { title: '', submenus: [] };
@@ -54,8 +55,7 @@ export class TestRealMenuComponent implements OnInit {
   @Output() menuAction = new EventEmitter<SubmenuOutputTransfer>();
   @Output() close = new EventEmitter<void>();
 
-  rearrangedSubmenus: { buttonText: string; submenu: SubmenuInputTransfer }[] =
-    [];
+  rearrangedSubmenus: { buttonText: string; submenu: SubmenuInputTransfer }[] = [];
 
   isMobile: boolean = false;
   xScale = X_SCALE_VALUE;
@@ -69,10 +69,7 @@ export class TestRealMenuComponent implements OnInit {
   ngOnInit() {
     this.isMobile = this.breakpointObserver.isMatched('(max-width: 790px)');
     this.rearrangeSubmenus();
-    console.log(
-      'Initialized TestRealMenuComponent with config:',
-      this.menuConfig
-    );
+    console.log('Initialized TestRealMenuComponent with config:', this.menuConfig);
   }
 
   rearrangeSubmenus() {
@@ -135,10 +132,7 @@ export class TestRealMenuComponent implements OnInit {
   }
 
   handleSubmenuAction(submenuOutputTransfer: SubmenuOutputTransfer) {
-    console.log(
-      'Handling submenu action in TestRealMenuComponent:',
-      submenuOutputTransfer
-    );
+    console.log('Handling submenu action in TestRealMenuComponent:', submenuOutputTransfer);
     // Emit the submenu action up to the parent component that opened this menu
     this.menuAction.emit(submenuOutputTransfer);
   }
@@ -147,5 +141,18 @@ export class TestRealMenuComponent implements OnInit {
     this.overlayService.closeAllOverlays();
     this.close.emit();
     console.log('Menu closed');
+  }
+
+  // Host listener for Escape key that only closes the main menu if no submenu overlay is open.
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      // Check if a submenu overlay is open
+      if (this.overlayService.hasOpenSubmenuOverlay()) {
+        // Do nothing if a submenu is currently open
+        return;
+      }
+      this.closeMenu();
+    }
   }
 }
