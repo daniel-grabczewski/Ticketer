@@ -15,3 +15,12 @@
 button {
   @include submenu-confirmation-button($menu-mobile-scale : 1.4);
 }
+
+.cancel-button {
+  @include submenu-button($menu-mobile-scale : 1.4);
+}
+
+.buttons-container {
+  display : flex;
+  justify-content: space-between;
+}

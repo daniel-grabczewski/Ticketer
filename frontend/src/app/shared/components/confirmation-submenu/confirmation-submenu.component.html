@@ -11,7 +11,12 @@
   </div>
 
   <!-- Action button -->
+   <div class="buttons-container">
     <button (click)="onActionClicked()">
       {{ buttonText }}
     </button>
+    <button class = "cancel-button" (click)="onCloseClicked()">
+      Cancel
+    </button>
+  </div>
 </div>
