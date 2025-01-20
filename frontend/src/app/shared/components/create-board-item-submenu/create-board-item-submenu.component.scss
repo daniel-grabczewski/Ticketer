@@ -1,5 +1,11 @@
 @import '../../../assets/styles/main.scss';
 
+.action-button-group button {
+  // This prevents a momentary 'flash' of the button when this submenu is opened. This 'flash' began occuring ever since the addition of having 'enter' being able to be used as a submit
+  transition: none !important;
+}
+
+
 .submenu-container {
   display: flex;
   flex-direction: column;
