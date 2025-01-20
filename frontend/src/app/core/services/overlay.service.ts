@@ -310,4 +310,11 @@ export class OverlayService {
     this.closeOverlay();
     this.closeSubmenuOverlay();
   }
+
+  /**
+ * Returns true if a submenu overlay is currently open.
+ */
+public hasOpenSubmenuOverlay(): boolean {
+  return this.submenuOverlayRef !== null;
+}
 }
