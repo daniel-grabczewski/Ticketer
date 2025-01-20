@@ -1,4 +1,13 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { 
+  Component, 
+  Input, 
+  Output, 
+  EventEmitter, 
+  HostListener, 
+  ViewChild, 
+  ElementRef, 
+  AfterViewInit 
+} from '@angular/core';
 import { X_SCALE_VALUE } from '@constants';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -9,12 +18,12 @@ import {
 import { XButtonComponent } from '../x-button/x-button.component';
 
 @Component({
-    selector: 'app-text-input-submenu',
-    templateUrl: './text-input-submenu.component.html',
-    styleUrls: ['./text-input-submenu.component.scss'],
-    imports: [CommonModule, FormsModule, XButtonComponent]
+  selector: 'app-text-input-submenu',
+  templateUrl: './text-input-submenu.component.html',
+  styleUrls: ['./text-input-submenu.component.scss'],
+  imports: [CommonModule, FormsModule, XButtonComponent]
 })
-export class TextInputSubmenuComponent implements TextInputSubmenuInput {
+export class TextInputSubmenuComponent implements TextInputSubmenuInput, AfterViewInit {
   // Inputs based on TextInputSubmenuInput
   @Input() title: string = '';
   @Input() textInputLabel: string = '';
@@ -30,21 +39,42 @@ export class TextInputSubmenuComponent implements TextInputSubmenuInput {
   textInputValue: string = '';
   xScale = X_SCALE_VALUE;
 
+  // ViewChild references for the container and the text input
+  @ViewChild('menuContainer') menuContainer!: ElementRef<HTMLElement>;
+  @ViewChild('textInput') textInput!: ElementRef<HTMLInputElement>;
+
   ngOnInit() {
-    // Initialize with initialText if provided
+    // Initialize with the provided initial text (if any)
     this.textInputValue = this.initialText;
   }
 
-  // Handle action button click
+  ngAfterViewInit() {
+    // Focus the text input so that the cursor is blinking inside it immediately.
+    if (this.textInput) {
+      this.textInput.nativeElement.focus();
+    }
+  }
+
+  // Handle action button or Enter key click.
   onActionClicked() {
-    // Emit the menu action with the specified structure
+    // Only proceed if there is non-empty trimmed text.
+    if (this.textInputValue.trim().length === 0) {
+      return;
+    }
     this.menuAction.emit({ text: this.textInputValue });
-    // Close the submenu
     this.close.emit();
   }
 
-  // Handle close button click
+  // Handle close button click.
   onCloseClicked() {
     this.close.emit();
+  }
+
+  // Listen for document keydown events. Close the submenu if Escape is pressed.
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      this.onCloseClicked();
+    }
   }
 }

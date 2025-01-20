@@ -1,28 +1,34 @@
-<div class="menu-container">
+<div
+  class="menu-container"
+  #menuContainer
+  tabindex="0"
+>
   <!-- Header with title and close button -->
   <div class="menu-header">
     <h3>{{ title }}</h3>
-    <app-x-button (click)="onCloseClicked()" config=menu></app-x-button>
+    <app-x-button (click)="onCloseClicked()" config="menu"></app-x-button>
   </div>
 
   <!-- Text input section -->
   <div class="input-group">
     <label for="textInput">{{ textInputLabel }}</label>
     <input
+      #textInput
       autocomplete="off"
       id="textInput"
       type="text"
       [(ngModel)]="textInputValue"
       [placeholder]="placeholder"
+      (keydown.enter)="onActionClicked()"
     />
   </div>
 
   <!-- Action button -->
-    <button 
+  <button 
     class="menu-button"
-    (click)="onActionClicked()" 
+    (click)="onActionClicked()"
     [disabled]="textInputValue.trim().length === 0"
-    >
+  >
     {{ buttonText }}
   </button>
 </div>
