@@ -13,6 +13,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './app/auth-interceptor';
 import { provideAppInitializer, inject } from '@angular/core';
 import { AuthService } from './app/core/services/auth.service';
+import 'dragdroptouch-bug-fixed'
 
 export function initializeAuth(): Promise<void> {
   console.log('[main.ts] initializeAuth started');
