@@ -2,7 +2,6 @@
 # Run `chmod +x deploy-frontend.sh` to make this script executable
 # Run './deploy-frontend.sh' while in the /frontend folder to execute this script
 
-
 # Exit the script if any command fails
 set -e
 
@@ -26,12 +25,13 @@ timestamp=$(date +%Y%m%d%H%M%S)
 log "Building new Docker image with tag: frontend:$timestamp..."
 docker build -t frontend:$timestamp .
 
-# Run the new container on port 8081:80
-log "Running new Docker container on port 8081:80..."
-docker run -d -p 8081:80 frontend:$timestamp
+# Run the new container on port 8081 with tail -f /dev/null
+log "Running new Docker container on port 8081 with tail -f /dev/null..."
+docker run -d -p 8081:80 frontend:$timestamp sh -c "nginx -g 'daemon off;' && tail -f /dev/null"
+
 
 # Reload Nginx
 log "Reloading Nginx..."
 sudo systemctl reload nginx
 
-log "Deployment completed successfully. New container running on port 8081."
+log "Deployment completed successfully. New container running on port 8081 with tail -f /dev/null."
