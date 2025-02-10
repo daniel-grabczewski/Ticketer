@@ -25,13 +25,13 @@ timestamp=$(date +%Y%m%d%H%M%S)
 log "Building new Docker image with tag: backend:$timestamp..."
 docker build -t backend:$timestamp .
 
-# Run the new container on port 8080:8080 with tail -f /dev/null
-log "Running new Docker container on port 8080:8080 with tail -f /dev/null..."
-docker run -d -p 8080:8080 backend:$timestamp sh -c "dotnet backend.dll && tail -f /dev/null"
+# Run the new container on port 8080:8080 with sleep infinity
+log "Running new Docker container on port 8080:8080 with sleep infinity"
+docker run -d -p 8080:8080 backend:$timestamp sh -c "dotnet backend.dll & sleep infinity"
 
 
 # Reload Nginx
 log "Reloading Nginx..."
 sudo systemctl reload nginx
 
-log "Deployment completed successfully. New container running on port 8080 with tail -f /dev/null."
+log "Deployment completed successfully. New container running on port 8080 with sleep infinity."
