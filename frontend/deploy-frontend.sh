@@ -25,13 +25,12 @@ timestamp=$(date +%Y%m%d%H%M%S)
 log "Building new Docker image with tag: frontend:$timestamp..."
 docker build -t frontend:$timestamp .
 
-# Run the new container on port 8081 with sleep infinity
-log "Running new Docker container on port 8081 with sleep infinity..."
-docker run -d -p 8081:80 frontend:$timestamp sh -c "nginx -g 'daemon off;' & sleep infinity"
-
+# Run the new container on port 8081 with restart policy and foreground Nginx process
+log "Running new Docker container on port 8081 with restart policy (--restart unless-stopped) and running Nginx in the foreground..."
+docker run -d --restart unless-stopped -p 8081:80 frontend:$timestamp nginx -g "daemon off;"
 
 # Reload Nginx
 log "Reloading Nginx..."
 sudo systemctl reload nginx
 
-log "Deployment completed successfully. New container running on port 8081 with sleep infinity."
+log "Deployment completed successfully. New container running on port 8081."
