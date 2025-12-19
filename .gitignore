@@ -20,8 +20,8 @@
 # VS Code settings
 .vscode/
 
-# Ignore user secrets
-/backend/secrets.json
+# Ignore backend environment file
+/backend/app.env
 
 # Compiled output
 /frontend/dist
