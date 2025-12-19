@@ -1,5 +1,6 @@
 #Environment files
 /frontend/src/environments/environment.ts
+/frontend/src/environments/environment.prod.ts
 
 # Ignore build outputs, temporary files, and user-specific settings
 /backend/bin/
