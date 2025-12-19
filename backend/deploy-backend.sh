@@ -10,14 +10,17 @@ log() {
     echo "[INFO] $1"
 }
 
-# Stop any Docker container running on port 8080:8080
-log "Stopping any Docker container running on port 8080..."
-container_id=$(docker ps -q --filter "publish=8080")
-if [ -n "$container_id" ]; then
-    docker stop "$container_id"
-    log "Stopped container with ID: $container_id"
+# Define a consistent name for the container so we can easily find/stop it later
+CONTAINER_NAME="ticketer-backend"
+
+# Stop and remove the existing container by name
+if [ "$(docker ps -aq -f name=^/${CONTAINER_NAME}$)" ]; then
+    log "Stopping and removing existing container: $CONTAINER_NAME..."
+    docker stop $CONTAINER_NAME
+    docker rm $CONTAINER_NAME
+    log "Old container removed."
 else
-    log "No container found running on port 8080."
+    log "No existing container named '$CONTAINER_NAME' found."
 fi
 
 # Build the Docker image with a timestamp as the tag
@@ -25,12 +28,20 @@ timestamp=$(date +%Y%m%d%H%M%S)
 log "Building new Docker image with tag: backend:$timestamp..."
 docker build -t backend:$timestamp .
 
-# Run the new container on port 8080:8080 with foreground process and restart policy
-log "Running new Docker container on port 8080:8080 with restart policy (--restart unless-stopped) and running dotnet in the foreground"
-docker run -d --restart unless-stopped -p 8080:8080 backend:$timestamp dotnet backend.dll
+# Run the new container
+# --network host: Connects directly to localhost MySQL
+# --env-file app.env: Injects the password securely from the file
+# --name: Assigns the name so we can stop it easily next time
+log "Running new Docker container..."
+docker run -d \
+  --restart unless-stopped \
+  --network host \
+  --name $CONTAINER_NAME \
+  --env-file app.env \
+  backend:$timestamp dotnet backend.dll
 
-# Reload Nginx
+# Reload Nginx (Optional for backend changes, but good practice)
 log "Reloading Nginx..."
 sudo systemctl reload nginx
 
-log "Deployment completed successfully. New container running on port 8080."
+log "Deployment completed successfully."
