@@ -18,7 +18,7 @@ Navigate to **/frontend** in your terminal
 - In that file, replace `<YOUR AUTH0 DOMAIN>`, `<YOUR AUTH0 CLIENT ID>`, and `<YOUR AUTH0 AUDIENCE>` with the matching fields from your Auth0 configuration.
 
 ## Build database
-Navigate to **/backend** in your terminal
+Navigate to **/backend** in your terminal.
 
 Confirm you have the following donet packages:
 - `MySql.EntityFrameworkCore`
